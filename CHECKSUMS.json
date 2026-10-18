@@ -1,8 +1,9 @@
 {
   "LICENSE": "f06db0ee909f2f8746128b8279713ced1aefd03f3a235d1f9476a831e6e36541",
-  "README.md": "43c32527bbe00b82ba61d67c2b482af2c90e7190622cafb2761842b9b5623bc0",
+  "README.md": "091bb0858d29c15481feee17213e1a6e8209e4599f677047b0f68f1bb4bb3c9d",
   "STATUS.md": "25ba629dd04a63cfd5174a4b535e675c7b94843a4201de8c1cd04c6c29ef83ad",
   "code.patch": "0e3b71893b5a1f64d65da30f86bf9524cb7a836a64e75726c0929556068096dc",
+  "data/community_predictions_audit.csv": "57b518604fcf0e48635f9b1b7f35a15c161f85aeeb5f0ac66ab35ff9e8c69fb4",
   "data/errata.csv": "263423043a9031b5b15694ab26cd581733c39e1968a9989bc98491d8839aac84",
   "data/fix_holes_before_after.csv": "1dc65e33839c9b12b8a7ecdbcde2d0393040d184e9a24799a08f312e34cef601",
   "data/kaggle_audit_all.csv": "708b2e6ef9530f31b6c0327a058838cf6aef88ac77ce516bfe88794a5e1bae76",
@@ -22,6 +23,7 @@
   "notes/trace-refinement-negative-result.md": "c626880deb1fa1d4b450cb857930ba415bd7059989cd398a144da6f676c9c6b1",
   "validation/audit-tests.xml": "159d920171ca7aa4db8820d7dc761ac975da68daf808d52a528fd52607ba677c",
   "validation/branch-tests-a620aca9e.json": "e60c6cd5b6b50489b41998ed0ac5892b649f5b049d6166e00913d50c61ede834",
+  "validation/community_predictions_run.sh": "2d6a12dfab81d4e589630df8d6d3d6d1be5b78ce39591b3319cde6fce5a7afe9",
   "validation/cpu-parity.json": "a51307fa3597d8deae359160a3fd683db0fa4e376f7bd61742db438287797640",
   "validation/real-data-review.json": "51998dd0bb6507637d539454b99ac48a75bba8afda950047ba5127c25d590822",
   "validation/review_real_data.py": "cf98987ea239dcf8153bf31e70d608024d2d534c86d6b48f44b5044cdd0ebddc",

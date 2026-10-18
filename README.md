@@ -177,6 +177,46 @@ labels exist for these crops.
   0.29), and the model was not trained on this scroll. This shows the audit works as a prediction check; it is not a
   benchmark of the model.
 
+### Community prediction volumes (zarr, read in place)
+
+With the zarr input landed, the same audit was run on nine binarised
+surface-prediction volumes published by Yupeng Li at
+`https://dl.ash2txt.org/community-uploads/yupeng/` (three models: m7, Socratic,
+HercUNet; two scrolls: PHerc1447, PHerc0814; thresholds 0.2, 0.3, 0.5, using
+the published `_thX.zarr` masks). One 768³ window per scroll, deep inside the
+scroll (PHerc1447 `12288:13056,3840:4608,3584:4352`; PHerc0814
+`9344:10112,2688:3456,2688:3456`), split into 27 tiles of 256³, read over
+HTTP without downloading or converting the volumes. Full table:
+[data/community_predictions_audit.csv](data/community_predictions_audit.csv);
+the exact command list is
+[validation/community_predictions_run.sh](validation/community_predictions_run.sh).
+
+| model | scroll | thr | fg | b1 total | b1 per Mvox fg | b2 total | fused frac | thick median |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| m7 | PHerc1447 | 0.3 | 15% | 2,686 | 40 | 123 | 0.45 | 3.0 |
+| m7 | PHerc0814 | 0.3 | 19% | 5,770 | 66 | 90 | 0.71 | 3.0 |
+| Socratic | PHerc1447 | 0.3 | 21% | 5,767 | 61 | 521 | 0.38 | 3.5 |
+| Socratic | PHerc0814 | 0.3 | 27% | 13,211 | 110 | 824 | 0.64 | 3.0 |
+| HercUNet | PHerc1447 | 0.3 | 29% | 26,207 | 199 | 38,335 | 0.60 | 3.5 |
+| HercUNet | PHerc0814 | 0.3 | 39% | 35,882 | 203 | 223,487 | 0.69 | 5.0 |
+
+- Per foreground voxel, m7 has the fewest holes and handles, Socratic 1.5-2x
+  more, HercUNet 3-5x more, on both scrolls and at every threshold.
+- Threshold matters in the same way for every model: 0.5 fragments the sheets
+  (b1 per Mvox rises 1.4-3x over 0.3, components per tile rise) while 0.2 adds
+  cavities (b2 rises 3-10x over 0.3). Of the three, 0.3 has the lowest hole
+  density for m7 and Socratic.
+- HercUNet's output is thicker (median 3.5-5 voxels) and carries tens to
+  hundreds of thousands of cavities per window, so it behaves like a volume
+  label rather than a thin sheet; the numbers are not comparable to the other
+  two as a surface model, and the table reports them as measured.
+- PHerc0814 is harder for every model: more fused voxels and more holes than
+  PHerc1447 at the same threshold.
+- Caveats: one window per scroll, chosen deep in the volume and not by any
+  label; tile faces count as crop faces (b1 face is 1-4% of b1); no ground
+  truth exists for these windows, so this ranks prediction topology, it does
+  not score accuracy. The m7 and Socratic groups publish only pyramid level 0.
+
 ## Files
 
 - `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `605e9d222`.
@@ -186,6 +226,8 @@ labels exist for these crops.
   judgments.
 - `data/errata.csv`: 33 holes with crop ID, centre, both AI verdicts,
   consensus, human verdict (14 rows) and a suggested action.
+- `data/community_predictions_audit.csv`: one row per community prediction
+  volume and threshold (18 rows), 27 tiles each.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:
   the synthetic example. It has two sheets with a gap through both, a hole at
   a crop face, and two bridges that make one handle. The audit reports
