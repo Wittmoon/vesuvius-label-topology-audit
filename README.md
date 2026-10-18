@@ -16,7 +16,8 @@ removed the holes or just moved them.
   on the fork, also here as [code.patch](code.patch). Pull request: see
   [STATUS.md](STATUS.md).
 - Data: result tables in `data/`, the hand-checked errata list in
-  [data/errata.csv](data/errata.csv), a synthetic example in `figures/`, test
+  [data/errata.csv](data/errata.csv) (the 6 CUT holes are also filed as
+  [ScrollPrize/villa#2144](https://github.com/ScrollPrize/villa/issues/2144)), a synthetic example in `figures/`, test
   and reproduction records in `validation/`.
 - Progress Prize entry for October 2026.
 
@@ -46,23 +47,27 @@ Compared with what the repo already has:
 | whole-dataset ranking (`ranked.csv`) | no | yes |
 | before/after deltas, `--fail-on` for CI | no | yes |
 | writes `fix_holes.py` input masks | n/a | yes (`--hole-masks`) |
+| zarr / OME-Zarr input, local or URL, windowed and tiled | no | yes (`--roi`, `--tile`, `--threshold`) |
 
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Commits: `6e4a88154`, `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`.
+- Commits: `6e4a88154`, `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`,
+  `a620aca9e` (zarr input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL).
 - Files: `vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py`,
   `vesuvius/src/vesuvius/image_proc/topology.py`, `vesuvius/src/vesuvius/scripts/detect_holes.py`
   (CPU path now uses the shared helper), `vesuvius/tests/test_label_topology_audit.py`
-  (31 tests), `vesuvius/docs/label-topology-audit.md`.
+  (35 tests), `vesuvius/docs/label-topology-audit.md`.
 - Environment for the numbers below: macOS arm64, Python 3.14.8, numpy 2.4.6,
   scipy 1.18.0, scikit-image 0.26.0, connected-components-3d 4.0.0,
   tifffile 2026.6.1, matplotlib 3.11.0. CPU only.
 
 Code review added input and pairing checks, a bounded thickness proxy at crop
 faces, support for singleton axes and clearer ranking text. All 31 audit tests
-pass on the branch and on a fresh export of current upstream with the patch
-applied ([test record](validation/upstream-source-tests.json)). The full
+passed on the branch and on a fresh export of current upstream with the patch
+applied ([test record](validation/upstream-source-tests.json)); with the zarr
+input commit the branch has 35 tests, all passing
+([record](validation/branch-tests-a620aca9e.json)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
 thickness included. The labels are 2-3 voxel sheets, so the crop-face
 correction does not change them. Three real-data cases are also recorded in

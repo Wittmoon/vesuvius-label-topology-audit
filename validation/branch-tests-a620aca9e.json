@@ -1,0 +1,9 @@
+{
+  "branch_head": "a620aca9e",
+  "patch_sha256": "0e3b71893b5a1f64d65da30f86bf9524cb7a836a64e75726c0929556068096dc",
+  "date": "2026-10-18",
+  "test_exit_code": 0,
+  "test_output": "...................................                                      [100%]\n35 passed in 4.62s",
+  "command": "python -m pytest -q -p no:cacheprovider tests/test_label_topology_audit.py",
+  "scope": "35 audit tests on the worktree at a620aca9e; the upstream-export record covers the earlier 31."
+}
