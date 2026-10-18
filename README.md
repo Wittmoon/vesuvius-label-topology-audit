@@ -13,8 +13,8 @@ removed the holes or just moved them.
 
 - Code: [ScrollPrize/villa](https://github.com/ScrollPrize/villa) branch
   [`feat/label-topology-audit`](https://github.com/Wittmoon/villa/tree/feat/label-topology-audit)
-  on the fork, also here as [code.patch](code.patch). Pull request: see
-  [STATUS.md](STATUS.md).
+  on the fork, also here as [code.patch](code.patch). Pull request:
+  [ScrollPrize/villa#2147](https://github.com/ScrollPrize/villa/pull/2147).
 - Data: result tables in `data/`, the hand-checked errata list in
   [data/errata.csv](data/errata.csv) (the 6 CUT holes are also filed as
   [ScrollPrize/villa#2144](https://github.com/ScrollPrize/villa/issues/2144)), a synthetic example in `figures/`, test
