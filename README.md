@@ -191,6 +191,21 @@ The source data is licensed CC BY-NC 4.0; this packet links it rather than
 redistributing it. The tile
 sheets used for the spot checks are kept locally for the same reason.
 
+## Notes: what did not work
+
+Two side experiments on label and trace refinement are recorded in `notes/`
+as negative results, so they are not repeated blind. Neither is part of the
+prize claim.
+
+- [notes/label-snapping-negative-result.md](notes/label-snapping-negative-result.md):
+  snapping labels to the CT edge works on synthetic perturbations of the
+  Kaggle crops only with a direction prior taken from the clean labels, and
+  does not transfer to a real traced segment.
+- [notes/trace-refinement-negative-result.md](notes/trace-refinement-negative-result.md):
+  optimal-surface refinement on raw CT moves 2-20% of a trace's cells onto a
+  neighbouring sheet; a learned cost helps on one crop and not on the next.
+  What survives is an audit of where overlapping traces disagree.
+
 ## Limitations
 
 - **Judging:** the spot check and the repair check were judged by an AI
