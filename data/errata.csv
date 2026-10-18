@@ -1,0 +1,34 @@
+id,rank,crop,center_zyx,hole_voxels,verdict_A,verdict_B,consensus,human_verdict,suggested_action
+E01,1,sample_00226,"[183, 97, 26]",164,UNCLEAR,UNCLEAR,UNCLEAR,FILL,inspect
+E02,1,sample_00226,"[182, 85, 55]",137,UNCLEAR,CUT,UNCLEAR,,inspect
+E03,1,sample_00226,"[153, 90, 31]",99,UNCLEAR,UNCLEAR,UNCLEAR,,inspect
+E04,2,sample_00379,"[49, 274, 36]",1617,CUT,CUT,CUT,CUT,separate merged sheets (pocket between sheets)
+E05,2,sample_00379,"[125, 33, 60]",833,CUT,CUT,CUT,CUT,separate merged sheets (pocket between sheets)
+E06,3,sample_00340,"[294, 186, 288]",5167,CUT,CUT,CUT,CUT,separate merged sheets (pocket between sheets)
+E07,3,sample_00340,"[283, 175, 301]",140,CUT,CUT,CUT,CUT,separate merged sheets (pocket between sheets)
+E08,4,sample_00137,"[132, 291, 13]",1289,CUT,CUT,CUT,CUT,separate merged sheets (pocket between sheets)
+E09,4,sample_00137,"[276, 286, 301]",374,CUT,FILL,UNCLEAR,,inspect
+E10,4,sample_00137,"[227, 259, 172]",192,CUT,FILL,UNCLEAR,,inspect
+E11,5,sample_00257,"[20, 6, 103]",125,UNCLEAR,UNCLEAR,UNCLEAR,,inspect
+E12,6,sample_00374,"[305, 78, 30]",461,CUT,FILL,UNCLEAR,,inspect
+E13,7,sample_00140,"[8, 76, 310]",415,UNCLEAR,UNCLEAR,UNCLEAR,,inspect
+E14,7,sample_00140,"[39, 155, 210]",296,CUT,CUT,CUT,CUT,separate merged sheets (pocket between sheets)
+E15,7,sample_00140,"[38, 163, 227]",253,CUT,UNCLEAR,UNCLEAR,,inspect
+E16,8,sample_00446,"[124, 18, 15]",1224,UNCLEAR,CUT,UNCLEAR,,inspect
+E17,10,sample_00683,"[248, 51, 264]",146,CUT,FILL,UNCLEAR,,inspect
+E18,10,sample_00683,"[239, 63, 271]",105,CUT,FILL,UNCLEAR,,inspect
+E19,11,sample_00416,"[18, 299, 10]",375,UNCLEAR,UNCLEAR,UNCLEAR,,inspect
+E20,12,sample_00615,"[39, 312, 174]",142,UNCLEAR,UNCLEAR,UNCLEAR,,inspect
+E21,13,sample_00902,"[83, 313, 285]",346,UNCLEAR,LEAVE,UNCLEAR,,inspect
+E22,14,sample_00244,"[73, 39, 107]",118530,FILL,CUT,UNCLEAR,,inspect
+E23,15,sample_00682,"[66, 283, 7]",707,UNCLEAR,UNCLEAR,UNCLEAR,,inspect
+E24,16,sample_00687,"[15, 139, 120]",133,CUT,CUT,CUT,,separate merged sheets (pocket between sheets)
+E25,17,sample_00768,"[187, 264, 114]",35,UNCLEAR,FILL,UNCLEAR,,inspect
+E26,18,sample_00833,"[64, 21, 265]",120,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)
+E27,19,sample_00895,"[242, 9, 203]",24,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)
+E28,19,sample_00895,"[75, 100, 82]",15,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)
+E29,19,sample_00895,"[81, 279, 105]",14,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)
+E30,20,sample_00821,"[208, 228, 138]",24,CUT,FILL,UNCLEAR,,inspect
+E31,21,sample_00910,"[28, 64, 8]",47,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)
+E32,21,sample_00910,"[63, 67, 10]",19,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)
+E33,21,sample_00910,"[290, 212, 10]",17,FILL,FILL,FILL,FILL,fill hole (fix_holes 2d_hole_fill mask)

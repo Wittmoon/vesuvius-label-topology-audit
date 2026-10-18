@@ -1,0 +1,354 @@
+rank,crop,reason,b1_interior,b2_total_big,n_fused_components,n_junction_clusters,b1_total_big
+1,sample_00226,"26 interior or unlocated holes, 3 cavities, 6 junction clusters, 26 holes incl. crop faces",26,3,0,6,26
+2,sample_00379,"17 interior or unlocated holes, 6 junction clusters, 17 holes incl. crop faces",17,0,0,6,17
+3,sample_00340,"13 interior or unlocated holes, 3 cavities, 5 junction clusters, 13 holes incl. crop faces",13,3,0,5,13
+4,sample_00137,"9 interior or unlocated holes, 8 cavities, 9 junction clusters, 9 holes incl. crop faces",9,8,0,9,9
+5,sample_00257,"9 interior or unlocated holes, 2 cavities, 2 junction clusters, 9 holes incl. crop faces",9,2,0,2,9
+6,sample_00374,"9 interior or unlocated holes, 4 junction clusters, 9 holes incl. crop faces",9,0,0,4,9
+7,sample_00140,"8 interior or unlocated holes, 2 cavities, 5 junction clusters, 8 holes incl. crop faces",8,2,0,5,8
+8,sample_00446,"7 interior or unlocated holes, 1 cavities, 6 junction clusters, 7 holes incl. crop faces",7,1,0,6,7
+9,sample_00169,"7 interior or unlocated holes, 1 junction clusters, 7 holes incl. crop faces",7,0,0,1,7
+10,sample_00683,"6 interior or unlocated holes, 3 junction clusters, 6 holes incl. crop faces",6,0,0,3,6
+11,sample_00416,"6 interior or unlocated holes, 2 junction clusters, 6 holes incl. crop faces",6,0,0,2,6
+12,sample_00615,"6 interior or unlocated holes, 1 junction clusters, 6 holes incl. crop faces",6,0,0,1,6
+13,sample_00902,"5 interior or unlocated holes, 4 cavities, 2 junction clusters, 19 holes incl. crop faces",5,4,0,2,19
+14,sample_00244,"5 interior or unlocated holes, 3 cavities, 1 fused components, 2 junction clusters, 5 holes incl. crop faces",5,3,1,2,5
+15,sample_00682,"5 interior or unlocated holes, 1 cavities, 13 junction clusters, 5 holes incl. crop faces",5,1,0,13,5
+16,sample_00687,"5 interior or unlocated holes, 1 cavities, 4 junction clusters, 5 holes incl. crop faces",5,1,0,4,5
+17,sample_00768,"5 interior or unlocated holes, 1 junction clusters, 5 holes incl. crop faces",5,0,0,1,5
+18,sample_00833,"5 interior or unlocated holes, 6 holes incl. crop faces",5,0,0,0,6
+19,sample_00895,"4 interior or unlocated holes, 6 cavities, 1 junction clusters, 4 holes incl. crop faces",4,6,0,1,4
+20,sample_00821,"4 interior or unlocated holes, 3 cavities, 1 junction clusters, 14 holes incl. crop faces",4,3,0,1,14
+21,sample_00910,"4 interior or unlocated holes, 1 cavities, 1 fused components, 4 holes incl. crop faces",4,1,1,0,4
+22,sample_00347,"4 interior or unlocated holes, 1 cavities, 1 junction clusters, 4 holes incl. crop faces",4,1,0,1,4
+23,sample_00900,"4 interior or unlocated holes, 1 cavities, 5 holes incl. crop faces",4,1,0,0,5
+24,sample_00424,"4 interior or unlocated holes, 7 junction clusters, 4 holes incl. crop faces",4,0,0,7,4
+25,sample_00466,"4 interior or unlocated holes, 5 junction clusters, 4 holes incl. crop faces",4,0,0,5,4
+26,sample_00888,"4 interior or unlocated holes, 4 junction clusters, 7 holes incl. crop faces",4,0,0,4,7
+27,sample_00487,"4 interior or unlocated holes, 1 junction clusters, 4 holes incl. crop faces",4,0,0,1,4
+28,sample_00612,"3 interior or unlocated holes, 2 cavities, 3 junction clusters, 3 holes incl. crop faces",3,2,0,3,3
+29,sample_00822,"3 interior or unlocated holes, 2 cavities, 2 junction clusters, 14 holes incl. crop faces",3,2,0,2,14
+30,sample_00868,"3 interior or unlocated holes, 1 cavities, 4 junction clusters, 5 holes incl. crop faces",3,1,0,4,5
+31,sample_00189,"3 interior or unlocated holes, 1 cavities, 3 junction clusters, 3 holes incl. crop faces",3,1,0,3,3
+32,sample_00678,"3 interior or unlocated holes, 1 cavities, 2 junction clusters, 3 holes incl. crop faces",3,1,0,2,3
+33,sample_00363,"3 interior or unlocated holes, 1 fused components, 9 junction clusters, 7 holes incl. crop faces",3,0,1,9,7
+34,sample_00279,"3 interior or unlocated holes, 1 fused components, 3 holes incl. crop faces",3,0,1,0,3
+35,sample_00908,"3 interior or unlocated holes, 5 junction clusters, 12 holes incl. crop faces",3,0,0,5,12
+36,sample_00872,"3 interior or unlocated holes, 5 junction clusters, 5 holes incl. crop faces",3,0,0,5,5
+37,sample_00873,"3 interior or unlocated holes, 34 holes incl. crop faces",3,0,0,0,34
+38,sample_00746,"3 interior or unlocated holes, 5 holes incl. crop faces",3,0,0,0,5
+39,sample_00314,"3 interior or unlocated holes, 3 holes incl. crop faces",3,0,0,0,3
+40,sample_00842,"3 interior or unlocated holes, 3 holes incl. crop faces",3,0,0,0,3
+41,sample_00409,"2 interior or unlocated holes, 7 cavities, 3 junction clusters, 2 holes incl. crop faces",2,7,0,3,2
+42,sample_00386,"2 interior or unlocated holes, 5 cavities, 7 junction clusters, 2 holes incl. crop faces",2,5,0,7,2
+43,sample_00823,"2 interior or unlocated holes, 3 cavities, 5 junction clusters, 10 holes incl. crop faces",2,3,0,5,10
+44,sample_00341,"2 interior or unlocated holes, 1 cavities, 5 junction clusters, 2 holes incl. crop faces",2,1,0,5,2
+45,sample_00200,"2 interior or unlocated holes, 1 cavities, 2 holes incl. crop faces",2,1,0,0,2
+46,sample_00641,"2 interior or unlocated holes, 1 fused components, 5 junction clusters, 3 holes incl. crop faces",2,0,1,5,3
+47,sample_00353,"2 interior or unlocated holes, 12 junction clusters, 2 holes incl. crop faces",2,0,0,12,2
+48,sample_00853,"2 interior or unlocated holes, 7 junction clusters, 2 holes incl. crop faces",2,0,0,7,2
+49,sample_00559,"2 interior or unlocated holes, 4 junction clusters, 2 holes incl. crop faces",2,0,0,4,2
+50,sample_00184,"2 interior or unlocated holes, 3 junction clusters, 2 holes incl. crop faces",2,0,0,3,2
+51,sample_00773,"2 interior or unlocated holes, 2 junction clusters, 2 holes incl. crop faces",2,0,0,2,2
+52,sample_00161,"2 interior or unlocated holes, 1 junction clusters, 2 holes incl. crop faces",2,0,0,1,2
+53,sample_00621,"2 interior or unlocated holes, 1 junction clusters, 2 holes incl. crop faces",2,0,0,1,2
+54,sample_00915,"2 interior or unlocated holes, 4 holes incl. crop faces",2,0,0,0,4
+55,sample_00864,"2 interior or unlocated holes, 3 holes incl. crop faces",2,0,0,0,3
+56,sample_00491,"2 interior or unlocated holes, 2 holes incl. crop faces",2,0,0,0,2
+57,sample_00686,"2 interior or unlocated holes, 2 holes incl. crop faces",2,0,0,0,2
+58,sample_00791,"2 interior or unlocated holes, 2 holes incl. crop faces",2,0,0,0,2
+59,sample_00861,"2 interior or unlocated holes, 2 holes incl. crop faces",2,0,0,0,2
+60,sample_00408,"1 interior or unlocated holes, 13 cavities, 5 junction clusters, 1 holes incl. crop faces",1,13,0,5,1
+61,sample_00361,"1 interior or unlocated holes, 12 cavities, 3 junction clusters, 1 holes incl. crop faces",1,12,0,3,1
+62,sample_00796,"1 interior or unlocated holes, 3 cavities, 8 junction clusters, 1 holes incl. crop faces",1,3,0,8,1
+63,sample_00732,"1 interior or unlocated holes, 3 cavities, 1 junction clusters, 4 holes incl. crop faces",1,3,0,1,4
+64,sample_00874,"1 interior or unlocated holes, 3 cavities, 1 holes incl. crop faces",1,3,0,0,1
+65,sample_00136,"1 interior or unlocated holes, 1 cavities, 3 junction clusters, 1 holes incl. crop faces",1,1,0,3,1
+66,sample_00906,"1 interior or unlocated holes, 1 cavities, 2 junction clusters, 4 holes incl. crop faces",1,1,0,2,4
+67,sample_00913,"1 interior or unlocated holes, 1 cavities, 2 junction clusters, 4 holes incl. crop faces",1,1,0,2,4
+68,sample_00684,"1 interior or unlocated holes, 1 cavities, 1 junction clusters, 1 holes incl. crop faces",1,1,0,1,1
+69,sample_00310,"1 interior or unlocated holes, 1 cavities, 1 holes incl. crop faces",1,1,0,0,1
+70,sample_00845,"1 interior or unlocated holes, 1 cavities, 1 holes incl. crop faces",1,1,0,0,1
+71,sample_00229,"1 interior or unlocated holes, 1 fused components, 1 junction clusters, 1 holes incl. crop faces",1,0,1,1,1
+72,sample_00449,"1 interior or unlocated holes, 1 fused components, 1 holes incl. crop faces",1,0,1,0,1
+73,sample_00218,"1 interior or unlocated holes, 6 junction clusters, 1 holes incl. crop faces",1,0,0,6,1
+74,sample_00672,"1 interior or unlocated holes, 6 junction clusters, 1 holes incl. crop faces",1,0,0,6,1
+75,sample_00769,"1 interior or unlocated holes, 6 junction clusters, 1 holes incl. crop faces",1,0,0,6,1
+76,sample_00497,"1 interior or unlocated holes, 4 junction clusters, 2 holes incl. crop faces",1,0,0,4,2
+77,sample_00462,"1 interior or unlocated holes, 4 junction clusters, 1 holes incl. crop faces",1,0,0,4,1
+78,sample_00463,"1 interior or unlocated holes, 3 junction clusters, 1 holes incl. crop faces",1,0,0,3,1
+79,sample_00183,"1 interior or unlocated holes, 2 junction clusters, 1 holes incl. crop faces",1,0,0,2,1
+80,sample_00215,"1 interior or unlocated holes, 2 junction clusters, 1 holes incl. crop faces",1,0,0,2,1
+81,sample_00217,"1 interior or unlocated holes, 2 junction clusters, 1 holes incl. crop faces",1,0,0,2,1
+82,sample_00250,"1 interior or unlocated holes, 2 junction clusters, 1 holes incl. crop faces",1,0,0,2,1
+83,sample_00261,"1 interior or unlocated holes, 2 junction clusters, 1 holes incl. crop faces",1,0,0,2,1
+84,sample_00213,"1 interior or unlocated holes, 1 junction clusters, 1 holes incl. crop faces",1,0,0,1,1
+85,sample_00362,"1 interior or unlocated holes, 1 junction clusters, 1 holes incl. crop faces",1,0,0,1,1
+86,sample_00456,"1 interior or unlocated holes, 1 junction clusters, 1 holes incl. crop faces",1,0,0,1,1
+87,sample_00778,"1 interior or unlocated holes, 1 junction clusters, 1 holes incl. crop faces",1,0,0,1,1
+88,sample_00790,"1 interior or unlocated holes, 1 junction clusters, 1 holes incl. crop faces",1,0,0,1,1
+89,sample_00840,"1 interior or unlocated holes, 1 junction clusters, 1 holes incl. crop faces",1,0,0,1,1
+90,sample_00232,"1 interior or unlocated holes, 2 holes incl. crop faces",1,0,0,0,2
+91,sample_00307,"1 interior or unlocated holes, 2 holes incl. crop faces",1,0,0,0,2
+92,sample_00618,"1 interior or unlocated holes, 2 holes incl. crop faces",1,0,0,0,2
+93,sample_00786,"1 interior or unlocated holes, 2 holes incl. crop faces",1,0,0,0,2
+94,sample_00807,"1 interior or unlocated holes, 2 holes incl. crop faces",1,0,0,0,2
+95,sample_00886,"1 interior or unlocated holes, 2 holes incl. crop faces",1,0,0,0,2
+96,sample_00146,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+97,sample_00392,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+98,sample_00432,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+99,sample_00525,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+100,sample_00741,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+101,sample_00761,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+102,sample_00816,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+103,sample_00826,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+104,sample_00835,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+105,sample_00837,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+106,sample_00881,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+107,sample_00901,"1 interior or unlocated holes, 1 holes incl. crop faces",1,0,0,0,1
+108,sample_00385,"10 cavities, 3 junction clusters",0,10,0,3,0
+109,sample_00863,"8 cavities, 3 junction clusters, 1 holes incl. crop faces",0,8,0,3,1
+110,sample_00383,"8 cavities, 1 junction clusters",0,8,0,1,0
+111,sample_00352,"6 cavities, 1 junction clusters",0,6,0,1,0
+112,sample_00355,"6 cavities, 1 junction clusters",0,6,0,1,0
+113,sample_00834,6 cavities,0,6,0,0,0
+114,sample_00418,"5 cavities, 2 junction clusters",0,5,0,2,0
+115,sample_00760,"4 cavities, 1 fused components, 3 junction clusters",0,4,1,3,0
+116,sample_00378,"4 cavities, 1 junction clusters",0,4,0,1,0
+117,sample_00843,"3 cavities, 2 junction clusters",0,3,0,2,0
+118,sample_00896,"3 cavities, 1 junction clusters, 1 holes incl. crop faces",0,3,0,1,1
+119,sample_00397,"3 cavities, 1 junction clusters",0,3,0,1,0
+120,sample_00892,"3 cavities, 1 junction clusters",0,3,0,1,0
+121,sample_00348,3 cavities,0,3,0,0,0
+122,sample_00357,3 cavities,0,3,0,0,0
+123,sample_00394,3 cavities,0,3,0,0,0
+124,sample_00903,"2 cavities, 7 junction clusters, 7 holes incl. crop faces",0,2,0,7,7
+125,sample_00589,"2 cavities, 6 junction clusters",0,2,0,6,0
+126,sample_00909,"2 cavities, 3 junction clusters, 3 holes incl. crop faces",0,2,0,3,3
+127,sample_00905,"2 cavities, 2 junction clusters, 4 holes incl. crop faces",0,2,0,2,4
+128,sample_00334,"2 cavities, 2 junction clusters",0,2,0,2,0
+129,sample_00869,"2 cavities, 1 junction clusters, 2 holes incl. crop faces",0,2,0,1,2
+130,sample_00402,"2 cavities, 1 junction clusters",0,2,0,1,0
+131,sample_00373,"1 cavities, 5 junction clusters",0,1,0,5,0
+132,sample_00371,"1 cavities, 3 junction clusters",0,1,0,3,0
+133,sample_00880,"1 cavities, 2 junction clusters, 8 holes incl. crop faces",0,1,0,2,8
+134,sample_00563,"1 cavities, 2 junction clusters",0,1,0,2,0
+135,sample_00877,"1 cavities, 1 junction clusters",0,1,0,1,0
+136,sample_00854,"1 cavities, 1 holes incl. crop faces",0,1,0,0,1
+137,sample_00260,1 cavities,0,1,0,0,0
+138,sample_00562,1 cavities,0,1,0,0,0
+139,sample_00820,1 cavities,0,1,0,0,0
+140,sample_00898,1 cavities,0,1,0,0,0
+141,sample_00234,"1 fused components, 3 junction clusters",0,0,1,3,0
+142,sample_00759,"1 fused components, 3 junction clusters",0,0,1,3,0
+143,sample_00188,"1 fused components, 2 junction clusters",0,0,1,2,0
+144,sample_00405,"1 fused components, 2 junction clusters",0,0,1,2,0
+145,sample_00219,"1 fused components, 1 junction clusters, 1 holes incl. crop faces",0,0,1,1,1
+146,sample_00637,"1 fused components, 1 junction clusters, 1 holes incl. crop faces",0,0,1,1,1
+147,sample_00894,"1 fused components, 1 junction clusters, 1 holes incl. crop faces",0,0,1,1,1
+148,sample_00605,"1 fused components, 1 junction clusters",0,0,1,1,0
+149,sample_00659,"1 fused components, 1 junction clusters",0,0,1,1,0
+150,sample_00631,"1 fused components, 1 holes incl. crop faces",0,0,1,0,1
+151,sample_00238,1 fused components,0,0,1,0,0
+152,sample_00323,1 fused components,0,0,1,0,0
+153,sample_00486,1 fused components,0,0,1,0,0
+154,sample_00593,1 fused components,0,0,1,0,0
+155,sample_00384,10 junction clusters,0,0,0,10,0
+156,sample_00248,7 junction clusters,0,0,0,7,0
+157,sample_00345,7 junction clusters,0,0,0,7,0
+158,sample_00098,6 junction clusters,0,0,0,6,0
+159,sample_00349,6 junction clusters,0,0,0,6,0
+160,sample_00536,"5 junction clusters, 1 holes incl. crop faces",0,0,0,5,1
+161,sample_00056,5 junction clusters,0,0,0,5,0
+162,sample_00298,5 junction clusters,0,0,0,5,0
+163,sample_00506,5 junction clusters,0,0,0,5,0
+164,sample_00551,5 junction clusters,0,0,0,5,0
+165,sample_00577,5 junction clusters,0,0,0,5,0
+166,sample_00712,5 junction clusters,0,0,0,5,0
+167,sample_00567,"4 junction clusters, 2 holes incl. crop faces",0,0,0,4,2
+168,sample_00138,4 junction clusters,0,0,0,4,0
+169,sample_00356,4 junction clusters,0,0,0,4,0
+170,sample_00364,4 junction clusters,0,0,0,4,0
+171,sample_00365,4 junction clusters,0,0,0,4,0
+172,sample_00642,4 junction clusters,0,0,0,4,0
+173,sample_00708,4 junction clusters,0,0,0,4,0
+174,sample_00718,4 junction clusters,0,0,0,4,0
+175,sample_00875,"3 junction clusters, 6 holes incl. crop faces",0,0,0,3,6
+176,sample_00080,3 junction clusters,0,0,0,3,0
+177,sample_00132,3 junction clusters,0,0,0,3,0
+178,sample_00360,3 junction clusters,0,0,0,3,0
+179,sample_00428,3 junction clusters,0,0,0,3,0
+180,sample_00517,3 junction clusters,0,0,0,3,0
+181,sample_00574,3 junction clusters,0,0,0,3,0
+182,sample_00582,3 junction clusters,0,0,0,3,0
+183,sample_00652,3 junction clusters,0,0,0,3,0
+184,sample_00667,3 junction clusters,0,0,0,3,0
+185,sample_00675,3 junction clusters,0,0,0,3,0
+186,sample_00713,3 junction clusters,0,0,0,3,0
+187,sample_00740,3 junction clusters,0,0,0,3,0
+188,sample_00754,3 junction clusters,0,0,0,3,0
+189,sample_00803,3 junction clusters,0,0,0,3,0
+190,sample_00897,"2 junction clusters, 7 holes incl. crop faces",0,0,0,2,7
+191,sample_00865,"2 junction clusters, 3 holes incl. crop faces",0,0,0,2,3
+192,sample_00797,"2 junction clusters, 1 holes incl. crop faces",0,0,0,2,1
+193,sample_00054,2 junction clusters,0,0,0,2,0
+194,sample_00072,2 junction clusters,0,0,0,2,0
+195,sample_00139,2 junction clusters,0,0,0,2,0
+196,sample_00143,2 junction clusters,0,0,0,2,0
+197,sample_00159,2 junction clusters,0,0,0,2,0
+198,sample_00230,2 junction clusters,0,0,0,2,0
+199,sample_00239,2 junction clusters,0,0,0,2,0
+200,sample_00297,2 junction clusters,0,0,0,2,0
+201,sample_00322,2 junction clusters,0,0,0,2,0
+202,sample_00359,2 junction clusters,0,0,0,2,0
+203,sample_00375,2 junction clusters,0,0,0,2,0
+204,sample_00413,2 junction clusters,0,0,0,2,0
+205,sample_00417,2 junction clusters,0,0,0,2,0
+206,sample_00420,2 junction clusters,0,0,0,2,0
+207,sample_00421,2 junction clusters,0,0,0,2,0
+208,sample_00435,2 junction clusters,0,0,0,2,0
+209,sample_00459,2 junction clusters,0,0,0,2,0
+210,sample_00467,2 junction clusters,0,0,0,2,0
+211,sample_00471,2 junction clusters,0,0,0,2,0
+212,sample_00485,2 junction clusters,0,0,0,2,0
+213,sample_00503,2 junction clusters,0,0,0,2,0
+214,sample_00534,2 junction clusters,0,0,0,2,0
+215,sample_00616,2 junction clusters,0,0,0,2,0
+216,sample_00617,2 junction clusters,0,0,0,2,0
+217,sample_00632,2 junction clusters,0,0,0,2,0
+218,sample_00638,2 junction clusters,0,0,0,2,0
+219,sample_00663,2 junction clusters,0,0,0,2,0
+220,sample_00714,2 junction clusters,0,0,0,2,0
+221,sample_00728,2 junction clusters,0,0,0,2,0
+222,sample_00736,2 junction clusters,0,0,0,2,0
+223,sample_00751,2 junction clusters,0,0,0,2,0
+224,sample_00753,2 junction clusters,0,0,0,2,0
+225,sample_00756,2 junction clusters,0,0,0,2,0
+226,sample_00787,2 junction clusters,0,0,0,2,0
+227,sample_00798,2 junction clusters,0,0,0,2,0
+228,sample_00804,2 junction clusters,0,0,0,2,0
+229,sample_00899,"1 junction clusters, 10 holes incl. crop faces",0,0,0,1,10
+230,sample_00912,"1 junction clusters, 3 holes incl. crop faces",0,0,0,1,3
+231,sample_00852,"1 junction clusters, 2 holes incl. crop faces",0,0,0,1,2
+232,sample_00292,"1 junction clusters, 1 holes incl. crop faces",0,0,0,1,1
+233,sample_00329,"1 junction clusters, 1 holes incl. crop faces",0,0,0,1,1
+234,sample_00911,"1 junction clusters, 1 holes incl. crop faces",0,0,0,1,1
+235,sample_00008,1 junction clusters,0,0,0,1,0
+236,sample_00010,1 junction clusters,0,0,0,1,0
+237,sample_00053,1 junction clusters,0,0,0,1,0
+238,sample_00090,1 junction clusters,0,0,0,1,0
+239,sample_00108,1 junction clusters,0,0,0,1,0
+240,sample_00123,1 junction clusters,0,0,0,1,0
+241,sample_00131,1 junction clusters,0,0,0,1,0
+242,sample_00133,1 junction clusters,0,0,0,1,0
+243,sample_00134,1 junction clusters,0,0,0,1,0
+244,sample_00171,1 junction clusters,0,0,0,1,0
+245,sample_00187,1 junction clusters,0,0,0,1,0
+246,sample_00205,1 junction clusters,0,0,0,1,0
+247,sample_00214,1 junction clusters,0,0,0,1,0
+248,sample_00220,1 junction clusters,0,0,0,1,0
+249,sample_00224,1 junction clusters,0,0,0,1,0
+250,sample_00236,1 junction clusters,0,0,0,1,0
+251,sample_00246,1 junction clusters,0,0,0,1,0
+252,sample_00247,1 junction clusters,0,0,0,1,0
+253,sample_00253,1 junction clusters,0,0,0,1,0
+254,sample_00280,1 junction clusters,0,0,0,1,0
+255,sample_00282,1 junction clusters,0,0,0,1,0
+256,sample_00290,1 junction clusters,0,0,0,1,0
+257,sample_00308,1 junction clusters,0,0,0,1,0
+258,sample_00311,1 junction clusters,0,0,0,1,0
+259,sample_00313,1 junction clusters,0,0,0,1,0
+260,sample_00317,1 junction clusters,0,0,0,1,0
+261,sample_00318,1 junction clusters,0,0,0,1,0
+262,sample_00333,1 junction clusters,0,0,0,1,0
+263,sample_00339,1 junction clusters,0,0,0,1,0
+264,sample_00342,1 junction clusters,0,0,0,1,0
+265,sample_00358,1 junction clusters,0,0,0,1,0
+266,sample_00366,1 junction clusters,0,0,0,1,0
+267,sample_00370,1 junction clusters,0,0,0,1,0
+268,sample_00376,1 junction clusters,0,0,0,1,0
+269,sample_00381,1 junction clusters,0,0,0,1,0
+270,sample_00382,1 junction clusters,0,0,0,1,0
+271,sample_00387,1 junction clusters,0,0,0,1,0
+272,sample_00406,1 junction clusters,0,0,0,1,0
+273,sample_00411,1 junction clusters,0,0,0,1,0
+274,sample_00419,1 junction clusters,0,0,0,1,0
+275,sample_00430,1 junction clusters,0,0,0,1,0
+276,sample_00436,1 junction clusters,0,0,0,1,0
+277,sample_00438,1 junction clusters,0,0,0,1,0
+278,sample_00445,1 junction clusters,0,0,0,1,0
+279,sample_00447,1 junction clusters,0,0,0,1,0
+280,sample_00451,1 junction clusters,0,0,0,1,0
+281,sample_00461,1 junction clusters,0,0,0,1,0
+282,sample_00469,1 junction clusters,0,0,0,1,0
+283,sample_00470,1 junction clusters,0,0,0,1,0
+284,sample_00473,1 junction clusters,0,0,0,1,0
+285,sample_00475,1 junction clusters,0,0,0,1,0
+286,sample_00476,1 junction clusters,0,0,0,1,0
+287,sample_00478,1 junction clusters,0,0,0,1,0
+288,sample_00480,1 junction clusters,0,0,0,1,0
+289,sample_00494,1 junction clusters,0,0,0,1,0
+290,sample_00495,1 junction clusters,0,0,0,1,0
+291,sample_00502,1 junction clusters,0,0,0,1,0
+292,sample_00516,1 junction clusters,0,0,0,1,0
+293,sample_00530,1 junction clusters,0,0,0,1,0
+294,sample_00547,1 junction clusters,0,0,0,1,0
+295,sample_00549,1 junction clusters,0,0,0,1,0
+296,sample_00552,1 junction clusters,0,0,0,1,0
+297,sample_00564,1 junction clusters,0,0,0,1,0
+298,sample_00566,1 junction clusters,0,0,0,1,0
+299,sample_00571,1 junction clusters,0,0,0,1,0
+300,sample_00572,1 junction clusters,0,0,0,1,0
+301,sample_00573,1 junction clusters,0,0,0,1,0
+302,sample_00579,1 junction clusters,0,0,0,1,0
+303,sample_00592,1 junction clusters,0,0,0,1,0
+304,sample_00594,1 junction clusters,0,0,0,1,0
+305,sample_00595,1 junction clusters,0,0,0,1,0
+306,sample_00607,1 junction clusters,0,0,0,1,0
+307,sample_00623,1 junction clusters,0,0,0,1,0
+308,sample_00630,1 junction clusters,0,0,0,1,0
+309,sample_00645,1 junction clusters,0,0,0,1,0
+310,sample_00647,1 junction clusters,0,0,0,1,0
+311,sample_00649,1 junction clusters,0,0,0,1,0
+312,sample_00653,1 junction clusters,0,0,0,1,0
+313,sample_00658,1 junction clusters,0,0,0,1,0
+314,sample_00671,1 junction clusters,0,0,0,1,0
+315,sample_00679,1 junction clusters,0,0,0,1,0
+316,sample_00680,1 junction clusters,0,0,0,1,0
+317,sample_00681,1 junction clusters,0,0,0,1,0
+318,sample_00706,1 junction clusters,0,0,0,1,0
+319,sample_00716,1 junction clusters,0,0,0,1,0
+320,sample_00719,1 junction clusters,0,0,0,1,0
+321,sample_00722,1 junction clusters,0,0,0,1,0
+322,sample_00731,1 junction clusters,0,0,0,1,0
+323,sample_00733,1 junction clusters,0,0,0,1,0
+324,sample_00737,1 junction clusters,0,0,0,1,0
+325,sample_00750,1 junction clusters,0,0,0,1,0
+326,sample_00755,1 junction clusters,0,0,0,1,0
+327,sample_00770,1 junction clusters,0,0,0,1,0
+328,sample_00788,1 junction clusters,0,0,0,1,0
+329,sample_00789,1 junction clusters,0,0,0,1,0
+330,sample_00792,1 junction clusters,0,0,0,1,0
+331,sample_00878,1 junction clusters,0,0,0,1,0
+332,sample_00907,1 junction clusters,0,0,0,1,0
+333,sample_00862,31 holes incl. crop faces,0,0,0,0,31
+334,sample_00871,12 holes incl. crop faces,0,0,0,0,12
+335,sample_00813,4 holes incl. crop faces,0,0,0,0,4
+336,sample_00377,3 holes incl. crop faces,0,0,0,0,3
+337,sample_00824,2 holes incl. crop faces,0,0,0,0,2
+338,sample_00860,2 holes incl. crop faces,0,0,0,0,2
+339,sample_00916,2 holes incl. crop faces,0,0,0,0,2
+340,sample_00052,1 holes incl. crop faces,0,0,0,0,1
+341,sample_00191,1 holes incl. crop faces,0,0,0,0,1
+342,sample_00202,1 holes incl. crop faces,0,0,0,0,1
+343,sample_00425,1 holes incl. crop faces,0,0,0,0,1
+344,sample_00556,1 holes incl. crop faces,0,0,0,0,1
+345,sample_00622,1 holes incl. crop faces,0,0,0,0,1
+346,sample_00644,1 holes incl. crop faces,0,0,0,0,1
+347,sample_00808,1 holes incl. crop faces,0,0,0,0,1
+348,sample_00811,1 holes incl. crop faces,0,0,0,0,1
+349,sample_00870,1 holes incl. crop faces,0,0,0,0,1
+350,sample_00882,1 holes incl. crop faces,0,0,0,0,1
+351,sample_00884,1 holes incl. crop faces,0,0,0,0,1
+352,sample_00885,1 holes incl. crop faces,0,0,0,0,1
+353,sample_00890,1 holes incl. crop faces,0,0,0,0,1

@@ -1,0 +1,61 @@
+tile,decision,note
+2D01,NO_CHANGE,sample_00226 small hole between close parallel sheets; looks like label gap on bright papyrus
+2D02,NO_CHANGE,sample_00226 hole sits between stacked layers; likely merged-slab pocket (needs cut not fill) low confidence
+2D03,NO_CHANGE,sample_00226 same stack; pocket between merged layers vs gap unclear
+2D04,NO_CHANGE,sample_00226 same stack; pocket between merged layers
+2D05,UNCLEAR,thin red specks inside thick green lens; cannot tell if papyrus
+2D06,UNCLEAR,thin red lines between two sheets inside lens
+2D07,FALSE_ADD,big red in darker interior of lens between two bright edges; pocket filled not cut
+2D08,FALSE_ADD,red stripes across darker interior between two sheets; bridges separate sheets
+2D09,UNCLEAR,red in wedge between sheets near ignore region
+2D10,UNCLEAR,small red next to ignore edge on dim tissue
+2D11,FALSE_ADD,red in grey wedge pocket between sheets
+2D12,NO_CHANGE,sample_00257 hole at crop edge near bright rim; label gap or unclear
+2D13,GOOD_FILL,tiny red on green sheet; low confidence
+2D14,UNCLEAR,tiny red; cannot tell
+2D15,GOOD_FILL,red bridges horizontal gap in single sheet in two views
+2D16,GOOD_FILL,red closes gap in sheet
+2D17,GOOD_FILL,red closes small gap in sheet
+2D18,GOOD_FILL,red on bright slab; low confidence
+2D19,UNCLEAR,red along lower edge of lens near ignore region
+2D20,UNCLEAR,red along lower edge of lens bridges sheet gap in one view
+CL01_k2,GOOD_FILL,tiny red on bright papyrus gap between sheets
+CL02_k2,NO_CHANGE,no red; pocket between stacked sheets low confidence
+CL03_k2,NO_CHANGE,no red; pocket between stacked sheets
+CL04_k2,NO_CHANGE,no red; pocket between stacked sheets
+CL05_k2,UNCLEAR,scattered specks inside lens
+CL06_k2,UNCLEAR,specks along thin lens
+CL07_k2,UNCLEAR,speckle at interior and edges of lens; mostly noise
+CL08_k2,FALSE_ADD,red at lower-left outside green on dim tissue plus interior specks
+CL09_k2,FALSE_ADD,large red in grey wedge between sheets
+CL10_k2,FALSE_ADD,red on outer edge of sheet over dark background
+CL11_k2,NO_CHANGE,no red; wedge pocket between merged sheets
+CL12_k2,UNCLEAR,red near bright rim at ignore edge
+CL13_k2,UNCLEAR,tiny red
+CL14_k2,FALSE_ADD,red blob on dark grey between two separate sheets
+CL15_k2,NO_CHANGE,no red; real label gap in a sheet (views 2 and 3)
+CL16_k2,UNCLEAR,small specks in lens
+CL17_k2,NO_CHANGE,no red; label gap in thin sheet or tear unclear
+CL18_k2,UNCLEAR,specks on slab
+CL19_k2,NO_CHANGE,no red; doubled thin lens pocket
+CL20_k2,NO_CHANGE,no red; doubled thin lens pocket
+CL01_k3,GOOD_FILL,tiny red on bright papyrus gap between sheets
+CL02_k3,NO_CHANGE,1 voxel added; pocket between stacked sheets
+CL03_k3,NO_CHANGE,no red; pocket between stacked sheets
+CL04_k3,NO_CHANGE,no red; pocket between stacked sheets
+CL05_k3,UNCLEAR,larger red in lens interior
+CL06_k3,FALSE_ADD,red strip in dark gap between two sheets
+CL07_k3,FALSE_ADD,red fills darker lens interior
+CL08_k3,FALSE_ADD,red outside green at lower left and lens interior
+CL09_k3,FALSE_ADD,large red wedge on grey between sheets
+CL10_k3,FALSE_ADD,red along outer edge of sheet over dark background
+CL11_k3,NO_CHANGE,no red; wedge pocket between merged sheets
+CL12_k3,UNCLEAR,red near bright rim
+CL13_k3,UNCLEAR,small red along sheet
+CL14_k3,FALSE_ADD,red blob on dark grey between two separate sheets
+CL15_k3,NO_CHANGE,4 voxels only; label gap in sheet
+CL16_k3,UNCLEAR,small specks
+CL17_k3,NO_CHANGE,no red; label gap or tear unclear
+CL18_k3,UNCLEAR,specks on slab
+CL19_k3,NO_CHANGE,1 voxel; doubled thin lens pocket
+CL20_k3,NO_CHANGE,3 voxels; doubled thin lens pocket

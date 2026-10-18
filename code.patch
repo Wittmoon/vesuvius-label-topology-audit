@@ -1,0 +1,1101 @@
+diff --git a/vesuvius/README.md b/vesuvius/README.md
+index b5963d3d7..82ccbe85e 100644
+--- a/vesuvius/README.md
++++ b/vesuvius/README.md
+@@ -24,6 +24,7 @@ _this package is in active development_
+ | Name                          | Script                             | Description                                                                                                                                                                                               |
+ | ----------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+ | `vesuvius.surface_preflight`  | `surface_preflight`                | [fails closed](docs/surface-preflight.md) when a TIFXYZ surface is not structurally valid, has inconsistent metadata scale/bbox, or is not safely paired with its Zarr/OME-Zarr CT volume |
++| `vesuvius.label_topology_audit` | `image_proc.run.label_topology_audit` | [audits](docs/label-topology-audit.md) 3D surface label volumes for components, holes/cavities (Betti numbers), thickness, fusion and tiny fragments; `--after` reports before/after deltas |
+ | `vesuvius.predict`            | `models.run.inference`             | outputs logits from a pretrained nnUNet-v2 model or one trained within the Vesuvius training framework; currently only works on Zarr data and can be fully distributed with `--num_parts` and `--part_id` |
+ | `vesuvius.blend_logits`       | `models.run.blending`              | blends the logits from `vesuvius.predict` using Gaussian blending                                                                                                                                         |
+ | `vesuvius.finalize_outputs`   | `models.run.finalize_outputs`      | performs softmax / argmax / none on the blended array and writes a final `uint8` volume                                                                                                                   |
+diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
+new file mode 100644
+index 000000000..f310ca275
+--- /dev/null
++++ b/vesuvius/docs/label-topology-audit.md
+@@ -0,0 +1,179 @@
++# Label topology audit
++
++`vesuvius.label_topology_audit` measures the voxel-level topology of 3D surface
++label volumes (0 = background, 1 = surface, 2 = ignore; values configurable with
++`--surface-value` / `--ignore-value`). Use it on label crops, refined labels or
++binarised predictions to inspect holes, cavities, fragments, possible fused
++sheets and a thickness proxy before training on or trusting them. These are
++inspection signals, not verified physical defects or correct-winding judgments.
++
++Needs `connected-components-3d`, `scikit-image`, `scipy`, `tifffile` (the
++`models` extra); `matplotlib` only for `--plot`.
++
++```bash
++# one crop, JSON report
++vesuvius.label_topology_audit --label sample_00001.tif --out audit_out
++
++# overlay PNG, fail (exit 2) if any hole/handle is found
++vesuvius.label_topology_audit --label sample_00001.tif --image img.tif --plot \
++  --out audit_out --fail-on b1_total_big=0
++
++# before/after refinement
++vesuvius.label_topology_audit --label before.tif --after refined.tif --out audit_out
++
++# a folder with labels/*.tif (and optional images/*.tif)
++vesuvius.label_topology_audit --batch DATA_DIR --out audit_out
++```
++
++Outputs: `<crop>.json` (full metrics), `aggregate.csv` (one row per crop),
++`ranked.csv` with `--batch` (crops with topology/fusion/junction findings, worst first, with a one-line
++reason), `<crop>.delta.json` (`metric: [before, after]`) with `--after`,
++`<crop>.png` and `<crop>.holes.png` (three orthogonal slices per located hole,
++label green, ignore blue, hole red) with `--plot`, `<crop>.hole_mask.tif` with
++`--hole-masks`.
++
++`ranked.csv` sorts on located interior plus unlocated holes, then cavities,
++possible fused components, junction clusters, and finally located crop-face holes.
++Unlocated holes may be near a crop face; their location is unknown. Tiny-fragment
++and thickness findings appear in JSON/aggregate CSV but do not determine ranking.
++
++Labels must be nonempty 3D arrays; singleton axes are supported. Images and
++before/after labels must have matching shapes and refer to the same voxel grid
++(the shape check cannot verify registration). `--erode` and `--min-piece` must
++be positive, surface and ignore values must differ, and `--fail-on` limits must
++be finite. A batch may leave reports for earlier valid crops if a later crop fails.
++
++## Workflow: from a dataset to fixed crops
++
++`ranked.csv` works as a proofreading queue: look at the top rows first, and fix
++or drop those crops only after inspecting the supporting label and CT evidence.
++
++```bash
++# 1. audit the dataset, write hole tiles and hole masks
++vesuvius.label_topology_audit --batch DATA_DIR --plot --hole-masks --out audit_out
++
++# 2. open audit_out/ranked.csv; look at <crop>.holes.png for the top crops
++
++# 3. fill the located holes with scripts/fix_holes.py, which expects
++#    IN/<crop>/<crop>_surf.tif next to IN/<crop>/hole_mask.tif
++mkdir -p fix_in/sample_00340
++cp DATA_DIR/labels/sample_00340.tif fix_in/sample_00340/sample_00340_surf.tif
++cp audit_out/sample_00340.hole_mask.tif fix_in/sample_00340/hole_mask.tif
++# (run from vesuvius/; add --fg-value if your surface value is not 1)
++python src/vesuvius/scripts/fix_holes.py --in-dir fix_in --ignore-value 2 --method 2d_hole_fill
++
++# 4. compare topology counts, then inspect added voxels against CT;
++#    this report alone does not establish that a repair is physically correct
++vesuvius.label_topology_audit --label DATA_DIR/labels/sample_00340.tif \
++  --after fix_in/sample_00340/sample_00340_surf_2d_hole_fill.tif --out audit_out
++```
++
++## Metrics
++
++| metric | meaning |
++| --- | --- |
++| `n_components` | 26-connected foreground components |
++| `n_tiny`, `tiny_voxel_frac` | components under 100 voxels (specks) and their share of foreground |
++| `n_big_components` | components of at least 100 voxels; topology is computed for these only |
++| `b1_total_big`, `n_big_with_b1` | Betti-1: holes/handles through a sheet (a flat sheet is 0, a sheet with a hole or a torus is 1) |
++| `n_holes_located`, `holes` | holes found by location: background blobs that a 3-step closing fills and whose filling lowers b1 (centre, voxels, interior or crop face); wider holes are not located |
++| `b1_face`, `b1_interior`, `b1_unlocated` | `b1_total_big` split by location: `b1_face` is located holes centred within 6 voxels of a crop face, `b1_interior` is the rest, including `b1_unlocated` (holes too wide to locate) |
++| `b2_total_big` | Betti-2: enclosed cavities (a hollow shell is 1) |
++| `n_closed_big`, `n_closed_with_b1` | big components not touching the crop border or ignore voxels; this does not establish physical correctness |
++| `thick_*` | thickness proxy in voxel units (`2*EDT-1` at medial ridge voxels, with background padding); truncated at crop faces and not calibrated physical thickness; `frac_ge_7` is the share at 7 voxels or more |
++| `n_fused_components`, `bridge_voxels` | components that split into several large pieces after `--erode` erosion; blind on 1-3 voxel sheets |
++| `n_junction_clusters` | clusters (20+ voxels) where the structure tensor is not planar: merged sheets or bridges |
++| `largest_component_frac` | share of foreground in the biggest component |
++
++Betti numbers use the Euler characteristic (26-connected foreground, 6-connected
++background), via `vesuvius.image_proc.topology.component_betti`, which the CPU
++path of `scripts/detect_holes.py` also uses. Thresholds (tiny 100, thick 7,
++piece 500, junction ratio 0.3) are heuristics.
++
++## Results on the Kaggle surface labels
++
++All 892 crops of `surfaces/kaggle/labels` (840 at 320³, 51 at 256³, one at 384³),
++4 processes, 44 minutes:
++
++| finding | crops | total |
++| --- | --- | --- |
++| holes/handles (`b1_total_big` > 0) | 152 (17%) | 571 |
++| located, interior | 74 | 237 |
++| located, on a crop face (`b1_face`) | 71 | 257 |
++| not located (`b1_unlocated`) | 49 | 77 |
++| interior (`b1_interior` > 0: located interior + not located) | 107 (12%) | 314 |
++| cavities (`b2_total_big` > 0) | 69 (8%) | 206 |
++| junction clusters | 281 (32%) | 651 |
++| fused components | 22 (2%) | |
++| tiny fragments, thickness ≥ 7 | ~0 | |
++
++Holes cluster in the later crops: 1% of crops 0-99 have one, 49% of crops 800-899
++and 81% of crops 900+. None of the holes are caused by ignore voxels. Filling
++holes with only the ignore voxels inside them removes none of the 571. Filling
++them with background voxels removes 495. Of the 571 holes, 494 (87%) were
++located; the other 77 are too wide for a 3-step closing. Each located hole is
++measured with the earlier holes already filled, so one loop is never counted
++twice.
++
++Provisional AI spot check: 29 located holes from 20 flagged crops, plus 10 clean
++crops as controls. Each was shown as three orthogonal CT slices with the label overlaid.
++- 12 holes were judged apparent label defects: a gap inside continuous papyrus, or a
++  pocket inside two merged sheets labelled as one slab.
++- 0 were judged to match a real tear in the papyrus.
++- 17 could not be judged. Most sat on a crop face (20 of the 29 holes are within
++  5 voxels of one), which is why `ranked.csv` puts interior holes first.
++- All 10 clean controls were judged to follow the sheet.
++
++The judging was done by an AI at thumbnail resolution, not by an expert
++annotator. These counts do not establish precision or correct winding identity.
++
++### Before/after with `fix_holes.py`
++
++The 10 crops at the top of `ranked.csv`, with the audit's hole masks passed to
++`scripts/fix_holes.py`, then audited again with `--after`:
++
++| method | b1 | b2 | voxels added |
++| --- | --- | --- | --- |
++| `2d_hole_fill` | 111 → 49 | 19 → 12 | 3,731 |
++| `close`, kernel 2 | 111 → 73 | 19 → 12 | 1,997 |
++| `close`, kernel 3 | 111 → 67 | 19 → 12 | 4,689 |
++
++- `2d_hole_fill` cleared 3 crops completely (13, 17 and 9 holes to 0), and
++  took 3 more down to 1 hole each.
++- It left 3 crops unchanged (26, 9 and 7 holes). One had no located holes,
++  because they were all too wide. In the other two, the hole is not enclosed
++  within any z-slice, and `2d_hole_fill` only fills holes in z-slices.
++- Closing made one crop worse (6 holes to 7 with kernel 2, and to 8 with
++  kernel 3). This is why `--after` is worth running on any fix.
++- `fix_holes.py` only adds voxels. A pocket between two merged sheets needs a
++  cut, which no tool here makes, and these were the most common defect in the
++  spot check.
++
++A lower b1 does not mean the repair is right. We rendered the voxels each method
++added on the CT, for the four largest located holes per crop (20 tiles per
++method), and judged each tile. The judge was an AI reviewer, not an expert, and
++the tiles are small, so treat this as a warning sign rather than a measurement:
++
++| method | fill on papyrus | fill on background or between sheets | no change | unclear |
++| --- | --- | --- | --- | --- |
++| `2d_hole_fill` | 5 | 3 | 5 | 7 |
++| `close`, kernel 2 | 1 | 4 | 8 | 7 |
++| `close`, kernel 3 | 1 | 6 | 8 | 5 |
++
++Provisional inspection suggests some closing additions fill an inter-sheet wedge
++and join sheets. Run
++`--after` and look at the added voxels on the CT before keeping any automatic
++fill. Most holes that were left unchanged looked like pockets between merged
++sheets.
++
++## Related tools
++
++- `scripts/detect_holes.py` computes the same per-component Betti numbers and
++  localizes holes with persistent homology. It writes hole masks.
++- `scripts/hole_viewer.py` and `scripts/fix_holes.py` are for inspecting and
++  repairing individual crops.
++- This audit is the dataset-level pass that runs before them:
++  - it adds cavities, fusion, junction and thickness checks
++  - it separates holes on crop faces from interior ones
++  - it adds before/after deltas and `--fail-on` for CI
++  - it ranks a whole folder, so the per-crop tools go to the worst crops first
+diff --git a/vesuvius/pyproject.toml b/vesuvius/pyproject.toml
+index 8675cb622..3c3a21dc5 100644
+--- a/vesuvius/pyproject.toml
++++ b/vesuvius/pyproject.toml
+@@ -220,6 +220,7 @@ Homepage = "https://github.com/ScrollPrize/villa"
+ "vesuvius.zarr_tasks" = "vesuvius.image_proc.run.zarr_tasks.__main__:main"
+ "vesuvius.find_patches" = "vesuvius.models.preprocessing.patches.cli:main"
+ "vesuvius.surface_preflight" = "vesuvius.surface_preflight:main"
++"vesuvius.label_topology_audit" = "vesuvius.image_proc.run.label_topology_audit:main"
+ 
+ [tool.setuptools]
+ include-package-data = true
+diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+new file mode 100644
+index 000000000..57e693bc7
+--- /dev/null
++++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+@@ -0,0 +1,470 @@
++"""Voxel-level topology audit for 3D surface label volumes.
++
++Label convention (Kaggle/HF ``surfaces/kaggle``): 0 = background, 1 = surface,
++2 = ignore/unlabeled. Both values are configurable. Ignore voxels are never
++foreground; components touching them (or the crop border) are reported as
++``open`` because their topology may be truncated; this is not a defect verdict.
++
++Per crop it measures:
++  * connected components (26-connectivity): count, size histogram, tiny fragments
++  * per component: Euler characteristic and Betti numbers b1 (handles/holes
++    through a sheet) and b2 (enclosed cavities), from a padded bounding box;
++    b1 is split into ``b1_face`` (located holes centred within 6 voxels of a crop face)
++    and ``b1_interior`` (the rest, including ``b1_unlocated``: holes too wide to locate)
++  * sheet thickness: 2*EDT-1 sampled at medial-ridge voxels (local EDT maxima)
++  * fused sheets: after eroding by ``--erode`` voxels, a component that splits
++    into >= 2 pieces of >= ``--min-piece`` voxels is "fused" (blind on 1-3
++    voxel sheets, which erosion deletes)
++  * hole locations: closing-filled background blobs whose filling lowers b1
++    (centre, size, interior/crop face); ``--hole-masks`` writes them for fix_holes.py
++  * non-planar junction clusters (structure tensor): a clean sheet is rank-1;
++    a second large eigenvalue marks merged sheets or bridges
++
++Usage:
++  vesuvius.label_topology_audit --label LABEL.tif --out DIR
++  vesuvius.label_topology_audit --label LABEL.tif --image IMG.tif --out DIR --plot
++  vesuvius.label_topology_audit --label BEFORE.tif --after AFTER.tif --out DIR
++  vesuvius.label_topology_audit --batch DATA_DIR --out DIR --fail-on b1_total_big=0
++
++``--batch`` reads ``DATA_DIR/labels/*.tif`` (and ``DATA_DIR/images/<same name>``
++when present, for ``--plot``); with ``--after`` it names a directory holding
++same-named label files.
++
++Writes ``<crop>.json`` per crop, ``aggregate.csv`` for all crops,
++``ranked.csv`` (batch: crops with findings, worst first) and
++``<crop>.delta.json`` (metric: [before, after]) with ``--after``.
++Exit code 0 on success, 2 when a ``--fail-on METRIC=MAX`` limit is exceeded.
++
++Requires connected-components-3d, scikit-image, scipy and tifffile (the
++``models`` extra); matplotlib is imported only for ``--plot``.
++"""
++
++from __future__ import annotations
++
++import argparse
++import csv
++import json
++import sys
++from pathlib import Path
++from typing import Any, Sequence
++
++import numpy as np
++
++from vesuvius.image_proc.topology import component_betti
++
++TINY = 100  # voxels; components smaller than this are "tiny fragments"
++THICK = 7  # voxels; ridge thickness at or above this is flagged
++SIZE_BINS = [1, 10, 100, 1_000, 10_000, 100_000, 10**9]
++EDGE = 6  # voxels; a located hole centred closer than this to a crop face is not interior
++# ranked.csv order: most severe first; each entry is (metric, phrase for the reason column)
++SEVERITY = [("b1_interior", "interior or unlocated holes"), ("b2_total_big", "cavities"),
++            ("n_fused_components", "fused components"), ("n_junction_clusters", "junction clusters"),
++            ("b1_total_big", "holes incl. crop faces")]
++
++FLAT_KEYS = [
++    "n_components", "n_tiny", "tiny_voxel_frac", "n_big_components", "n_closed_big",
++    "b1_total_big", "b1_interior", "b1_face", "b1_unlocated", "n_holes_located", "n_big_with_b1", "n_closed_with_b1", "b2_total_big",
++    "n_fused_components", "fused_voxel_frac", "bridge_voxels",
++    "n_junction_clusters", "junction_voxel_frac", "n_components_with_junction",
++    "largest_component_frac",
++]
++
++
++def _deps():
++    try:
++        import cc3d
++        from scipy import ndimage as ndi
++        from skimage.measure import euler_number
++    except ImportError as exc:  # pragma: no cover
++        raise SystemExit(
++            f"label_topology_audit needs connected-components-3d, scipy and "
++            f"scikit-image (install the `models` extra): {exc}"
++        )
++    return cc3d, ndi, euler_number
++
++
++def component_topology(mask: np.ndarray) -> dict[str, int]:
++    """Euler number, b1, b2 of a connected binary mask (foreground 26-conn, background 6-conn)."""
++    _deps()
++    b1, b2, chi = component_betti(mask, fg_connectivity=26, bg_connectivity=6)
++    return {"euler": chi, "b1": b1, "b2": b2}
++
++
++def locate_holes(mask: np.ndarray, b1: int, blocked: np.ndarray | None = None, closing: int = 3):
++    """Hole sites of one component: blobs of background voxels that a ``closing``-step closing
++    fills and whose filling lowers b1. Holes wider than the closing are not located.
++
++    Returns (list of {"center_zyx", "voxels", "fixes"}, mask of the located blobs).
++    """
++    _, ndi, euler_number = _deps()
++    st = ndi.generate_binary_structure(3, 3)
++    p = closing + 1
++    fill = ndi.binary_closing(np.pad(mask, p), st, iterations=closing)[p:-p, p:-p, p:-p] & ~mask
++    if blocked is not None:
++        fill &= ~blocked
++    lab, _ = ndi.label(fill, st)
++    sizes = np.bincount(lab.ravel())[1:]
++    # blobs are measured against the mask with earlier blobs already filled, so two blobs
++    # that close the same loop are not both counted
++    holes, cur = [], mask.copy()
++    for j, sl in sorted(enumerate(ndi.find_objects(lab), start=1), key=lambda t: -sizes[t[0] - 1]):
++        if b1 <= 0:
++            break
++        blob = lab == j
++        # Euler number is local: a chi change in a window around the blob screens candidates
++        # before the full b1 check (filling a hole through a sheet raises chi by 1)
++        win = tuple(slice(max(s.start - 2, 0), s.stop + 2) for s in sl)
++        before = cur[win]
++        if euler_number(np.pad(before | blob[win], 1), 3) <= euler_number(np.pad(before, 1), 3):
++            continue
++        b1_after = component_topology(cur | blob)["b1"]
++        if b1_after < b1:
++            c = np.argwhere(blob).mean(0).round().astype(int)
++            holes.append({"center_zyx": c.tolist(), "voxels": int(sizes[j - 1]), "fixes": int(b1 - b1_after)})
++            cur |= blob
++            b1 = b1_after
++    return holes, cur & ~mask
++
++
++def thickness_stats(fg: np.ndarray):
++    """Thickness proxy on medial ridges; crop faces are treated as background boundaries.
++
++    Where material extends out of the crop, this is a truncated lower-bound estimate.
++    """
++    _, ndi, _ = _deps()
++    edt = ndi.distance_transform_edt(np.pad(fg, 1))[1:-1, 1:-1, 1:-1]
++    ridge = fg & (edt >= ndi.maximum_filter(edt, size=3)) & (edt > 0)
++    t = 2 * edt[ridge] - 1
++    if t.size == 0:
++        return {}, ridge, edt
++    q = np.percentile(t, [5, 50, 95, 99])
++    stats = {"p5": q[0], "median": q[1], "p95": q[2], "p99": q[3], "max": t.max(),
++             "frac_ge_7": float((t >= THICK).mean()), "n_ridge": int(t.size)}
++    return stats, ridge, edt
++
++
++def fused_sheets(fg, comp, erode, min_piece):
++    """Components that split into >=2 big pieces after erosion; returns (ids, bridge mask)."""
++    cc3d, ndi, _ = _deps()
++    ball = ndi.generate_binary_structure(3, 1)
++    core = ndi.binary_erosion(fg, ball, iterations=erode)
++    pieces = cc3d.connected_components(core, connectivity=26)
++    sizes = np.bincount(pieces.ravel())
++    big = np.flatnonzero(sizes >= min_piece)
++    big = big[big > 0]
++    keep = np.where(np.isin(pieces, big), pieces, 0)
++    idx = np.flatnonzero(keep)
++    _, first = np.unique(keep.ravel()[idx], return_index=True)
++    owners, counts = np.unique(comp.ravel()[idx[first]], return_counts=True)
++    fused = sorted(c for c, k in zip(owners.tolist(), counts.tolist()) if k >= 2)
++    # bridge voxels: fg voxels whose 3x3x3 neighbourhood touches >=2 different pieces
++    hi = ndi.maximum_filter(keep, size=3)
++    lo = ndi.minimum_filter(np.where(keep > 0, keep, np.iinfo(keep.dtype).max), size=3)
++    bridge = fg & (hi > 0) & (lo < hi) & np.isin(comp, fused)
++    return fused, bridge
++
++
++def junction_voxels(fg: np.ndarray, thresh: float = 0.3) -> np.ndarray:
++    """Non-planar spots: structure tensor of the smoothed mask has a big 2nd eigenvalue."""
++    _, ndi, _ = _deps()
++    smoothed = ndi.gaussian_filter(fg.astype(np.float32), 1.5)
++    g = [np.gradient(smoothed, axis=ax) if fg.shape[ax] > 1 else np.zeros_like(smoothed)
++         for ax in range(3)]
++    T = np.empty(fg.shape + (3, 3), np.float32)
++    for i in range(3):
++        for j in range(i, 3):
++            T[..., i, j] = T[..., j, i] = ndi.gaussian_filter(g[i] * g[j], 3)
++    ev = np.linalg.eigvalsh(T[fg])[:, ::-1] if fg.any() else np.zeros((0, 3))
++    out = np.zeros_like(fg)
++    out[fg] = ev[:, 1] / (ev[:, 0] + 1e-9) > thresh
++    m = 6  # drop crop-border artefacts (2 sigma of the tensor smoothing)
++    out[:m], out[-m:], out[:, :m], out[:, -m:], out[:, :, :m], out[:, :, -m:] = [False] * 6
++    return out
++
++
++def audit(label, erode=1, min_piece=500, surface_value=1, ignore_value=2):
++    """Return (metrics dict, flag masks dict) for one label volume."""
++    if label.ndim != 3 or label.size == 0:
++        raise ValueError(f"expected a nonempty 3D label volume, got shape {label.shape}")
++    if erode < 1 or min_piece < 1:
++        raise ValueError("--erode and --min-piece must be positive integers")
++    if ignore_value is not None and surface_value == ignore_value:
++        raise ValueError("--surface-value and --ignore-value must differ")
++    cc3d, ndi, _ = _deps()
++    ball = ndi.generate_binary_structure(3, 1)
++    fg = label == surface_value
++    unl = (label == ignore_value) if ignore_value is not None else np.zeros_like(fg)
++    comp, n = cc3d.connected_components(fg, connectivity=26, return_N=True)
++    sizes = np.bincount(comp.ravel(), minlength=n + 1)
++    # components touching the crop border or ignore voxels have truncated topology
++    near_unl = ndi.binary_dilation(unl, ball) if unl.any() else unl
++    border = np.zeros_like(fg)
++    for ax in range(3):
++        for s in (0, -1):
++            border[(slice(None),) * ax + (s,)] = True
++    open_ids = set(np.unique(comp[(border | near_unl) & fg]).tolist()) - {0}
++
++    rows, holes, hole_mask = [], [], np.zeros_like(fg)
++    for cid, sl in enumerate(ndi.find_objects(comp), start=1):
++        if sl is None:
++            continue
++        topo = component_topology(comp[sl] == cid) if sizes[cid] >= TINY else {}
++        rows.append({"id": cid, "size": int(sizes[cid]), "open": cid in open_ids, **topo})
++        if topo.get("b1"):
++            found, blobs = locate_holes(comp[sl] == cid, topo["b1"], unl[sl] | (comp[sl] > 0))
++            off = np.array([s.start for s in sl])
++            for h in found:
++                c = np.array(h["center_zyx"]) + off
++                inside = bool(np.all((c >= EDGE) & (c < np.array(fg.shape) - EDGE)))
++                holes.append({"component": cid, **h, "center_zyx": c.tolist(), "interior": inside})
++            hole_mask[sl] |= blobs
++    big = [r for r in rows if "b1" in r]
++    closed = [r for r in big if not r["open"]]
++
++    thick, ridge, edt = thickness_stats(fg)
++    fused, bridge = fused_sheets(fg, comp, erode, min_piece)
++    junc = junction_voxels(fg)
++    jl = cc3d.connected_components(junc, connectivity=26)
++    jsz = np.bincount(jl.ravel())[1:]
++    jbig = np.flatnonzero(jsz >= 20) + 1  # clusters of >=20 non-planar voxels
++    junc_comps = np.unique(comp[np.isin(jl, jbig)])
++    tiny_ids = [r["id"] for r in rows if r["size"] < TINY]
++    tiny_mask = np.isin(comp, tiny_ids)
++    thick_mask = ridge & (2 * edt - 1 >= THICK)
++
++    hist, _ = np.histogram(sizes[1:], bins=SIZE_BINS)
++    nfg = int(fg.sum())
++    m = {
++        "shape": list(label.shape),
++        "surface_value": surface_value, "ignore_value": ignore_value,
++        "fg_voxels": nfg, "fg_frac": nfg / label.size, "unlabeled_frac": float(unl.mean()),
++        "n_components": n,
++        "size_hist": {f"[{a},{b})": int(h) for a, b, h in zip(SIZE_BINS, SIZE_BINS[1:], hist)},
++        "largest_component_frac": float(sizes[1:].max() / nfg) if n else 0.0,
++        "n_tiny": len(tiny_ids), "tiny_voxel_frac": float(tiny_mask.sum() / max(nfg, 1)),
++        "n_big_components": len(big), "n_closed_big": len(closed),
++        "euler_total_big": int(sum(r["euler"] for r in big)),
++        "b1_total_big": int(sum(r["b1"] for r in big)),
++        "b1_total_closed": int(sum(r["b1"] for r in closed)),
++        "n_big_with_b1": sum(r["b1"] > 0 for r in big),
++        "n_closed_with_b1": sum(r["b1"] > 0 for r in closed),
++        "b2_total_big": int(sum(r["b2"] for r in big)),
++        "n_holes_located": int(sum(h["fixes"] for h in holes)),
++        # Legacy name: b1_interior includes unlocated holes, whose location is unknown.
++        # b1_total_big = b1_face + b1_interior; b1_interior includes b1_unlocated.
++        "b1_face": int(sum(h["fixes"] for h in holes if not h["interior"])),
++        "b1_unlocated": int(sum(r["b1"] for r in big) - sum(h["fixes"] for h in holes)),
++        "b1_interior": int(sum(r["b1"] for r in big) - sum(h["fixes"] for h in holes if not h["interior"])),
++        "holes": holes,
++        "thickness": {k: float(v) for k, v in thick.items()},
++        "n_fused_components": len(fused),
++        "fused_voxel_frac": float(np.isin(comp, fused).sum() / max(nfg, 1)),
++        "bridge_voxels": int(bridge.sum()),
++        "n_junction_clusters": int(jbig.size),
++        "junction_voxel_frac": float(junc.sum() / max(nfg, 1)),
++        "n_components_with_junction": int(junc_comps.size),
++        "components": sorted(rows, key=lambda r: -r["size"])[:25],
++    }
++    flags = {"tiny": tiny_mask, "bridge": bridge, "thick": thick_mask, "junction": junc, "hole": hole_mask}
++    return m, flags
++
++
++def flat(m: dict[str, Any]) -> dict[str, Any]:
++    t = m["thickness"]
++    return {**{k: m[k] for k in ["fg_frac", "unlabeled_frac"] + FLAT_KEYS},
++            **{f"thick_{k}": t.get(k) for k in ("p5", "median", "p95", "p99", "frac_ge_7")}}
++
++
++def overlay(img, label, flags, path, surface_value=1):
++    import matplotlib
++
++    matplotlib.use("Agg")
++    import matplotlib.pyplot as plt
++
++    any_flag = flags["tiny"] | flags["bridge"] | flags["thick"] | flags["junction"]
++    z = int(any_flag.sum(axis=(1, 2)).argmax()) if any_flag.any() else img.shape[0] // 2
++    rgb = np.repeat((img[z] / max(img[z].max(), 1))[..., None], 3, axis=2)
++    pan = [rgb.copy(), rgb.copy()]
++    sel = label[z] == surface_value
++    pan[1][sel] = 0.55 * pan[1][sel] + 0.45 * np.array([0, 0.8, 0])
++    for name, col in (("tiny", (1, 0, 0)), ("bridge", (1, 1, 0)),
++                      ("thick", (0, 1, 1)), ("junction", (1, 0, 1))):
++        pan[1][flags[name][z]] = col
++    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
++    titles = ("image", f"label green; tiny red, bridge yel, thick cyan, junction mag (z={z})")
++    for a, p, t in zip(ax, pan, titles):
++        a.imshow(p)
++        a.set_title(t, fontsize=8)
++        a.axis("off")
++    fig.tight_layout()
++    fig.savefig(path, dpi=110)
++    plt.close(fig)
++
++
++def hole_tiles(img, label, holes, hole_mask, path, surface_value=1, ignore_value=2, half=32, limit=8):
++    """Three orthogonal CT slices through each of the first ``limit`` located holes."""
++    import matplotlib
++
++    matplotlib.use("Agg")
++    import matplotlib.pyplot as plt
++
++    holes = holes[:limit]
++    fig, axs = plt.subplots(len(holes), 3, figsize=(7.5, 2.5 * len(holes)), squeeze=False)
++    scale = max(float(img.max()), 1.0)
++    for row, h in zip(axs, holes):
++        c = h["center_zyx"]
++        for axis, a in enumerate(row):
++            sl = [slice(max(q - half, 0), q + half) for q in c]
++            sl[axis] = c[axis]
++            sl = tuple(sl)
++            rgb = np.repeat((img[sl] / scale)[..., None], 3, axis=2)
++            lb = label[sl]
++            rgb[lb == surface_value] = 0.55 * rgb[lb == surface_value] + 0.45 * np.array([0, 1, 0])
++            rgb[lb == ignore_value] = 0.7 * rgb[lb == ignore_value] + 0.3 * np.array([0, 0.3, 1])
++            rgb[hole_mask[sl]] = (1, 0, 0)
++            a.imshow(rgb, interpolation="nearest")
++            a.set_xticks([])
++            a.set_yticks([])
++        tag = "interior" if h["interior"] else "crop face"
++        row[0].set_ylabel(f"zyx {c}\n{h['voxels']} vox, {tag}", fontsize=7)
++    axs[0, 1].set_title("label green, ignore blue, hole red", fontsize=8)
++    fig.tight_layout()
++    fig.savefig(path, dpi=100)
++    plt.close(fig)
++
++
++def ranked(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
++    """Crops with any finding, most severe first (lexicographic over SEVERITY), with a reason."""
++    keys = [k for k, _ in SEVERITY]
++    hit = [r for r in rows if any(r[k] for k in keys)]
++    hit.sort(key=lambda r: tuple(-r[k] for k in keys))
++    return [{"rank": i, "crop": r["crop"],
++             "reason": ", ".join(f"{r[k]} {name}" for k, name in SEVERITY if r[k]),
++             **{k: r[k] for k in keys}}
++            for i, r in enumerate(hit, start=1)]
++
++
++def _parse_fail_on(specs: Sequence[str]) -> dict[str, float]:
++    limits = {}
++    for spec in specs:
++        key, sep, val = spec.partition("=")
++        if not sep or key not in set(flat_keys()):
++            raise SystemExit(f"--fail-on expects METRIC=MAX with METRIC in {flat_keys()}: {spec!r}")
++        try:
++            limits[key] = float(val)
++        except ValueError:
++            raise SystemExit(f"--fail-on limit must be a number: {spec!r}") from None
++        if not np.isfinite(limits[key]):
++            raise SystemExit(f"--fail-on limit must be finite: {spec!r}")
++    return limits
++
++
++def flat_keys() -> list[str]:
++    return ["fg_frac", "unlabeled_frac"] + FLAT_KEYS
++
++
++def build_parser() -> argparse.ArgumentParser:
++    ap = argparse.ArgumentParser(
++        prog="vesuvius.label_topology_audit",
++        description="Audit topology (components, Betti numbers, thickness, fusion) of 3D surface labels.",
++    )
++    ap.add_argument("--label", type=Path, help="label volume (.tif)")
++    ap.add_argument("--image", type=Path, help="matching image volume; only needed for --plot")
++    ap.add_argument("--batch", type=Path, help="directory with labels/*.tif (and optional images/)")
++    ap.add_argument("--after", type=Path,
++                    help="second label volume (batch: directory of same-named files); writes <crop>.delta.json")
++    ap.add_argument("--out", type=Path, default=Path("audit_out"), help="output directory")
++    ap.add_argument("--surface-value", type=int, default=1, help="label value of the surface")
++    ap.add_argument("--ignore-value", type=int, default=2,
++                    help="label value of ignored/unlabeled voxels (-1 to disable)")
++    ap.add_argument("--erode", type=int, default=1, help="erosion iterations for the fusion test")
++    ap.add_argument("--min-piece", type=int, default=500, help="minimum voxels of a post-erosion piece")
++    ap.add_argument("--plot", action="store_true", help="write overlay PNGs (needs --image / batch images)")
++    ap.add_argument("--hole-masks", action="store_true",
++                    help="write <crop>.hole_mask.tif (located holes = 1), the input format of scripts/fix_holes.py")
++    ap.add_argument("--fail-on", action="append", default=[], metavar="METRIC=MAX",
++                    help="exit 2 if a crop's metric (or its --after volume's) exceeds MAX (repeatable), e.g. b1_total_big=0")
++    return ap
++
++
++def main(argv: Sequence[str] | None = None) -> int:
++    import tifffile
++
++    ap = build_parser()
++    a = ap.parse_args(argv)
++    if bool(a.label) == bool(a.batch):
++        ap.error("give exactly one of --label or --batch")
++    limits = _parse_fail_on(a.fail_on)
++    ignore = None if a.ignore_value < 0 else a.ignore_value
++
++    if a.batch:
++        labels = sorted((a.batch / "labels").glob("*.tif"))
++        if not labels:
++            ap.error(f"no labels/*.tif under {a.batch}")
++        jobs = [(p, a.batch / "images" / p.name, a.after / p.name if a.after else None) for p in labels]
++        missing = [str(j[2]) for j in jobs if j[2] is not None and not j[2].exists()]
++        if missing:
++            ap.error(f"--after is missing {len(missing)} paired file(s), e.g. {missing[0]}")
++    else:
++        jobs = [(a.label, a.image, a.after)]
++
++    rows, failed = [], False
++    for label_path, image_path, after_path in jobs:
++        name = label_path.stem
++        lab = tifffile.imread(label_path)
++        after_lab = tifffile.imread(after_path) if after_path else None
++        if after_lab is not None and after_lab.shape != lab.shape:
++            ap.error(f"{name}: --after shape {after_lab.shape} differs from label shape {lab.shape}")
++        img = None
++        if a.plot and image_path is not None and Path(image_path).exists():
++            img = tifffile.imread(image_path)
++            if img.shape != lab.shape:
++                ap.error(f"{name}: image shape {img.shape} differs from label shape {lab.shape}")
++        try:
++            m, flags = audit(lab, a.erode, a.min_piece, a.surface_value, ignore)
++            if after_lab is not None:
++                m2, _ = audit(after_lab, a.erode, a.min_piece, a.surface_value, ignore)
++        except ValueError as exc:
++            ap.error(f"{name}: {exc}")
++        a.out.mkdir(parents=True, exist_ok=True)
++        (a.out / f"{name}.json").write_text(json.dumps(m, indent=1))
++        f = flat(m)
++        rows.append({"crop": name, **f})
++        print(name, json.dumps(f), flush=True)
++        if a.plot:
++            if img is None:
++                print(f"{name}: --plot skipped, no image", file=sys.stderr)
++            else:
++                overlay(img, lab, flags, a.out / f"{name}.png", a.surface_value)
++                if m["holes"]:
++                    hole_tiles(img, lab, m["holes"], flags["hole"], a.out / f"{name}.holes.png",
++                               a.surface_value, -1 if ignore is None else ignore)
++        if a.hole_masks:
++            tifffile.imwrite(a.out / f"{name}.hole_mask.tif", flags["hole"].astype(np.uint8))
++        if after_path:
++            f2 = flat(m2)
++            delta = {k: [f[k], f2[k]] for k in f}
++            (a.out / f"{name}.delta.json").write_text(json.dumps(delta, indent=1))
++            print("delta (before, after):", json.dumps(delta))
++        checked = [("", f)] + ([(" (after)", f2)] if after_path else [])
++        for tag, vals in checked:
++            for key, limit in limits.items():
++                if vals[key] > limit:
++                    print(f"FAIL {name}{tag}: {key}={vals[key]} > {limit}", file=sys.stderr)
++                    failed = True
++    with open(a.out / "aggregate.csv", "w", newline="") as fh:
++        w = csv.DictWriter(fh, fieldnames=list(rows[0]))
++        w.writeheader()
++        w.writerows(rows)
++    if a.batch:
++        top = ranked(rows)
++        with open(a.out / "ranked.csv", "w", newline="") as fh:
++            w = csv.DictWriter(fh, fieldnames=["rank", "crop", "reason"] + [k for k, _ in SEVERITY])
++            w.writeheader()
++            w.writerows(top)
++        print(f"{len(top)} of {len(rows)} crops have findings; worst first in {a.out / 'ranked.csv'}")
++    return 2 if failed else 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/vesuvius/src/vesuvius/image_proc/topology.py b/vesuvius/src/vesuvius/image_proc/topology.py
+new file mode 100644
+index 000000000..e644a8e87
+--- /dev/null
++++ b/vesuvius/src/vesuvius/image_proc/topology.py
+@@ -0,0 +1,37 @@
++"""Betti numbers of a single connected binary component (CPU)."""
++
++from __future__ import annotations
++
++import numpy as np
++from scipy import ndimage as ndi
++
++
++def conn_to_skimage(conn: int, ndim: int) -> int:
++    """Voxel connectivity (6/18/26 in 3D, 4/8 in 2D) to the skimage/scipy rank."""
++    if ndim == 3:
++        mapping = {6: 1, 18: 2, 26: 3}
++    elif ndim == 2:
++        mapping = {4: 1, 8: 2}
++    else:
++        raise ValueError(f"Unsupported ndim={ndim}")
++    if conn not in mapping:
++        raise ValueError(f"Invalid connectivity {conn} for ndim={ndim}")
++    return mapping[conn]
++
++
++def component_betti(mask: np.ndarray, fg_connectivity: int = 26, bg_connectivity: int = 6) -> tuple[int, int, int]:
++    """(b1, b2, euler) of one connected component, via b1 = b0 + b2 - chi with b0 = 1.
++
++    b2 counts background components that do not reach the padded border. Use complementary
++    connectivities (26/6 or 6/26 in 3D) so the Euler number and the cavity count agree. 2D: b2 = 0.
++    """
++    from skimage.measure import euler_number
++
++    m = np.pad(mask.astype(bool), 1)
++    chi = int(euler_number(m, connectivity=conn_to_skimage(fg_connectivity, m.ndim)))
++    if m.ndim == 2:
++        return 1 - chi, 0, chi
++    st = ndi.generate_binary_structure(3, conn_to_skimage(bg_connectivity, 3))
++    _, n = ndi.label(~m, structure=st)
++    b2 = n - 1  # the padding shell joins all outside background into one component
++    return 1 + b2 - chi, b2, chi
+diff --git a/vesuvius/src/vesuvius/scripts/detect_holes.py b/vesuvius/src/vesuvius/scripts/detect_holes.py
+index dc8729440..281a5c3fc 100644
+--- a/vesuvius/src/vesuvius/scripts/detect_holes.py
++++ b/vesuvius/src/vesuvius/scripts/detect_holes.py
+@@ -41,6 +41,8 @@ from tqdm import tqdm
+ 
+ from scipy import ndimage as ndi
+ 
++from vesuvius.image_proc.topology import component_betti, conn_to_skimage
++
+ try:
+     import cripser
+     _HAS_CRIPSER = True
+@@ -126,16 +128,7 @@ def load_tif_3d(path: Path, allow_2d: bool = False) -> np.ndarray:
+     return arr
+ 
+ 
+-def _conn_to_skimage(conn: int, ndim: int) -> int:
+-    if ndim == 3:
+-        mapping = {6: 1, 18: 2, 26: 3}
+-    elif ndim == 2:
+-        mapping = {4: 1, 8: 2}
+-    else:
+-        raise ValueError(f"Unsupported ndim={ndim}")
+-    if conn not in mapping:
+-        raise ValueError(f"Invalid connectivity {conn} for ndim={ndim}")
+-    return mapping[conn]
++_conn_to_skimage = conn_to_skimage
+ 
+ 
+ def _border_mask(shape: Tuple[int, ...]) -> np.ndarray:
+@@ -183,33 +176,27 @@ def compute_component_topology(
+     Returns (holes_b1, cavities_b2, euler_characteristic) for a single component mask.
+     For 3D, uses b1 = b0 + b2 - chi, with b0=1.
+     """
+-    comp = comp.astype(bool)
+-    comp_pad = np.pad(comp, pad_width=1, mode="constant", constant_values=False)
++    if use_cpu:
++        if not _HAS_SKIMAGE:
++            raise ImportError("scikit-image is required for --cpu (Euler number).")
++        return component_betti(comp, fg_connectivity, bg_connectivity)
++    if not _HAS_CUPY:
++        raise ImportError("CuPy/cuCIM not available; use --cpu to run on CPU.")
++
++    comp_pad = np.pad(comp.astype(bool), pad_width=1, mode="constant", constant_values=False)
+ 
+     # Cavities: background components not connected to the padded border
+-    bg = ~comp_pad
+-    if use_cpu:
+-        struct_bg = ndi.generate_binary_structure(comp_pad.ndim, _conn_to_skimage(bg_connectivity, comp_pad.ndim))
+-        bg_lab, num_bg = ndi.label(bg.astype(np.uint8), structure=struct_bg)
+-    else:
+-        if not _HAS_CUPY:
+-            raise ImportError("CuPy/cuCIM not available; use --cpu to run on CPU.")
+-        bg_gpu = cp.asarray(bg.astype(np.uint8))
+-        bg_lab = cp.asnumpy(cucim_label(bg_gpu, connectivity=_conn_to_skimage(bg_connectivity, comp_pad.ndim)))
+-        num_bg = int(bg_lab.max())
++    bg_gpu = cp.asarray((~comp_pad).astype(np.uint8))
++    bg_lab = cp.asnumpy(cucim_label(bg_gpu, connectivity=_conn_to_skimage(bg_connectivity, comp_pad.ndim)))
++    num_bg = int(bg_lab.max())
+     border = _border_mask(bg_lab.shape)
+     outside_ids = np.unique(bg_lab[border])
+     outside_ids = outside_ids[outside_ids > 0]
+     cavities = int(num_bg - outside_ids.size)
+ 
+     # Euler characteristic (digital topology)
+-    if use_cpu:
+-        if not _HAS_SKIMAGE:
+-            raise ImportError("scikit-image is required for --cpu (Euler number).")
+-        chi = int(sk_euler_number(comp_pad, connectivity=_conn_to_skimage(fg_connectivity, comp_pad.ndim)))
+-    else:
+-        comp_pad_gpu = cp.asarray(comp_pad)
+-        chi = int(cucim_euler_number(comp_pad_gpu, connectivity=_conn_to_skimage(fg_connectivity, comp_pad.ndim)))
++    comp_pad_gpu = cp.asarray(comp_pad)
++    chi = int(cucim_euler_number(comp_pad_gpu, connectivity=_conn_to_skimage(fg_connectivity, comp_pad.ndim)))
+ 
+     # Betti numbers for a single component (b0 = 1)
+     if comp_pad.ndim == 3:
+diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
+new file mode 100644
+index 000000000..750dc51aa
+--- /dev/null
++++ b/vesuvius/tests/test_label_topology_audit.py
+@@ -0,0 +1,289 @@
++from __future__ import annotations
++
++import json
++
++import numpy as np
++import pytest
++import tifffile
++
++pytest.importorskip("cc3d")
++pytest.importorskip("skimage")
++
++from vesuvius.image_proc.run import label_topology_audit as lta  # noqa: E402
++
++
++def sheet(shape=(40, 40, 40), z0=18, z1=20):
++    v = np.zeros(shape, np.uint8)
++    v[z0:z1, 4:-4, 4:-4] = 1
++    return v
++
++
++def torus(shape=(40, 40, 40), R=10, r=4):
++    z, y, x = np.indices(shape) - np.array(shape)[:, None, None, None] / 2
++    return (((np.hypot(y, x) - R) ** 2 + z**2) <= r**2).astype(np.uint8)
++
++
++def shell(shape=(40, 40, 40), r_out=12, r_in=9):
++    d = np.sqrt(((np.indices(shape) - np.array(shape)[:, None, None, None] / 2) ** 2).sum(0))
++    return ((d <= r_out) & (d > r_in)).astype(np.uint8)
++
++
++def test_flat_sheet_has_no_holes_or_cavities_and_is_thin():
++    m, _ = lta.audit(sheet())
++    assert (m["b1_total_big"], m["b2_total_big"], m["n_components"]) == (0, 0, 1)
++    assert 1 <= m["thickness"]["median"] <= 3
++
++
++def test_torus_has_one_handle():
++    m, _ = lta.audit(torus())
++    assert (m["b1_total_big"], m["b2_total_big"]) == (1, 0)
++
++
++def test_sheet_with_hole_has_one_handle():
++    v = sheet()
++    v[:, 18:24, 18:24] = 0
++    m, _ = lta.audit(v)
++    assert (m["b1_total_big"], m["b2_total_big"], m["n_components"]) == (1, 0, 1)
++
++
++def test_hollow_shell_has_one_cavity():
++    m, _ = lta.audit(shell())
++    assert (m["b2_total_big"], m["b1_total_big"]) == (1, 0)
++
++
++def test_cavity_closed_only_diagonally_counts_as_cavity():
++    # 26-connected foreground pairs with 6-connected background: a cavity whose only route
++    # outside is a diagonal (edge) step between two removed wall voxels is still closed.
++    # With the wrong pairing it would leak (b2=0) or get a spurious handle.
++    v = np.zeros((30, 30, 30), np.uint8)
++    v[4:26, 4:26, 4:26] = 1
++    v[6:24, 6:24, 6:24] = 0          # 2-voxel-thick hollow cube
++    v[4, 15, 15] = 0                 # outer wall layer
++    v[5, 16, 15] = 0                 # inner wall layer, edge-adjacent only
++    m, _ = lta.audit(v)
++    assert (m["b2_total_big"], m["b1_total_big"]) == (1, 0)
++
++
++def test_specks_are_counted_as_tiny_fragments():
++    v = sheet()
++    for i in range(5):
++        v[2, 2 + 6 * i, 2] = 1  # isolated single voxels
++    m, _ = lta.audit(v)
++    assert m["n_components"] == 6 and m["n_tiny"] == 5
++    assert m["n_big_components"] == 1 and m["b1_total_big"] == 0
++
++
++def test_ignore_voxels_are_not_foreground_and_mark_components_open():
++    v = sheet()
++    v[18:20, 20:24, 20:24] = 2
++    m, _ = lta.audit(v)
++    assert m["fg_voxels"] == int((v == 1).sum())
++    assert m["unlabeled_frac"] > 0
++    assert m["n_closed_big"] == 0  # touches ignore voxels
++    # the same bytes read with another surface value are a different volume
++    m2, _ = lta.audit(v, surface_value=2, ignore_value=0)
++    assert m2["fg_voxels"] == 4 * 4 * 2
++
++
++def test_interior_component_is_closed():
++    v = np.zeros((40, 40, 40), np.uint8)
++    v[18:20, 10:30, 10:30] = 1
++    m, _ = lta.audit(v)
++    assert m["n_closed_big"] == 1
++
++
++def test_cli_after_delta_and_fail_on(tmp_path):
++    before, after = sheet(), sheet()
++    after[:, 18:24, 18:24] = 0
++    tifffile.imwrite(tmp_path / "before.tif", before)
++    tifffile.imwrite(tmp_path / "after.tif", after)
++    out = tmp_path / "out"
++    rc = lta.main(["--label", str(tmp_path / "before.tif"), "--after", str(tmp_path / "after.tif"),
++                   "--out", str(out)])
++    assert rc == 0
++    delta = json.loads((out / "before.delta.json").read_text())
++    assert delta["b1_total_big"] == [0, 1]
++    assert (out / "aggregate.csv").exists()
++    rc = lta.main(["--label", str(tmp_path / "after.tif"), "--out", str(out),
++                   "--fail-on", "b1_total_big=0"])
++    assert rc == 2
++    # a regression only in the --after volume must also fail
++    rc = lta.main(["--label", str(tmp_path / "before.tif"), "--after", str(tmp_path / "after.tif"),
++                   "--out", str(out), "--fail-on", "b1_total_big=0"])
++    assert rc == 2
++    with pytest.raises(SystemExit):
++        lta.main(["--label", str(tmp_path / "before.tif"), "--out", str(out), "--fail-on", "b1_total_big=abc"])
++
++
++def test_batch_after_missing_pair_errors_before_writing(tmp_path):
++    (tmp_path / "labels").mkdir(); (tmp_path / "after").mkdir()
++    tifffile.imwrite(tmp_path / "labels" / "a.tif", sheet())
++    out = tmp_path / "out"
++    with pytest.raises(SystemExit):
++        lta.main(["--batch", str(tmp_path), "--after", str(tmp_path / "after"), "--out", str(out)])
++    assert not out.exists()
++
++
++def test_hole_at_crop_face_is_excluded_from_interior_b1():
++    # holes cut at the crop face are mostly unjudgeable slivers in the Kaggle crops; the
++    # interior count is what ranked.csv sorts on, so a face hole must not inflate it
++    face, mid = sheet(), sheet()
++    face[:, 4:7, 18:22] = 0     # hole whose rim is the first labelled rows next to the face
++    face[:, 3, 18:22] = 1       # close it off so it is a hole, not a notch
++    mid[:, 18:22, 18:22] = 0
++    mf, _ = lta.audit(face)
++    mm, _ = lta.audit(mid)
++    assert (mf["b1_total_big"], mf["b1_interior"], mf["b1_face"]) == (1, 0, 1)
++    assert (mm["b1_total_big"], mm["b1_interior"], mm["b1_face"], mm["b1_unlocated"]) == (1, 1, 0, 0)
++
++    # a crop thinner than twice the face margin has no interior
++    tiny = np.zeros((10, 40, 40), np.uint8); tiny[2:8, 4:-4, 4:-4] = 1; tiny[2:8, 18:22, 18:22] = 0
++    mt, _ = lta.audit(tiny)
++    assert (mt["b1_total_big"], mt["b1_interior"]) == (1, 0)
++
++
++def test_ranked_puts_interior_holes_first_and_drops_clean_crops():
++    base = {k: 0 for k, _ in lta.SEVERITY}
++    rows = [{"crop": "clean", **base},
++            {"crop": "junctions", **base, "n_junction_clusters": 9},
++            {"crop": "face_hole", **base, "b1_total_big": 5},
++            {"crop": "hole", **base, "b1_interior": 1, "b1_total_big": 1}]
++    r = lta.ranked(rows)
++    assert [x["crop"] for x in r] == ["hole", "junctions", "face_hole"]
++    assert r[0]["rank"] == 1 and r[0]["reason"] == "1 interior or unlocated holes, 1 holes incl. crop faces"
++
++
++def test_batch_writes_ranked_csv(tmp_path):
++    (tmp_path / "labels").mkdir()
++    holed = sheet(); holed[:, 18:24, 18:24] = 0
++    tifffile.imwrite(tmp_path / "labels" / "a_clean.tif", sheet())
++    tifffile.imwrite(tmp_path / "labels" / "b_holed.tif", holed)
++    out = tmp_path / "out"
++    assert lta.main(["--batch", str(tmp_path), "--out", str(out)]) == 0
++    lines = (out / "ranked.csv").read_text().splitlines()
++    assert len(lines) == 2 and lines[1].startswith("1,b_holed,")
++
++
++def test_detect_holes_cpu_topology_matches_known_shapes():
++    # detect_holes/hole_viewer now get their CPU Betti numbers from the shared helper;
++    # both connectivity pairings must still give the textbook answers
++    dh = pytest.importorskip("vesuvius.scripts.detect_holes")
++    for fg, bg in ((26, 6), (6, 26)):
++        topo = lambda v: dh.compute_component_topology(v, fg_connectivity=fg, bg_connectivity=bg, use_cpu=True)[:2]
++        assert (topo(torus()), topo(shell()), topo(sheet())) == ((1, 0), (0, 1), (0, 0))
++
++
++def test_holes_are_located_where_they_are():
++    # locations are what make a flag checkable (and fixable with fix_holes.py), so each
++    # small hole must come back at its own position
++    v = sheet()
++    v[:, 10:13, 10:13] = 0
++    v[:, 26:29, 24:27] = 0
++    m, flags = lta.audit(v)
++    assert m["b1_total_big"] == m["n_holes_located"] == 2
++    centres = sorted(tuple(h["center_zyx"][1:]) for h in m["holes"])
++    assert centres == [(11, 11), (27, 25)]
++    assert flags["hole"].sum() == 2 * 9 * 2 and not (flags["hole"] & (v == 1)).any()
++
++
++def test_wide_hole_is_not_located_but_still_counts_as_interior():
++    v = sheet()
++    v[:, 12:28, 12:28] = 0           # 16 voxels across, wider than the 3-step closing reaches
++    m, _ = lta.audit(v)
++    assert (m["b1_total_big"], m["n_holes_located"], m["b1_interior"]) == (1, 0, 1)
++    assert (m["b1_face"], m["b1_unlocated"]) == (0, 1)
++
++
++def test_one_loop_closed_from_two_sides_is_counted_once():
++    # tube A (long) and tube B (short, narrow bore) joined by a bridge: b1 = 2. An ignore plug
++    # splits A's bore into two blobs, and filling either caps A. Counting both against the
++    # original b1 would use up b1 on A and never locate B's hole.
++    z, y, x = np.mgrid[:24, :16, :30]
++    ra, rb = np.hypot(y - 7.5, x - 7.5), np.hypot(y - 7.5, x - 21.5)
++    v = (ra < 4) & (ra >= 2) & (z >= 2) & (z < 22)
++    v |= (rb < 4) & (rb >= 1) & (z >= 2) & (z < 8)
++    v |= (z >= 2) & (z < 4) & (y >= 5) & (y < 11) & (x >= 10) & (x < 20) & ~((ra < 2) | (rb < 1))
++    plug = (ra < 2) & (z >= 11) & (z < 13)
++    assert lta.component_topology(v)["b1"] == 2
++    holes, found = lta.locate_holes(v, 2, plug)
++    assert sorted(h["center_zyx"][2] > 15 for h in holes) == [False, True]   # one per tube
++    assert sum(h["fixes"] for h in holes) == 2
++    assert not (found & plug).any()
++
++
++def test_cli_hole_masks_and_hole_tiles(tmp_path):
++    pytest.importorskip("matplotlib")
++    v = sheet()
++    v[:, 18:21, 18:21] = 0
++    tifffile.imwrite(tmp_path / "lab.tif", v)
++    tifffile.imwrite(tmp_path / "img.tif", (v * 200).astype(np.uint8))
++    out = tmp_path / "out"
++    assert lta.main(["--label", str(tmp_path / "lab.tif"), "--image", str(tmp_path / "img.tif"),
++                     "--out", str(out), "--plot", "--hole-masks"]) == 0
++    mask = tifffile.imread(out / "lab.hole_mask.tif")
++    assert mask.sum() == 9 * 2 and mask[18:20, 18:21, 18:21].all()
++    assert (out / "lab.holes.png").exists()
++
++
++@pytest.mark.parametrize("limit", ["nan", "inf", "-inf"])
++def test_cli_rejects_nonfinite_limits_before_writing(tmp_path, limit):
++    out = tmp_path / "out"
++    with pytest.raises(SystemExit):
++        lta.main(["--label", str(tmp_path / "unused.tif"), "--out", str(out),
++                  "--fail-on", f"b1_total_big={limit}"])
++    assert not out.exists()
++
++
++@pytest.mark.parametrize("extra", [["--erode", "0"], ["--erode", "-1"],
++                                   ["--min-piece", "0"], ["--ignore-value", "1"]])
++def test_cli_rejects_invalid_audit_options_before_writing(tmp_path, extra):
++    tifffile.imwrite(tmp_path / "label.tif", sheet())
++    out = tmp_path / "out"
++    with pytest.raises(SystemExit):
++        lta.main(["--label", str(tmp_path / "label.tif"), "--out", str(out), *extra])
++    assert not out.exists()
++
++
++@pytest.mark.parametrize("paired_option", ["--after", "--image"])
++def test_cli_rejects_mismatched_volume_shapes_before_writing(tmp_path, paired_option):
++    tifffile.imwrite(tmp_path / "label.tif", sheet())
++    tifffile.imwrite(tmp_path / "mismatch.tif", sheet()[:20])
++    out = tmp_path / "out"
++    with pytest.raises(SystemExit):
++        lta.main(["--label", str(tmp_path / "label.tif"), "--out", str(out),
++                  paired_option, str(tmp_path / "mismatch.tif"), "--plot"])
++    assert not out.exists()
++
++
++def test_audit_rejects_2d_or_empty_input_with_clear_error():
++    for label in [np.zeros((20, 20), np.uint8), np.zeros((0, 20, 20), np.uint8)]:
++        with pytest.raises(ValueError, match="nonempty 3D"):
++            lta.audit(label)
++
++
++def test_singleton_axis_and_empty_foreground_are_supported():
++    label = np.ones((1, 20, 20), np.uint8)
++    metrics, _ = lta.audit(label)
++    assert metrics["n_components"] == 1
++    assert metrics["thickness"]["median"] == 1
++    metrics, _ = lta.audit(np.zeros((10, 10, 10), np.uint8))
++    assert metrics["n_components"] == metrics["b1_total_big"] == 0
++    assert metrics["thickness"] == {}
++
++
++def test_thickness_treats_all_crop_faces_as_truncated_boundaries():
++    # A full 10-voxel cube has no observed external background. Padding supplies a
++    # symmetric crop boundary; the lower-bound thickness must not exceed the crop.
++    stats, _, edt = lta.thickness_stats(np.ones((10, 10, 10), bool))
++    assert stats["max"] == 9
++    assert np.array_equal(edt, edt[::-1, ::-1, ::-1])
++
++
++def test_fusion_heuristic_flags_thick_lobes_joined_by_a_thin_bridge():
++    label = np.zeros((30, 30, 50), np.uint8)
++    label[8:22, 8:22, 4:18] = 1
++    label[8:22, 8:22, 32:46] = 1
++    label[14:16, 14:16, 18:32] = 1
++    metrics, _ = lta.audit(label)
++    assert metrics["n_components"] == metrics["n_fused_components"] == 1
++    assert metrics["fused_voxel_frac"] == 1

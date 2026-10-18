@@ -1,0 +1,9 @@
+{
+  "upstream_main": "1db9cd94487c2fb5e759cc4ee72018dcb7359984",
+  "patch_sha256": "bd91b0d2c70ace2ade2eb25c5f5703c6813ee31ec0eeffc603f1f499eb646351",
+  "patch_applied": true,
+  "source": "Temporary export of latest upstream source with the full contribution patch applied. Existing local dependencies reused; no installation performed.",
+  "test_exit_code": 0,
+  "test_output": "...............................                                          [100%]\n31 passed in 3.98s",
+  "scope": "31 audit tests; not a full monorepo or GPU test suite."
+}

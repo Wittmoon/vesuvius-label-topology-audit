@@ -1,0 +1,83 @@
+{
+  "review_date": "2026-10-18",
+  "cases": [
+    {
+      "crop": "sample_00226",
+      "input_sha256": {
+        "<data-root>/labels/sample_00226.tif": "c76245b987fcd4adabd46a23dc66442067ec9822e7504eed1bdfc84d1bdfba5f",
+        "<data-root>/images/sample_00226.tif": "65339f9ae2415241757d0239965e909cd19d30157271f04cc868ade7f4ab2ad2"
+      },
+      "cli_arguments": [
+        "--label",
+        "<data-root>/labels/sample_00226.tif",
+        "--out",
+        "<out>/sample_00226",
+        "--hole-masks",
+        "--image",
+        "<data-root>/images/sample_00226.tif",
+        "--plot"
+      ],
+      "exit_code": 0,
+      "seconds": 20.581825166998897,
+      "b1_total_big": 26,
+      "non_thickness_metrics_match_recorded_run": true,
+      "changed_metrics": {},
+      "repair_b1_before_after": null
+    },
+    {
+      "crop": "sample_00340",
+      "input_sha256": {
+        "<data-root>/labels/sample_00340.tif": "e93fb65d9eb5952c5f1ee0faf335a427f9f77ce11d33e3363e7f9d6606cff2c2",
+        "<data-root>/images/sample_00340.tif": "ad6a6a5cdba1309692b103597e3b3e841c8159d66058837b24877fdaa6280b98",
+        "<data-root>/fix/2d_hole_fill/after/sample_00340.tif": "ec5fc260d6c4fa39908fb68b0254195779c32529d01a601be37ce7df1c72fa9d"
+      },
+      "cli_arguments": [
+        "--label",
+        "<data-root>/labels/sample_00340.tif",
+        "--out",
+        "<out>/sample_00340",
+        "--hole-masks",
+        "--image",
+        "<data-root>/images/sample_00340.tif",
+        "--plot",
+        "--after",
+        "<data-root>/fix/2d_hole_fill/after/sample_00340.tif"
+      ],
+      "exit_code": 0,
+      "seconds": 24.47568170899467,
+      "b1_total_big": 13,
+      "non_thickness_metrics_match_recorded_run": true,
+      "changed_metrics": {},
+      "repair_b1_before_after": [
+        13,
+        0
+      ]
+    },
+    {
+      "crop": "sample_00173",
+      "input_sha256": {
+        "<data-root>/labels/sample_00173.tif": "d60a76180c260561eadbe496fb73b9ed2a3661631871a4d922863ee1451e2af8",
+        "<data-root>/images/sample_00173.tif": "a97f8e4e5726a9a50c73699cb0edf560da409655ba96805696099db7ed8489c0"
+      },
+      "cli_arguments": [
+        "--label",
+        "<data-root>/labels/sample_00173.tif",
+        "--out",
+        "<out>/sample_00173",
+        "--hole-masks",
+        "--image",
+        "<data-root>/images/sample_00173.tif",
+        "--plot"
+      ],
+      "exit_code": 0,
+      "seconds": 13.411723124998389,
+      "b1_total_big": 0,
+      "non_thickness_metrics_match_recorded_run": true,
+      "changed_metrics": {},
+      "repair_b1_before_after": null
+    }
+  ],
+  "scope": "Three real-data compatibility checks; not a full 892-crop rerun or physical validation.",
+  "full_dataset_evidence_commit": "ace26f2fcc75fce9b2b9be069c57bc66f075c6fd",
+  "input_files_unchanged": true
+}

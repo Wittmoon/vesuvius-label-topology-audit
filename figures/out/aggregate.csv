@@ -1,0 +1,2 @@
+crop,fg_frac,unlabeled_frac,n_components,n_tiny,tiny_voxel_frac,n_big_components,n_closed_big,b1_total_big,b1_interior,b1_face,b1_unlocated,n_holes_located,n_big_with_b1,n_closed_with_b1,b2_total_big,n_fused_components,fused_voxel_frac,bridge_voxels,n_junction_clusters,junction_voxel_frac,n_components_with_junction,largest_component_frac,thick_p5,thick_median,thick_p95,thick_p99,thick_frac_ge_7
+synthetic_label,0.09425862630208333,0.0,1,0,0.0,1,0,5,3,2,1,4,1,0,0,0,0.0,0,2,0.00764443485142816,1,1.0,3.0,3.0,3.0,3.0,0.0

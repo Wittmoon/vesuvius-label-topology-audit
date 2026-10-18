@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "3d56d06ecd45564e3bc777f9279ab41385a60905",
+  "seed": 20261018,
+  "connected_masks_compared": 200,
+  "connectivity_pairs_3d": [
+    [
+      26,
+      6
+    ],
+    [
+      6,
+      26
+    ],
+    [
+      6,
+      6
+    ]
+  ],
+  "connectivity_pairs_2d": [
+    [
+      4,
+      8
+    ],
+    [
+      8,
+      4
+    ]
+  ],
+  "all_equal": true,
+  "scope": "Behavior parity with original CPU implementation, not independent physical validation."
+}
