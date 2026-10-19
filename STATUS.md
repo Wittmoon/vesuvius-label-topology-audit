@@ -10,3 +10,4 @@
 - 2026-10-18 evening: announced in the Vesuvius Discord #show-and-tell: https://discord.com/channels/1079907749569237093/1162822163171119194/threads/1561558653746675742
 - 2026-10-19: threshold sweep (nine cuts of the six probability volumes) added as `data/threshold_sweep.csv` with a README subsection; `code.patch` regenerated from the branch at 005887b3f (11 commits, now also the surface placement audit).
 - 2026-10-19, later: surface placement audit run over all 255 public Scroll 1 segments, `data/scroll1_segment_placement.csv` + README subsection; `code.patch` regenerated at 49626183f (12 commits).
+- 2026-10-19 13:10 local: placement follow-up posted as PR #2147 comment (https://github.com/ScrollPrize/villa/pull/2147#issuecomment-6272805754) and in the Discord thread.
