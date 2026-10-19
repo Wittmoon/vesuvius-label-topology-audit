@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/12] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/13] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -529,7 +529,7 @@ index 000000000..9321fc64e
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/12] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/13] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -643,7 +643,7 @@ index 9321fc64e..befc51f26 100644
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/12] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/13] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -1035,7 +1035,7 @@ index befc51f26..b15e79b9c 100644
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/12] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/13] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1444,7 +1444,7 @@ index b15e79b9c..ba977e4b5 100644
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/12] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/13] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1485,7 +1485,7 @@ index 2b5503795..14624a5a1 100644
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/12] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/13] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1812,7 +1812,7 @@ index ba977e4b5..750dc51aa 100644
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/12] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/13] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -2202,7 +2202,7 @@ index 750dc51aa..113996fad 100644
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/12] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/13] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2410,7 +2410,7 @@ index 113996fad..deb220f49 100644
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/12] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/13] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -3185,7 +3185,7 @@ index 000000000..9e7dc1d24
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/12] feat: update 4 Python files
+Subject: [PATCH 10/13] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3584,7 +3584,7 @@ index 9e7dc1d24..2b8014743 100644
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/12] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/13] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3639,7 +3639,7 @@ index 048f619e2..488ff418e 100644
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/12] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/13] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3700,6 +3700,173 @@ index 488ff418e..b064abb97 100644
 +(`data/scroll1_segment_placement.csv`). At 20000 samples over a segment of hundreds of cm² no 32-voxel
  cell collects 30 points, so the `patch_*` metrics are NaN; they need a dense
  sample (a small tifxyz patch, or `--samples` in the millions).
+-- 
+2.56.0
+
+
+From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Mon, 19 Oct 2026 14:02:10 -0400
+Subject: [PATCH 13/13] feat(surface-placement-audit): --cache DIR keeps CT
+ chunks on disk
+
+ChunkCache wraps the volume and stores each native chunk it reads as a .npy
+keyed by shape, chunking and dtype, so reruns and further surfaces on the same
+remote volume read from disk. Two tests: cached slices equal direct reads
+across chunk boundaries and a second pass fetches nothing; the flag leaves the
+audit result unchanged.
+---
+ vesuvius/docs/surface-placement-audit.md      |  4 ++
+ .../image_proc/run/surface_placement_audit.py | 65 +++++++++++++++++++
+ .../tests/test_surface_placement_audit.py     | 26 ++++++++
+ 3 files changed, 95 insertions(+)
+
+diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
+index b064abb97..53b691758 100644
+--- a/vesuvius/docs/surface-placement-audit.md
++++ b/vesuvius/docs/surface-placement-audit.md
+@@ -47,6 +47,10 @@ vesuvius.surface_placement_audit --surface seg_a.obj seg_b/ --volume ct.zarr \
+   range): a profile with less contrast, or whose nearest maximum is a shoulder
+   rather than a peak, counts as no peak.
+ - `--workers` (8): threads for volume reads. `--seed` fixes the sample.
++- `--cache DIR`: keep every CT chunk read as a `.npy` under `DIR` (one
++  subdirectory per volume shape, chunking and dtype). A rerun against the same
++  remote volume, or the next surface on it, then reads from disk. A pass over
++  the public Scroll 1 segments at 20000 samples fills roughly 20–40 GB.
+ 
+ ## Outputs
+ 
+diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+index 3c279d9ae..4f261487d 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+@@ -25,6 +25,7 @@ import math
+ import os
+ import re
+ import sys
++import threading
+ import urllib.request
+ from typing import Any, Sequence
+ 
+@@ -225,6 +226,66 @@ def is_tifxyz(src: str) -> bool:
+     return os.path.isdir(src) and all(os.path.exists(os.path.join(src, f)) for f in ("x.tif", "y.tif", "z.tif"))
+ 
+ 
++# --------------------------------------------------------------------------- chunk cache
++
++
++class ChunkCache:
++    """Array-like over ``vol`` that keeps every native chunk it reads as a ``.npy`` under ``root``.
++
++    A second run against the same remote volume (another surface, the controls'
++    re-reads, a rerun with other settings) then reads from disk instead of the
++    server. Files are keyed by the volume's shape, chunk size and dtype, so a
++    different volume or level gets its own directory. Leading non-spatial axes
++    are read at index 0. Writes go through a temp file and ``os.replace`` so
++    concurrent threads never see a partial chunk.
++    """
++
++    def __init__(self, vol, root: str, default_chunk: int = 128):
++        self.vol = vol
++        self.ndim = vol.ndim
++        self.shape = tuple(int(n) for n in vol.shape)
++        self.dtype = np.dtype(vol.dtype)
++        self.spatial = self.shape[-3:]
++        chunks = getattr(vol, "chunks", None) or (default_chunk,) * 3
++        self.chunks = tuple(int(c) for c in chunks[-3:])
++        tag = "x".join(map(str, self.spatial)) + "_c" + "x".join(map(str, self.chunks)) + "_" + self.dtype.name
++        self.root = os.path.join(root, tag)
++        os.makedirs(self.root, exist_ok=True)
++        self.fetched = 0
++
++    def _chunk(self, c: tuple[int, int, int]) -> np.ndarray:
++        path = os.path.join(self.root, f"{c[0]}_{c[1]}_{c[2]}.npy")
++        if os.path.exists(path):
++            return np.load(path)
++        lo = [ci * s for ci, s in zip(c, self.chunks)]
++        hi = [min(l + s, n) for l, s, n in zip(lo, self.chunks, self.spatial)]
++        index = (0,) * (self.ndim - 3) + tuple(slice(l, h) for l, h in zip(lo, hi))
++        arr = np.asarray(self.vol[index]).reshape([h - l for l, h in zip(lo, hi)])
++        tmp = f"{path}.{os.getpid()}.{threading.get_ident()}.tmp"
++        with open(tmp, "wb") as f:
++            np.save(f, arr)
++        os.replace(tmp, path)
++        self.fetched += 1
++        return arr
++
++    def __getitem__(self, index) -> np.ndarray:
++        sl = index[-3:]
++        lo = [int(s.start or 0) for s in sl]
++        hi = [int(n if s.stop is None else s.stop) for s, n in zip(sl, self.spatial)]
++        out = np.empty([h - l for l, h in zip(lo, hi)], self.dtype)
++        ranges = [range(l // c, (h - 1) // c + 1) for l, h, c in zip(lo, hi, self.chunks)]
++        for cz in ranges[0]:
++            for cy in ranges[1]:
++                for cx in ranges[2]:
++                    blk = self._chunk((cz, cy, cx))
++                    b0 = [ci * s for ci, s in zip((cz, cy, cx), self.chunks)]
++                    src = tuple(slice(max(l - b, 0), min(h - b, n)) for l, h, b, n in zip(lo, hi, b0, blk.shape))
++                    dst = tuple(slice(max(b - l, 0), max(b - l, 0) + (sr.stop - sr.start))
++                                for sr, l, b in zip(src, lo, b0))
++                    out[dst] = blk[src]
++        return out
++
++
+ # --------------------------------------------------------------------------- profiles
+ 
+ 
+@@ -441,6 +502,8 @@ def build_parser() -> argparse.ArgumentParser:
+     p.add_argument("--min-prominence", type=float, default=0.15, help="peak prominence as a fraction of the profile range")
+     p.add_argument("--seed", type=int, default=0)
+     p.add_argument("--workers", type=int, default=8, help="threads for volume reads (default 8)")
++    p.add_argument("--cache", metavar="DIR", help="keep every CT chunk read under DIR (.npy per chunk); "
++                   "reruns against the same volume read from disk instead of the server")
+     p.add_argument("--plot", action="store_true")
+     p.add_argument("--fail-on", action="append", default=[], metavar="METRIC=MAX",
+                    help="exit 2 if any surface exceeds MAX for METRIC (e.g. offset_abs_gt_2_frac=0.5)")
+@@ -454,6 +517,8 @@ def main(argv: Sequence[str] | None = None) -> int:
+         return 1
+     limits = parse_fail_on(a.fail_on)
+     vol = open_volume(a.volume, a.level)
++    if a.cache:
++        vol = ChunkCache(vol, a.cache)
+     os.makedirs(a.out, exist_ok=True)
+     rng = np.random.default_rng(a.seed)
+     rows: list[dict[str, Any]] = []
+diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
+index 2b8014743..916c8bb3b 100644
+--- a/vesuvius/tests/test_surface_placement_audit.py
++++ b/vesuvius/tests/test_surface_placement_audit.py
+@@ -196,3 +196,29 @@ def test_bad_arguments(tmp_path, ct):
+     with pytest.raises(SystemExit):
+         spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+     assert spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--half", "0"]) == 1
++
++
++def test_chunk_cache_matches_direct_reads_and_reuses_chunks(tmp_path):
++    rng = np.random.default_rng(3)
++    vol = rng.integers(0, 255, (37, 50, 41), dtype=np.uint8)  # not a multiple of the chunk
++    cache = spa.ChunkCache(vol, str(tmp_path / "cache"), default_chunk=16)
++    windows = [(slice(0, 37), slice(0, 50), slice(0, 41)), (slice(15, 17), slice(31, 33), slice(16, 32)),
++               (slice(36, 37), slice(49, 50), slice(40, 41)), (slice(3, 20), slice(0, 7), slice(30, 41))]
++    for w in windows:
++        np.testing.assert_array_equal(cache[w], vol[w])
++    fetched = cache.fetched
++    assert fetched > 0 and len(list((tmp_path / "cache").rglob("*.npy"))) == fetched
++    for w in windows:
++        np.testing.assert_array_equal(cache[w], vol[w])
++    assert cache.fetched == fetched  # second pass came from disk
++
++
++def test_cache_flag_gives_the_same_result(tmp_path, ct):
++    pts = grid_points(28.0)
++    nrm = np.tile([0.0, 0.0, 1.0], (len(pts), 1))
++    write_obj(tmp_path / "s.obj", pts, nrm)
++    _, _, direct = run(tmp_path / "a", ct, [str(tmp_path / "s.obj")])
++    _, _, cached = run(tmp_path / "b", ct, [str(tmp_path / "s.obj")], "--cache", str(tmp_path / "cache"))
++    _, _, again = run(tmp_path / "c", ct, [str(tmp_path / "s.obj")], "--cache", str(tmp_path / "cache"))
++    assert direct[0]["offset_median"] == cached[0]["offset_median"] == again[0]["offset_median"]
++    assert list((tmp_path / "cache").rglob("*.npy"))
 -- 
 2.56.0
 
