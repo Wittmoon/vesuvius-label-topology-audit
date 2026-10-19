@@ -1,10 +1,14 @@
 # Label topology audit: evidence packet
 
 **Finding:** 17% of the public Vesuvius Challenge surface-label crops (152 of
-892) contain holes or handles, 571 in all. Of the 14 largest interior holes in
-the 20 worst crops, checked by hand in CT, 8 sit on continuous papyrus and
-should be filled, and 6 are pockets between two sheets the label merged and
-should be cut. The existing repair script, `fix_holes.py`, would fill all 14.
+892) contain holes or handles, 571 in all. Of 14 located interior holes in the
+20 worst crops (the 13 where two AI reviewers agreed, plus one they were unsure
+of; not the 14 largest), checked by hand in CT by the submitter, 8 sit on
+continuous papyrus and should be filled, and 6 are pockets between two sheets
+the label merged and should be cut. The existing repair script, `fix_holes.py`,
+adds voxels into all 6 of those pockets (`data/repair_tiles.csv`), which is the
+wrong direction; whether it fills the 8 was measured for only one of them, where
+it added nothing.
 
 **Tool:** `vesuvius.label_topology_audit`, a dataset-level topology audit for
 3D surface labels: it ranks a folder of crops worst first, locates the small
@@ -99,7 +103,7 @@ is needed.
 | located, interior | 74 | 237 |
 | located, on a crop face | 71 | 257 |
 | not located (too wide) | 49 | 77 |
-| interior (located interior + not located) | 107 (12%) | 314 |
+| interior (237 located interior + 77 not located, location unknown) | 107 (12%) | 314 |
 | cavities | 69 (8%) | 206 |
 | junction clusters | 281 (32%) | 651 |
 | fused components | 22 (2%) | |
@@ -179,7 +183,7 @@ labels exist for these crops.
 
 ### Community prediction volumes (zarr, read in place)
 
-With the zarr input landed, the same audit was run on nine binarised
+With the zarr input landed, the same audit was run on 18 binarised
 surface-prediction volumes published by Yupeng Li at
 `https://dl.ash2txt.org/community-uploads/yupeng/` (three models: m7, Socratic,
 HercUNet; two scrolls: PHerc1447, PHerc0814; thresholds 0.2, 0.3, 0.5, using
@@ -200,8 +204,9 @@ the exact command list is
 | HercUNet | PHerc1447 | 0.3 | 29% | 26,207 | 199 | 38,335 | 0.60 | 3.5 |
 | HercUNet | PHerc0814 | 0.3 | 39% | 35,882 | 203 | 223,487 | 0.69 | 5.0 |
 
-- Per foreground voxel, m7 has the fewest holes and handles, Socratic 1.5-2x
-  more, HercUNet 3-5x more, on both scrolls and at every threshold.
+- Per foreground voxel, m7 has the fewest holes and handles, Socratic 1.5-2.3x
+  more, HercUNet 3.1-8.7x more, on both scrolls and at every threshold
+  (ratios of `b1_per_Mvox_fg` in `data/community_predictions_audit.csv`).
 - Threshold matters in the same way for every model: 0.5 fragments the sheets
   (b1 per Mvox rises 1.4-3x over 0.3, components per tile rise) while 0.2 adds
   cavities (b2 rises 3-10x over 0.3). Of the three, 0.3 has the lowest hole
@@ -311,7 +316,7 @@ three `ink_9um` segments that ship a validation mask:
 
 | segment (labels) | profile peak | default window (layers 2-18) AUC / AP | peak-chosen window AUC / AP | best window in a 5-window sweep |
 | --- | --- | --- | --- | --- |
-| public Scroll 1 w029 at 2.4 µm pooled to 9 µm (`pherc0139-w016`) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
+| public PHerc0139 segment w029 at 2.4 µm pooled to 9 µm (`pherc0139-w016`) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
 | `pherc0814-46527` | 9 | 0.874 / 0.839 | 0.817 / 0.785 (layers 1-17) | 0.896 / 0.872 (layers 4-20) |
 | `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | sweep running |
 
@@ -323,7 +328,8 @@ training segment PHercParis4 w02 (supervision pixels only, peak at layer 7) the
 peak window gives 0.988 against 0.992 for the default. So this is a measured
 negative result for the one-read window rule, and a measured sensitivity
 finding: the released model's held-out score moves by 0.05 to 0.10 AUC with
-window choice alone, which is larger than the gap between released checkpoints.
+window choice alone on the two segments swept so far. The scores are single
+values with no interval; a bootstrap is not yet done.
 Picking the window per segment needs something other than the mean profile; the
 training pixels are unchanged in every case (supervision AUC 0.994 on w029,
 0.999 on w035 and w039). The released recipe already jitters the training
