@@ -249,9 +249,9 @@ scroll x threshold); commands in
 - Caveats as above: one window per scroll, no ground truth, a cut's topology
   ranks it against other cuts of the same model only.
 
-### Surface placement on the public Scroll 1 segments
+### Second check: surface placement on the public Scroll 1 segments
 
-A second tool on the branch, `vesuvius.surface_placement_audit`, measures
+The audit has a second check next to topology, `vesuvius.surface_placement_audit`. It measures
 where a traced mesh sits relative to the papyrus sheet in the CT: it samples
 the mesh, reads a short CT profile along each stored normal, and reports the
 signed offset to the nearest density peak, with a snap-and-remeasure control
