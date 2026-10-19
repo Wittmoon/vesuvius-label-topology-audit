@@ -1,0 +1,27 @@
+step,segment,checkpoint,window_start,mask,auc,ap,note
+1,pherc0139-w016,seed42-075000,centre,supervision,0.994,0.984,default peak=9 shift=-1
+1,pherc0139-w016,seed42-075000,1,supervision,0.994,0.984,peakwin peak=9 shift=-1
+1,pherc0139-w016,seed42-075000,centre,validation,0.775,0.622,default peak=9 shift=-1
+1,pherc0139-w016,seed42-075000,1,validation,0.823,0.676,peakwin peak=9 shift=-1
+1,pherc0139-w017,seed42-075000,centre,supervision,0.997,0.989,default peak=9 shift=-1
+1,pherc0139-w017,seed42-075000,1,supervision,0.997,0.990,peakwin peak=9 shift=-1
+1,pherc0139-w028,seed42-075000,centre,supervision,1.000,0.999,default peak=10 shift=0
+1,pherc0139-w028,seed42-075000,2,supervision,1.000,0.999,peakwin peak=10 shift=0
+1,pherc0139-w029,seed42-075000,centre,supervision,0.977,0.936,default peak=10 shift=0
+1,pherc0139-w029,seed42-075000,2,supervision,0.977,0.936,peakwin peak=10 shift=0
+1,pherc0139-w035,seed42-075000,centre,supervision,0.999,0.997,default peak=9 shift=-1
+1,pherc0139-w035,seed42-075000,1,supervision,0.999,0.997,peakwin peak=9 shift=-1
+1,pherc0139-w039,seed42-075000,centre,supervision,0.999,0.998,default peak=9 shift=-1
+1,pherc0139-w039,seed42-075000,1,supervision,0.999,0.998,peakwin peak=9 shift=-1
+1,pherc0139-w040,seed42-075000,centre,supervision,0.996,0.994,default peak=9 shift=-1
+1,pherc0139-w040,seed42-075000,1,supervision,0.996,0.994,peakwin peak=9 shift=-1
+1,pherc0139-w041,seed42-075000,centre,supervision,0.999,0.999,default peak=10 shift=0
+1,pherc0139-w041,seed42-075000,2,supervision,0.999,0.999,peakwin peak=10 shift=0
+1,pherc0139-w043,seed42-075000,centre,supervision,1.000,0.999,default peak=10 shift=0
+1,pherc0139-w043,seed42-075000,2,supervision,1.000,0.999,peakwin peak=10 shift=0
+1,pherc0814-46527,seed42-075000,centre,supervision,1.000,1.000,default peak=9 shift=-1
+1,pherc0814-46527,seed42-075000,1,supervision,1.000,1.000,peakwin peak=9 shift=-1
+1,pherc0814-46527,seed42-075000,centre,validation,0.874,0.839,default peak=9 shift=-1
+1,pherc0814-46527,seed42-075000,1,validation,0.817,0.785,peakwin peak=9 shift=-1
+1,pherc1667-w013,seed42-075000,centre,supervision,0.999,0.999,default peak=9 shift=-1
+1,pherc1667-w013,seed42-075000,1,supervision,0.999,0.998,peakwin peak=9 shift=-1

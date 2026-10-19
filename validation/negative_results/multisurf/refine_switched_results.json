@@ -1,0 +1,202 @@
+[
+ {
+  "segment": "20230919113918",
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 3820,
+  "switch_recovered": 0.353,
+  "switch_still_off": 0.189,
+  "agree_cells": 38426,
+  "agree_damaged": 0.4509
+ },
+ {
+  "segment": "20230919113918",
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 3820,
+  "switch_recovered": 0.434,
+  "switch_still_off": 0.31,
+  "agree_cells": 38426,
+  "agree_damaged": 0.1562
+ },
+ {
+  "segment": "20230919113918",
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 3820,
+  "switch_recovered": 0.434,
+  "switch_still_off": 0.025,
+  "agree_cells": 38426,
+  "agree_damaged": 0.0658
+ },
+ {
+  "segment": "20230919113918",
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 3820,
+  "switch_recovered": 0.709,
+  "switch_still_off": 0.115,
+  "agree_cells": 38426,
+  "agree_damaged": 0.0002
+ },
+ {
+  "segment": "20230922174128",
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 92,
+  "switch_recovered": 0.0,
+  "switch_still_off": 1.0,
+  "agree_cells": 52081,
+  "agree_damaged": 0.3865
+ },
+ {
+  "segment": "20230922174128",
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 92,
+  "switch_recovered": 0.087,
+  "switch_still_off": 0.913,
+  "agree_cells": 52081,
+  "agree_damaged": 0.1318
+ },
+ {
+  "segment": "20230922174128",
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 92,
+  "switch_recovered": 0.859,
+  "switch_still_off": 0.0,
+  "agree_cells": 52081,
+  "agree_damaged": 0.0737
+ },
+ {
+  "segment": "20230922174128",
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 92,
+  "switch_recovered": 0.0,
+  "switch_still_off": 0.0,
+  "agree_cells": 52081,
+  "agree_damaged": 0.0
+ },
+ {
+  "segment": "20230925002745",
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 600,
+  "switch_recovered": 0.107,
+  "switch_still_off": 0.81,
+  "agree_cells": 29724,
+  "agree_damaged": 0.3235
+ },
+ {
+  "segment": "20230925002745",
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 600,
+  "switch_recovered": 0.112,
+  "switch_still_off": 0.773,
+  "agree_cells": 29724,
+  "agree_damaged": 0.0847
+ },
+ {
+  "segment": "20230925002745",
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 600,
+  "switch_recovered": 0.43,
+  "switch_still_off": 0.0,
+  "agree_cells": 29724,
+  "agree_damaged": 0.1213
+ },
+ {
+  "segment": "20230925002745",
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 600,
+  "switch_recovered": 0.91,
+  "switch_still_off": 0.088,
+  "agree_cells": 29724,
+  "agree_damaged": 0.0
+ },
+ {
+  "segment": "20231005123336",
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 2753,
+  "switch_recovered": 0.045,
+  "switch_still_off": 0.773,
+  "agree_cells": 36026,
+  "agree_damaged": 0.3092
+ },
+ {
+  "segment": "20231005123336",
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 2753,
+  "switch_recovered": 0.029,
+  "switch_still_off": 0.776,
+  "agree_cells": 36026,
+  "agree_damaged": 0.1138
+ },
+ {
+  "segment": "20231005123336",
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 2753,
+  "switch_recovered": 0.533,
+  "switch_still_off": 0.001,
+  "agree_cells": 36026,
+  "agree_damaged": 0.0612
+ },
+ {
+  "segment": "20231005123336",
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 2753,
+  "switch_recovered": 0.309,
+  "switch_still_off": 0.272,
+  "agree_cells": 36026,
+  "agree_damaged": 0.0005
+ },
+ {
+  "segment": "20231007101619",
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 14914,
+  "switch_recovered": 0.309,
+  "switch_still_off": 0.552,
+  "agree_cells": 13134,
+  "agree_damaged": 0.3101
+ },
+ {
+  "segment": "20231007101619",
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 14914,
+  "switch_recovered": 0.095,
+  "switch_still_off": 0.786,
+  "agree_cells": 13134,
+  "agree_damaged": 0.1125
+ },
+ {
+  "segment": "20231007101619",
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 14914,
+  "switch_recovered": 0.458,
+  "switch_still_off": 0.37,
+  "agree_cells": 13134,
+  "agree_damaged": 0.1318
+ },
+ {
+  "segment": "20231007101619",
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 14914,
+  "switch_recovered": 0.268,
+  "switch_still_off": 0.604,
+  "agree_cells": 13134,
+  "agree_damaged": 0.002
+ }
+]

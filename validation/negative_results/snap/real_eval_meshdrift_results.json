@@ -1,0 +1,85 @@
+{
+ "faces": 1500,
+ "samples": 1662814,
+ "label_voxels": 680096,
+ "label_topo": {
+  "n_big": 2,
+  "b1": 0,
+  "b2": 0
+ },
+ "sign_bit": -1.0,
+ "sign_vote_frac": 0.648,
+ "sign_mean_diff": -20.11,
+ "statuses": {
+  "rejected_poor_fit": 1,
+  "snapped": 1
+ },
+ "report": [
+  {
+   "sheet": 1,
+   "voxels": 440460,
+   "prior_flipped_frac": 0.298,
+   "strong_frac": 0.807,
+   "cap_median": 3.0,
+   "raw_off_median": -0.5,
+   "resid_median": 1.04,
+   "shift_median": -0.61,
+   "shift_abs_p95": 2.62,
+   "status": "rejected_poor_fit"
+  },
+  {
+   "sheet": 2,
+   "voxels": 239636,
+   "prior_flipped_frac": 0.389,
+   "strong_frac": 0.707,
+   "cap_median": 3.0,
+   "raw_off_median": -0.5,
+   "resid_median": 0.88,
+   "shift_median": -0.61,
+   "shift_abs_p95": 2.88,
+   "status": "snapped"
+  }
+ ],
+ "snap_topo": {
+  "n_big": 2,
+  "b1": 0,
+  "b2": 0
+ },
+ "as_traced_move": 0.19,
+ "idempotence": 0.11,
+ "shift+2": {
+  "pert_vs_ref": 0.95,
+  "snap_vs_ref": 0.83,
+  "pert_vs_traced": 0.76,
+  "snap_vs_traced": 0.8,
+  "pert_b1": 0,
+  "snap_b1": 0,
+  "statuses": {
+   "rejected_poor_fit": 1,
+   "snapped": 1
+  }
+ },
+ "shift-2": {
+  "pert_vs_ref": 0.81,
+  "snap_vs_ref": 0.93,
+  "pert_vs_traced": 0.77,
+  "snap_vs_traced": 1.02,
+  "pert_b1": 0,
+  "snap_b1": 0,
+  "statuses": {
+   "snapped": 2
+  }
+ },
+ "drift2.5": {
+  "pert_vs_ref": 0.38,
+  "snap_vs_ref": 0.32,
+  "pert_vs_traced": 0.31,
+  "snap_vs_traced": 0.54,
+  "pert_b1": 0,
+  "snap_b1": 0,
+  "statuses": {
+   "rejected_poor_fit": 1,
+   "snapped": 1
+  }
+ }
+}

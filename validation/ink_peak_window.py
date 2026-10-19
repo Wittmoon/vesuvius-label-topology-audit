@@ -12,8 +12,10 @@ import argparse, json, math, os, subprocess, sys
 import numpy as np, zarr
 from concurrent.futures import ThreadPoolExecutor
 
-VENV = "/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa/vesuvius/.venv/bin/python"
-SRC = "/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-wt/label-topology-audit/vesuvius/src"
+# Interpreter and source tree for `infer`: set VESUVIUS_PYTHON (default: the interpreter running this
+# script) and VESUVIUS_SRC (path to villa/vesuvius/src; default: use the installed package).
+VENV = os.environ.get("VESUVIUS_PYTHON", sys.executable)
+SRC = os.environ.get("VESUVIUS_SRC")
 WIN = 17
 
 def profile(path, n_cells=10):
@@ -54,5 +56,5 @@ cmd = [VENV, '-m', 'vesuvius.ink_detection.inference.infer', a.zarr, a.ckpt, a.o
        '--layer-start', str(start), '--layer-end', str(start + WIN),
        '--overlap', '0.5', '--blend-mode', 'hann', '--batch-size', '4', '--no-compile'] + extra
 log = open(os.path.splitext(a.out)[0] + '.log', 'w')
-rc = subprocess.call(cmd, env={**os.environ, 'PYTHONPATH': SRC}, stdout=log, stderr=subprocess.STDOUT)
+rc = subprocess.call(cmd, env={**os.environ, **({'PYTHONPATH': SRC} if SRC else {})}, stdout=log, stderr=subprocess.STDOUT)
 print('infer rc', rc, file=sys.stderr); sys.exit(rc)

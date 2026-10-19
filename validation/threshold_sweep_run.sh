@@ -1,9 +1,13 @@
 #!/bin/sh
 # threshold sweep on Yupeng's probability volumes: uint8 cut = ceil(t*255) for t = 0.1..0.9
-export W=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-wt/label-topology-audit/vesuvius/src
-export PY=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa/vesuvius/.venv/bin/python
+# Paths (environment variables; the recorded runs used local paths, these defaults are placeholders):
+#   W   villa checkout's vesuvius/src (PYTHONPATH)      default: $PWD/villa/vesuvius/src
+#   PY  python with the branch's dependencies           default: python3
+#   R   output directory                                 default: $PWD/out/pred_audit/sweep
+export W=${W:-$PWD/villa/vesuvius/src}
+export PY=${PY:-python3}
 export B=https://dl.ash2txt.org/community-uploads/yupeng
-export R=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-tools/scratch/pred_audit/sweep
+export R=${R:-$PWD/out/pred_audit/sweep}
 export TH=26,51,77,102,128,153,179,204,230
 mkdir -p $R
 cat > $R/jobs.txt <<J

@@ -18,7 +18,10 @@ lab = zarr.open(f'{a.labels}/{a.prefix}_inklabels.zarr', mode='r')['0']
 msk = zarr.open(f'{a.labels}/{a.prefix}_{a.mask}_mask.zarr', mode='r')['0']
 zc = lab.shape[0] // 2
 L = np.asarray(lab[zc]); M = np.asarray(msk[zc])
-h = min(pred.shape[0], L.shape[0]); w = min(pred.shape[1], L.shape[1])
+if pred.shape != L.shape or pred.shape != M.shape:
+    raise SystemExit(f'shape mismatch: pred {pred.shape}, labels {L.shape}, mask {M.shape}; '
+                     'refusing to score a partial overlap')
+h, w = L.shape
 s = a.stride
 pp = pred[:h:s, :w:s]; ll = L[:h:s, :w:s] > 0; mm = M[:h:s, :w:s] > 0
 print(f'{a.pred}: pred {pred.shape} labels {L.shape} mask={a.mask} covers {mm.mean():.3f}, ink frac in mask {ll[mm].mean():.4f}')

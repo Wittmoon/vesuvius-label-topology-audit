@@ -1,0 +1,222 @@
+[
+ {
+  "segment": "20230826135043",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 36002,
+  "switch_recovered": 0.136,
+  "switch_still_off": 0.636,
+  "agree_cells": 25544,
+  "agree_damaged": 0.502
+ },
+ {
+  "segment": "20230826135043",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 36002,
+  "switch_recovered": 0.066,
+  "switch_still_off": 0.736,
+  "agree_cells": 25544,
+  "agree_damaged": 0.1762
+ },
+ {
+  "segment": "20230826135043",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 36002,
+  "switch_recovered": 0.314,
+  "switch_still_off": 0.286,
+  "agree_cells": 25544,
+  "agree_damaged": 0.5105
+ },
+ {
+  "segment": "20230826135043",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 36002,
+  "switch_recovered": 0.313,
+  "switch_still_off": 0.311,
+  "agree_cells": 25544,
+  "agree_damaged": 0.3187
+ },
+ {
+  "segment": "20230922174128",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 12867,
+  "switch_recovered": 0.194,
+  "switch_still_off": 0.586,
+  "agree_cells": 45145,
+  "agree_damaged": 0.5838
+ },
+ {
+  "segment": "20230922174128",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 12867,
+  "switch_recovered": 0.127,
+  "switch_still_off": 0.652,
+  "agree_cells": 45145,
+  "agree_damaged": 0.2418
+ },
+ {
+  "segment": "20230922174128",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 12867,
+  "switch_recovered": 0.193,
+  "switch_still_off": 0.367,
+  "agree_cells": 45145,
+  "agree_damaged": 0.5692
+ },
+ {
+  "segment": "20230922174128",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 12867,
+  "switch_recovered": 0.117,
+  "switch_still_off": 0.404,
+  "agree_cells": 45145,
+  "agree_damaged": 0.2989
+ },
+ {
+  "segment": "20230925002745",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 1240,
+  "switch_recovered": 0.13,
+  "switch_still_off": 0.766,
+  "agree_cells": 43476,
+  "agree_damaged": 0.6024
+ },
+ {
+  "segment": "20230925002745",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 1240,
+  "switch_recovered": 0.04,
+  "switch_still_off": 0.616,
+  "agree_cells": 43476,
+  "agree_damaged": 0.2137
+ },
+ {
+  "segment": "20230925002745",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 1240,
+  "switch_recovered": 0.625,
+  "switch_still_off": 0.102,
+  "agree_cells": 43476,
+  "agree_damaged": 0.5038
+ },
+ {
+  "segment": "20230925002745",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 1240,
+  "switch_recovered": 0.485,
+  "switch_still_off": 0.007,
+  "agree_cells": 43476,
+  "agree_damaged": 0.2254
+ },
+ {
+  "segment": "20230925090314",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 18046,
+  "switch_recovered": 0.192,
+  "switch_still_off": 0.648,
+  "agree_cells": 35717,
+  "agree_damaged": 0.6071
+ },
+ {
+  "segment": "20230925090314",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 18046,
+  "switch_recovered": 0.108,
+  "switch_still_off": 0.716,
+  "agree_cells": 35717,
+  "agree_damaged": 0.2373
+ },
+ {
+  "segment": "20230925090314",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 18046,
+  "switch_recovered": 0.278,
+  "switch_still_off": 0.441,
+  "agree_cells": 35717,
+  "agree_damaged": 0.5388
+ },
+ {
+  "segment": "20230925090314",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 18046,
+  "switch_recovered": 0.209,
+  "switch_still_off": 0.521,
+  "agree_cells": 35717,
+  "agree_damaged": 0.3352
+ },
+ {
+  "segment": "20231005123336",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 40492,
+  "switch_recovered": 0.129,
+  "switch_still_off": 0.698,
+  "agree_cells": 26391,
+  "agree_damaged": 0.5716
+ },
+ {
+  "segment": "20231005123336",
+  "R": 14,
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 40492,
+  "switch_recovered": 0.031,
+  "switch_still_off": 0.867,
+  "agree_cells": 26391,
+  "agree_damaged": 0.1802
+ },
+ {
+  "segment": "20231005123336",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 40492,
+  "switch_recovered": 0.24,
+  "switch_still_off": 0.555,
+  "agree_cells": 26391,
+  "agree_damaged": 0.5702
+ },
+ {
+  "segment": "20231005123336",
+  "R": 14,
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 40492,
+  "switch_recovered": 0.185,
+  "switch_still_off": 0.688,
+  "agree_cells": 26391,
+  "agree_damaged": 0.2802
+ }
+]

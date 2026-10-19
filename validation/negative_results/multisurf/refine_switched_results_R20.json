@@ -1,0 +1,46 @@
+[
+ {
+  "segment": "20231007101619",
+  "R": 20,
+  "cost": "ct",
+  "lam": 0.0,
+  "switch_cells": 14914,
+  "switch_recovered": 0.286,
+  "switch_still_off": 0.554,
+  "agree_cells": 13134,
+  "agree_damaged": 0.378
+ },
+ {
+  "segment": "20231007101619",
+  "R": 20,
+  "cost": "ct",
+  "lam": 0.05,
+  "switch_cells": 14914,
+  "switch_recovered": 0.073,
+  "switch_still_off": 0.818,
+  "agree_cells": 13134,
+  "agree_damaged": 0.1
+ },
+ {
+  "segment": "20231007101619",
+  "R": 20,
+  "cost": "learned",
+  "lam": 0.0,
+  "switch_cells": 14914,
+  "switch_recovered": 0.379,
+  "switch_still_off": 0.387,
+  "agree_cells": 13134,
+  "agree_damaged": 0.1568
+ },
+ {
+  "segment": "20231007101619",
+  "R": 20,
+  "cost": "learned",
+  "lam": 0.05,
+  "switch_cells": 14914,
+  "switch_recovered": 0.211,
+  "switch_still_off": 0.673,
+  "agree_cells": 13134,
+  "agree_damaged": 0.0025
+ }
+]

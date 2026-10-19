@@ -1,0 +1,61 @@
+[
+ {
+  "cells": 82228,
+  "ref_cells": 21830,
+  "ref_median": 0.0,
+  "ref_abs_p50_p90": [
+   2.5,
+   4.5
+  ],
+  "cells_with_a_retrace_off_by_gt6": 75680
+ },
+ {
+  "name": "traced (h=0)",
+  "agree2": 0.456,
+  "wrong_sheet": 0.0,
+  "err_p50": 2.5,
+  "err_p90": 4.5
+ },
+ {
+  "name": "single R6 lam0.05",
+  "agree2": 0.393,
+  "wrong_sheet": 0.1319,
+  "err_p50": 2.53,
+  "err_p90": 7.24
+ },
+ {
+  "name": "single R10 lam0.1",
+  "agree2": 0.479,
+  "wrong_sheet": 0.1118,
+  "err_p50": 2.11,
+  "err_p90": 6.57
+ },
+ {
+  "name": "single R10 lam0.0",
+  "agree2": 0.139,
+  "wrong_sheet": 0.3996,
+  "err_p50": 4.87,
+  "err_p90": 12.38
+ },
+ {
+  "name": "joint lam0.1 smin5 beta0.1",
+  "agree2": 0.549,
+  "wrong_sheet": 0.0378,
+  "err_p50": 1.73,
+  "err_p90": 4.55
+ },
+ {
+  "name": "joint lam0.05 smin5 beta0.1",
+  "agree2": 0.438,
+  "wrong_sheet": 0.115,
+  "err_p50": 2.42,
+  "err_p90": 6.66
+ },
+ {
+  "name": "joint lam0.1 smin3 beta0.1",
+  "agree2": 0.532,
+  "wrong_sheet": 0.0574,
+  "err_p50": 1.85,
+  "err_p90": 4.79
+ }
+]

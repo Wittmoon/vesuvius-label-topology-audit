@@ -2,7 +2,8 @@
 import csv, json, sys
 from collections import defaultdict
 from pathlib import Path
-R = Path(__file__).parent / "sweep"
+import os
+R = Path(os.environ.get("R", "out/pred_audit/sweep"))  # the R used by threshold_sweep_run.sh
 NAMES = {"m7": "m7", "soc": "Socratic", "herc": "HercUNet"}
 rows = []
 for d in sorted(R.glob("*_PHerc*")):

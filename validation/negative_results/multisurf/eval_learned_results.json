@@ -1,0 +1,52 @@
+[
+ {
+  "prob_at_trace_p10_p50_p90": [
+   0.091,
+   0.357,
+   0.612
+  ],
+  "cells_with_peak_gt_0p5_within_3": 0.586
+ },
+ {
+  "name": "traced (h=0)",
+  "agree2": 0.869,
+  "wrong_sheet": 0.0,
+  "err_p50": 0.75,
+  "err_p90": 2.5
+ },
+ {
+  "name": "learned single R6 lam0.05",
+  "agree2": 0.014,
+  "wrong_sheet": 0.3583,
+  "err_p50": 5.5,
+  "err_p90": 8.0
+ },
+ {
+  "name": "learned single R10 lam0.1",
+  "agree2": 0.353,
+  "wrong_sheet": 0.1672,
+  "err_p50": 3.01,
+  "err_p90": 7.94
+ },
+ {
+  "name": "learned single R10 lam0.0",
+  "agree2": 0.007,
+  "wrong_sheet": 0.7962,
+  "err_p50": 7.49,
+  "err_p90": 11.25
+ },
+ {
+  "name": "learned joint lam0.1 smin5 beta0.1",
+  "agree2": 0.218,
+  "wrong_sheet": 0.1141,
+  "err_p50": 3.08,
+  "err_p90": 6.46
+ },
+ {
+  "name": "learned joint lam0.0 smin5 beta0.1",
+  "agree2": 0.007,
+  "wrong_sheet": 0.7417,
+  "err_p50": 7.16,
+  "err_p90": 10.13
+ }
+]

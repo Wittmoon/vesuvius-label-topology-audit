@@ -56,12 +56,16 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Commits: `6e4a88154`, `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`,
-  `a620aca9e` (zarr input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL).
+- Code revision: <to be filled>
+- Earlier commits, kept for history only and not the release revision: `6e4a88154`,
+  `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e` (zarr
+  input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
+  records below were made at those commits; they do not cover the surface placement
+  audit or later fixes.
 - Files: `vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py`,
   `vesuvius/src/vesuvius/image_proc/topology.py`, `vesuvius/src/vesuvius/scripts/detect_holes.py`
   (CPU path now uses the shared helper), `vesuvius/tests/test_label_topology_audit.py`
-  (35 tests), `vesuvius/docs/label-topology-audit.md`.
+  (35 tests at `a620aca9e`), `vesuvius/docs/label-topology-audit.md`.
 - Environment for the numbers below: macOS arm64, Python 3.14.8, numpy 2.4.6,
   scipy 1.18.0, scikit-image 0.26.0, connected-components-3d 4.0.0,
   tifffile 2026.6.1, matplotlib 3.11.0. CPU only.
@@ -94,6 +98,13 @@ vesuvius.label_topology_audit --batch BEFORE --after AFTER --out fix_out
 
 `figures/make_synthetic.py` builds the synthetic example below; no scroll data
 is needed.
+
+The scripts in `validation/` take their paths from environment variables
+(`W` = villa `vesuvius/src` or `vesuvius/` as noted in each script's header, `PY`
+= python with the branch installed, `R` = output directory; `INK_ROOT`,
+`INK_DATA`, `VESUVIUS_PYTHON`, `VESUVIUS_SRC` for the ink scripts). Defaults are
+placeholders relative to the working directory, documented at the top of each
+script. The recorded runs used local paths that are not in the packet.
 
 ## Results (Kaggle surface labels, 892 crops)
 
@@ -207,16 +218,21 @@ the exact command list is
 - Per foreground voxel, m7 has the fewest holes and handles, Socratic 1.5-2.3x
   more, HercUNet 3.1-8.7x more, on both scrolls and at every threshold
   (ratios of `b1_per_Mvox_fg` in `data/community_predictions_audit.csv`).
-- Threshold matters in the same way for every model: 0.5 fragments the sheets
-  (b1 per Mvox rises 1.4-3x over 0.3, components per tile rise) while 0.2 adds
-  cavities (b2 rises 3-10x over 0.3). Of the three, 0.3 has the lowest hole
-  density for m7 and Socratic.
+- Threshold effects (ratios of `b1_per_Mvox_fg` and `b2_total` in the CSV): going
+  from 0.3 to 0.5 raises hole density for every model, by 1.13x (m7, PHerc1447)
+  to 2.99x (HercUNet, PHerc0814); the other four ratios are 1.38-1.96x. Going
+  from 0.3 to 0.2 raises cavities 5.2-10.3x for m7 and Socratic, but lowers them
+  for HercUNet (0.87x on PHerc1447, 0.75x on PHerc0814). Of the three
+  thresholds, 0.3 has the lowest hole density for all three models, but the
+  margin over 0.2 is only 1.6% for HercUNet on PHerc0814 (12% on PHerc1447).
 - HercUNet's output is thicker (median 3.5-5 voxels) and carries tens to
   hundreds of thousands of cavities per window, so it behaves like a volume
   label rather than a thin sheet; the numbers are not comparable to the other
   two as a surface model, and the table reports them as measured.
-- PHerc0814 is harder for every model: more fused voxels and more holes than
-  PHerc1447 at the same threshold.
+- PHerc0814 has a higher fused fraction than PHerc1447 for every model at
+  every threshold, and a higher hole density in 8 of 9 model-threshold pairs
+  (the exception is HercUNet at 0.2: 206.6 against 225.1; at 0.3 the two are
+  within 2%).
 - Caveats: one window per scroll, chosen deep in the volume and not by any
   label; tile faces count as crop faces (b1 face is 1-4% of b1); no ground
   truth exists for these windows, so this ranks prediction topology, it does
@@ -241,16 +257,19 @@ scroll x threshold); commands in
 | HercUNet | PHerc0814 | 0.3 | 267 / 203 / 1,051 | 167,541 / 323,748 / 469,453 |
 
 - For m7 and Socratic the hole density has a single minimum at 0.3-0.4 and
-  cavities fall by one to two orders of magnitude between 0.2 and 0.4, then
-  reach zero by 0.7. Cuts above 0.5 fragment the sheets: hole density rises
-  5-30x by 0.7 for Socratic, 2-3x for m7.
+  cavities fall 26-90x between 0.2 and 0.4. They reach zero by 0.7, except m7
+  on PHerc1447, which still has one cavity at 0.7 (zero at 0.8). Cuts above 0.5
+  raise hole density: at 0.7 it is 16-19x its minimum for Socratic and 2.6-3.4x
+  for m7.
 - The hole minimum and the cavity collapse sit on the same cut, so the sweep
   picks a threshold without a labelled reference: 0.3 to 0.4 for both models,
   on both scrolls.
-- HercUNet's cavity count rises with the threshold up to 0.5-0.6, the opposite
-  of the other two. Its probability volume is thick (median thickness 3.5-5 at
-  0.3), and a higher cut hollows the thick sheets instead of separating them.
-  No cut in the sweep makes it behave like a surface model.
+- HercUNet's cavity count is lower at 0.2 than at 0.3 on both scrolls and
+  rises with the threshold up to 0.5 (PHerc1447 150,269; PHerc0814 504,525)
+  before falling, the opposite of the other two. One reading is
+  that its thick volume (median thickness 3.5-5 at 0.3) is hollowed by a higher
+  cut rather than separated; this was not tested. No cut in the sweep gives it
+  the hole density or cavity count of m7 or Socratic.
 - Caveats as above: one window per scroll, no ground truth, a cut's topology
   ranks it against other cuts of the same model only.
 
@@ -277,14 +296,25 @@ segments have 1000 or more valid samples. Quantiles across segments
 | tangent median |diff| at 2 / 4 / 8 vox | 0.5 / 0.5 / 0.5 | 0.5 / 0.5 / 1.0 | 0.5 / 0.5 / 1.0 |
 | tangent correlation at 2 / 4 / 8 vox | 0.79 / 0.62 / 0.41 | 0.85 / 0.72 / 0.54 | 0.89 / 0.79 / 0.66 |
 
-The median offset is small, but about half of the sampled points sit more
-than 2 voxels (16 µm) from the sheet peak. The controls say this is not
-drift: the peak location repeats to 0.3 voxels, and offsets agree at 2 and 4
-voxels apart but decorrelate by 8. The sheet wanders a few voxels inside one
-~18-voxel triangle, so this is a resolution limit of the mesh rather than a
-global shift. It matters for anything that samples CT at the mesh surface
-(render depth, ink model inputs). Per-segment rows:
-`data/scroll1_segment_placement.csv`.
+What was measured. The median offset is small. The 0.48 in the second row is
+the median, across the 224 segments with 1000 or more valid samples, of each
+segment's fraction of valid samples with an offset beyond 2 voxels
+(`offset_abs_gt_2_frac`); it is not a pooled fraction over all sampled points.
+The snap remeasure sd shows that the peak location is repeatable to about 0.3
+voxels once a peak is found. The tangent correlations fall from a median of 0.85
+at 2 voxels to 0.54 at 8 voxels, so the offset varies along the surface on a
+scale of a few voxels.
+
+What was not shown. Neither control establishes that the detected peak is the
+correct papyrus surface (rather than another layer or an edge), and neither
+identifies the cause of the offsets or excludes drift of the mesh from the
+sheet. One hypothesis is that the mesh, which has about 18 voxels between
+vertices, cannot follow a sheet that wanders a few voxels inside one triangle;
+this was not tested (for instance by comparing against a finer mesh). The
+measurement matters for anything that samples CT at the mesh surface (render
+depth, ink model inputs). The method assumes isotropic voxels: distances,
+smoothing and tangent geometry use voxel coordinates without spacing. Per-segment
+rows: `data/scroll1_segment_placement.csv`.
 
 ### Where the placement goes next: render depth and the ink model's window
 
@@ -312,32 +342,76 @@ retraining: it measures the peak of the render it is given, shifts the model's
 17-layer window so the peak lands at in-window layer 8, and runs the released
 `infer`. Scored with `validation/ink_score.py` on the dataset's own
 validation-mask pixels only (released hybrid_3d2d seed42 step-075000), on the
-three `ink_9um` segments that ship a validation mask:
+three `ink_9um` segments that ship a validation mask. Every AUC/AP in this
+section is in [data/ink_validation_scores.csv](data/ink_validation_scores.csv),
+regenerated with `validation/ink_score_table.sh` from the local prediction
+files (layer start `L<k>`; `default` = layers 2-18, `peakwin` = peak-chosen).
+Checkpoint hashes: `validation/ink_checkpoints.sha256`.
 
 | segment (labels) | profile peak | default window (layers 2-18) AUC / AP | peak-chosen window AUC / AP | best window in a 5-window sweep |
 | --- | --- | --- | --- | --- |
 | public PHerc0139 segment w029 at 2.4 µm pooled to 9 µm (`pherc0139-w016`) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
 | `pherc0814-46527` | 9 | 0.874 / 0.839 | 0.817 / 0.785 (layers 1-17) | 0.896 / 0.872 (layers 4-20) |
-| `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | sweep running |
+| `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | not run (only layers 1-17 and 2-18 were scored) |
 
-The window matters on held-out pixels (0.73 to 0.83 AUC across five windows on
-w029, 0.81 to 0.90 on 0814-46527), but the mean density peak does not pick it:
-it helps on w029, is within noise on 1667-w029, and on 0814-46527 the best
-window lies in the opposite direction from the one the peak chooses. On the
-training segment PHercParis4 w02 (supervision pixels only, peak at layer 7) the
-peak window gives 0.988 against 0.992 for the default. So this is a measured
-negative result for the one-read window rule, and a measured sensitivity
-finding: the released model's held-out score moves by 0.05 to 0.10 AUC with
-window choice alone on the two segments swept so far. The scores are single
-values with no interval; a bootstrap is not yet done.
-Picking the window per segment needs something other than the mean profile; the
-training pixels are unchanged in every case (supervision AUC 0.994 on w029,
-0.999 on w035 and w039). The released recipe already jitters the training
-window by ±2 layers. Per-column re-centring of the render at inference
-(shifting each column so its peak sits at the centre) is also negative: it drops
-AUC from 0.999 to 0.677 on w035, see `notes/ink-recentring-negative-result.md`.
+The scores are on the dataset's validation-mask pixels. These are not
+unseen-scroll results: villa
+[PR #2126](https://github.com/ScrollPrize/villa/pull/2126) reports that 233 of
+282 validation crops share image voxels with training crops, although their
+supervised labels are disjoint. Until spatial isolation is shown for this
+checkpoint, read them as within-segment scores.
+
+With that caveat, the window changes the score: AUC ranges 0.73 to 0.83 across
+five windows on w029 and 0.81 to 0.90 across five on 0814-46527. The mean density
+peak does not reliably pick the window. It raises AUC on w029 (0.775 to 0.823)
+and on 1667-w029 (0.870 to 0.881), and lowers it on 0814-46527 (0.874 to
+0.817), where the best scored window (layers 4-20) lies in the opposite
+direction from the one the peak chooses. There are no intervals, so whether the
+1667-w029 change (0.011 AUC) is distinguishable from zero is unknown. Other
+variables moved the score more: the seed43 checkpoint scores 0.936 on w029
+(seed42 0.775) and 0.931 on 1667-w029 (0.870), and a mirror-TTA run scores 0.891
+on w029, in [data/ink_validation_scores.csv](data/ink_validation_scores.csv).
+On the training segment PHercParis4 w02 (supervision pixels only, peak at
+layer 7) the peak window gives 0.988 against 0.992 for the default; this figure
+is not in the packet's score files. So this is a measured negative result for
+the one-read window rule, and a measured sensitivity of the released model's
+validation score to window choice (0.05 to 0.10 AUC on the two segments with
+a full sweep). Picking the window per segment needs something other than the
+mean profile. Training-pixel scores are unchanged by the window (supervision
+AUC 0.994 on w029, 0.999 on w035 and w039; the per-segment default and
+peak-window rows are in
+[data/ink_supervision_and_validation_scores_overnight.csv](data/ink_supervision_and_validation_scores_overnight.csv),
+which covers 11 segments, most on training pixels only). The released recipe already jitters the training window
+by +-2 layers. Per-column re-centring of the render at inference (shifting each
+column so its peak sits at the centre) is also negative: on w029 (PHerc0139
+w016 labels) validation AUC drops from 0.775 to 0.498 (`recentered` row in the
+scores CSV); the drop from 0.999 to 0.677 on w035 has no result file in the
+packet. Mechanism: see `notes/ink-recentring-negative-result.md`, where it is
+a hypothesis.
 Run records: `validation/ink_w016_peak_window.json`,
 `validation/ink_0814-46527_peak_window.json`, `validation/ink_1667-w029_peak_window.json`.
+
+### Numbers a judge cannot rerun from this packet
+
+- Every ink result needs the `ink_9um` labels, the surface volumes and the
+  released `hybrid_3d2d` checkpoints (hashes in `validation/ink_checkpoints.sha256`;
+  weights not included). The AUC/AP
+  tables are recorded, not recomputed from published predictions: the
+  prediction tifs are not in the packet. Predictions are not guaranteed bitwise
+  reproducible across machines.
+- The PHercParis4 w02 training-pixel figures (0.988 / 0.992), the w035
+  re-centring figure (0.677) have no result file in the packet.
+- The placement tables need the public Scroll 1 meshes and volume over HTTP
+  (`validation/placement_run_all.sh`, list in `validation/scroll1_segments.txt`);
+  the per-segment CSV is the recorded output. The rerun was not repeated for
+  this release.
+- The render-depth table (`validation/ink_render_depth.py`) reads 29 surface
+  volumes over HTTP plus two local native-9 um copies (`INK_DATA`); only its
+  output CSV is included. Run and error logs of the original runs are not.
+- Spot-check and repair judgments (AI and the submitter's) are in the CSVs;
+  the tile images they were made from are withheld (CC BY-NC) and cannot be
+  re-judged.
+- The numbers in `notes/`: see the notes section below.
 
 ## Files
 
@@ -355,6 +429,15 @@ Run records: `validation/ink_w016_peak_window.json`,
   (255) from `vesuvius.surface_placement_audit`, 20000 samples each;
   `validation/placement_run_all.sh` and `validation/summarise_placement.py`
   produce it.
+- `data/ink_validation_scores.csv`: validation-mask AUC/AP of every ink
+  prediction variant cited above (33 rows), from `validation/ink_score_table.sh`;
+  `data/ink_supervision_and_validation_scores_overnight.csv`: the overnight
+  default-vs-peak-window scores, with checkpoint name. Checkpoint hashes in
+  `validation/ink_checkpoints.sha256`.
+- `validation/negative_results/`: raw JSON outputs of the label-snapping and
+  trace-refinement experiments (see Notes below).
+- `validation/scroll1_segments.txt`: the 255 segment IDs `placement_run_all.sh`
+  reads.
 - `data/community_predictions_audit.csv`: one row per community prediction
   volume and threshold (18 rows), 27 tiles each.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:
@@ -369,9 +452,13 @@ sheets used for the spot checks are kept locally for the same reason.
 
 ## Notes: what did not work
 
-Two side experiments on label and trace refinement are recorded in `notes/`
-as negative results, so they are not repeated blind. Neither is part of the
-prize claim.
+Side experiments are recorded in `notes/` as negative results, so they are not
+repeated blind. None is part of the prize claim. Their scripts are not released.
+The raw JSON outputs of the label-snapping and trace-refinement runs are in
+`validation/negative_results/` (snap/, multisurf/, multisurf2/, optsurf/); the
+notes' figures were not re-derived from them for this release, and some
+figures in the notes may not appear in these files. The ink re-centring note
+has result rows in `data/ink_validation_scores.csv` for one of its two figures.
 
 - [notes/label-snapping-negative-result.md](notes/label-snapping-negative-result.md):
   snapping labels to the CT edge works on synthetic perturbations of the
@@ -391,6 +478,8 @@ prize claim.
   counted but not located.
 - **Thresholds:** tiny 100, thick 7, piece 500 and junction ratio 0.3 are
   heuristics, not tuned on reviewed data.
+- **Isotropic grids:** both audits use voxel coordinates for distances,
+  smoothing and tangent geometry and assume isotropic voxels.
 - **Inspection only:** the audit flags topology findings and measures changes. It does not repair
   merged sheets.
 

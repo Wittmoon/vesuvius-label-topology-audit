@@ -1,0 +1,851 @@
+[
+ {
+  "crop": 1,
+  "statuses": {
+   "snapped": 5
+  },
+  "shifts": [
+   -0.73,
+   -0.33,
+   -0.57,
+   0.18,
+   -0.67
+  ],
+  "orig_topo": {
+   "n_big": 5,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 5,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.33,
+  "idempotence": 0.05,
+  "shift+2": {
+   "pert_vs_ref": 1.34,
+   "snap_vs_ref": 0.96,
+   "pert_vs_orig": 1.03,
+   "snap_vs_orig": 0.71,
+   "pert_b1": 1,
+   "snap_b1": 1,
+   "statuses": {
+    "rejected_topology": 2,
+    "snapped_half": 3,
+    "small_kept": 1
+   },
+   "flipped": [
+    0.604,
+    0.451,
+    0.455,
+    0.386,
+    0.628
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.92,
+   "snap_vs_ref": 0.19,
+   "pert_vs_orig": 1.03,
+   "snap_vs_orig": 0.41,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped": 5
+   },
+   "flipped": [
+    0.175,
+    0.189,
+    0.241,
+    0.312,
+    0.18
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.62,
+   "snap_vs_ref": 0.33,
+   "pert_vs_orig": 0.41,
+   "snap_vs_orig": 0.31,
+   "pert_b1": 5,
+   "snap_b1": 5,
+   "statuses": {
+    "snapped_half": 3,
+    "snapped": 1,
+    "rejected_topology": 1,
+    "small_kept": 2
+   },
+   "flipped": [
+    0.181,
+    0.107,
+    0.159,
+    0.13,
+    0.213
+   ]
+  }
+ },
+ {
+  "crop": 2,
+  "statuses": {
+   "snapped": 4,
+   "snapped_half": 4
+  },
+  "shifts": [
+   -0.53,
+   -0.39,
+   -0.77,
+   -0.25,
+   -0.64,
+   -0.55,
+   -0.61,
+   -0.88
+  ],
+  "orig_topo": {
+   "n_big": 8,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 8,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.28,
+  "idempotence": 0.05,
+  "shift+2": {
+   "pert_vs_ref": 1.31,
+   "snap_vs_ref": 0.59,
+   "pert_vs_orig": 0.99,
+   "snap_vs_orig": 0.45,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "rejected_topology": 1,
+    "snapped_half": 3,
+    "snapped": 4
+   },
+   "flipped": [
+    0.415,
+    0.389,
+    0.424,
+    0.297,
+    0.457,
+    0.414,
+    0.266,
+    0.275
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.87,
+   "snap_vs_ref": 0.35,
+   "pert_vs_orig": 0.98,
+   "snap_vs_orig": 0.56,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped": 6,
+    "rejected_topology": 2
+   },
+   "flipped": [
+    0.148,
+    0.185,
+    0.113,
+    0.188,
+    0.201,
+    0.237,
+    0.123,
+    0.051
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.72,
+   "snap_vs_ref": 0.25,
+   "pert_vs_orig": 0.46,
+   "snap_vs_orig": 0.35,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped": 4,
+    "snapped_half": 3,
+    "rejected_topology": 1
+   },
+   "flipped": [
+    0.136,
+    0.153,
+    0.099,
+    0.127,
+    0.213,
+    0.233,
+    0.169,
+    0.251
+   ]
+  }
+ },
+ {
+  "crop": 3,
+  "statuses": {
+   "snapped": 7,
+   "snapped_half": 1
+  },
+  "shifts": [
+   -1.25,
+   -0.64,
+   -0.84,
+   -0.37,
+   -0.76,
+   -0.59,
+   -0.85,
+   -0.8
+  ],
+  "orig_topo": {
+   "n_big": 8,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 8,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.36,
+  "idempotence": 0.05,
+  "shift+2": {
+   "pert_vs_ref": 1.52,
+   "snap_vs_ref": 1.17,
+   "pert_vs_orig": 1.06,
+   "snap_vs_orig": 0.79,
+   "pert_b1": 20,
+   "snap_b1": 19,
+   "statuses": {
+    "snapped_half": 2,
+    "rejected_topology": 3,
+    "snapped": 2,
+    "small_kept": 5
+   },
+   "flipped": [
+    0.639,
+    0.484,
+    0.457,
+    0.468,
+    0.585,
+    0.454,
+    0.449
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.77,
+   "snap_vs_ref": 0.5,
+   "pert_vs_orig": 1.06,
+   "snap_vs_orig": 0.8,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped_half": 4,
+    "rejected_topology": 2,
+    "snapped": 2,
+    "small_kept": 1
+   },
+   "flipped": [
+    0.107,
+    0.176,
+    0.213,
+    0.183,
+    0.192,
+    0.206,
+    0.176,
+    0.078
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.89,
+   "snap_vs_ref": 0.65,
+   "pert_vs_orig": 0.59,
+   "snap_vs_orig": 0.45,
+   "pert_b1": 2,
+   "snap_b1": 2,
+   "statuses": {
+    "snapped_half": 3,
+    "rejected_topology": 3,
+    "snapped": 2
+   },
+   "flipped": [
+    0.391,
+    0.268,
+    0.236,
+    0.289,
+    0.184,
+    0.156,
+    0.1,
+    0.09
+   ]
+  }
+ },
+ {
+  "crop": 4,
+  "statuses": {
+   "snapped": 15,
+   "snapped_half": 2,
+   "rejected_poor_fit": 1
+  },
+  "shifts": [
+   -0.49,
+   -0.24,
+   0.26,
+   -0.59,
+   -0.53,
+   -0.51,
+   -0.52,
+   -0.43,
+   -0.23,
+   -0.46,
+   -0.56,
+   -0.12,
+   -0.72,
+   -1.2,
+   0.09,
+   -0.73,
+   -1.46
+  ],
+  "orig_topo": {
+   "n_big": 18,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 18,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.27,
+  "idempotence": 0.05,
+  "shift+2": {
+   "pert_vs_ref": 1.28,
+   "snap_vs_ref": 0.91,
+   "pert_vs_orig": 1.03,
+   "snap_vs_orig": 0.72,
+   "pert_b1": 15,
+   "snap_b1": 15,
+   "statuses": {
+    "rejected_topology": 9,
+    "snapped_half": 4,
+    "snapped": 2,
+    "rejected_poor_fit": 1,
+    "small_kept": 3
+   },
+   "flipped": [
+    0.444,
+    0.492,
+    0.547,
+    0.423,
+    0.451,
+    0.417,
+    0.469,
+    0.494,
+    0.415,
+    0.401,
+    0.175,
+    0.636,
+    0.914,
+    0.335,
+    0.481,
+    0.921
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.94,
+   "snap_vs_ref": 0.41,
+   "pert_vs_orig": 1.02,
+   "snap_vs_orig": 0.57,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped_half": 5,
+    "rejected_topology": 2,
+    "snapped": 10,
+    "rejected_poor_fit": 1
+   },
+   "flipped": [
+    0.238,
+    0.412,
+    0.393,
+    0.207,
+    0.291,
+    0.296,
+    0.222,
+    0.264,
+    0.298,
+    0.237,
+    0.13,
+    0.307,
+    0.14,
+    0.111,
+    0.047,
+    0.372,
+    0.166,
+    0.045
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.62,
+   "snap_vs_ref": 0.37,
+   "pert_vs_orig": 0.49,
+   "snap_vs_orig": 0.4,
+   "pert_b1": 9,
+   "snap_b1": 9,
+   "statuses": {
+    "rejected_topology": 6,
+    "snapped": 5,
+    "snapped_half": 5,
+    "rejected_poor_fit": 2,
+    "small_kept": 2
+   },
+   "flipped": [
+    0.262,
+    0.217,
+    0.106,
+    0.175,
+    0.224,
+    0.247,
+    0.201,
+    0.187,
+    0.144,
+    0.153,
+    0.08,
+    0.096,
+    0.052,
+    0.232,
+    0.073,
+    0.261,
+    0.134,
+    0.038
+   ]
+  }
+ },
+ {
+  "crop": 5,
+  "statuses": {
+   "snapped_half": 5,
+   "rejected_topology": 1,
+   "snapped": 9
+  },
+  "shifts": [
+   -0.84,
+   -0.69,
+   -0.62,
+   -0.59,
+   -0.96,
+   -0.49,
+   -0.96,
+   -0.48,
+   -0.68,
+   -0.69,
+   -0.87,
+   -1.07,
+   -0.94,
+   -0.97
+  ],
+  "orig_topo": {
+   "n_big": 15,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 15,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.31,
+  "idempotence": 0.04,
+  "shift+2": {
+   "pert_vs_ref": 1.48,
+   "snap_vs_ref": 0.52,
+   "pert_vs_orig": 0.98,
+   "snap_vs_orig": 0.34,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "rejected_topology": 3,
+    "snapped": 9,
+    "snapped_half": 3
+   },
+   "flipped": [
+    0.468,
+    0.512,
+    0.406,
+    0.328,
+    0.296,
+    0.498,
+    0.376,
+    0.366,
+    0.265,
+    0.245,
+    0.459,
+    0.536,
+    0.487,
+    0.241,
+    0.451
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.71,
+   "snap_vs_ref": 0.24,
+   "pert_vs_orig": 0.97,
+   "snap_vs_orig": 0.54,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "rejected_topology": 2,
+    "snapped": 10,
+    "small_kept": 7,
+    "snapped_half": 1
+   },
+   "flipped": [
+    0.167,
+    0.089,
+    0.194,
+    0.152,
+    0.167,
+    0.111,
+    0.132,
+    0.041,
+    0.133,
+    0.09,
+    0.142,
+    0.146,
+    0.128
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.6,
+   "snap_vs_ref": 0.23,
+   "pert_vs_orig": 0.42,
+   "snap_vs_orig": 0.37,
+   "pert_b1": 4,
+   "snap_b1": 4,
+   "statuses": {
+    "snapped_half": 3,
+    "rejected_topology": 4,
+    "snapped": 8,
+    "small_kept": 3
+   },
+   "flipped": [
+    0.212,
+    0.215,
+    0.147,
+    0.089,
+    0.118,
+    0.171,
+    0.111,
+    0.062,
+    0.07,
+    0.067,
+    0.107,
+    0.086,
+    0.274,
+    0.236,
+    0.421
+   ]
+  }
+ },
+ {
+  "crop": 6,
+  "statuses": {
+   "rejected_poor_fit": 6,
+   "snapped": 2
+  },
+  "shifts": [
+   -1.26,
+   -0.32
+  ],
+  "orig_topo": {
+   "n_big": 8,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 8,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.1,
+  "idempotence": 0.02,
+  "shift+2": {
+   "pert_vs_ref": 1.24,
+   "snap_vs_ref": 0.66,
+   "pert_vs_orig": 1.09,
+   "snap_vs_orig": 0.61,
+   "pert_b1": 26,
+   "snap_b1": 16,
+   "statuses": {
+    "rejected_topology": 2,
+    "snapped": 3,
+    "snapped_half": 1,
+    "rejected_poor_fit": 1,
+    "small_kept": 2
+   },
+   "flipped": [
+    0.35,
+    0.37,
+    0.36,
+    0.296,
+    0.27,
+    0.229,
+    0.384
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 1.0,
+   "snap_vs_ref": 0.61,
+   "pert_vs_orig": 1.09,
+   "snap_vs_orig": 0.7,
+   "pert_b1": 16,
+   "snap_b1": 4,
+   "statuses": {
+    "rejected_poor_fit": 1,
+    "rejected_topology": 1,
+    "snapped": 4,
+    "snapped_half": 1
+   },
+   "flipped": [
+    0.221,
+    0.062,
+    0.147,
+    0.26,
+    0.147,
+    0.188,
+    0.294
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.5,
+   "snap_vs_ref": 0.35,
+   "pert_vs_orig": 0.39,
+   "snap_vs_orig": 0.36,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "rejected_poor_fit": 4,
+    "snapped": 2,
+    "rejected_topology": 1,
+    "snapped_half": 1
+   },
+   "flipped": [
+    0.132,
+    0.127,
+    0.109,
+    0.101,
+    0.117,
+    0.059,
+    0.058,
+    0.125
+   ]
+  }
+ },
+ {
+  "crop": 7,
+  "statuses": {
+   "snapped": 2,
+   "rejected_poor_fit": 4
+  },
+  "shifts": [
+   -0.83,
+   -1.29
+  ],
+  "orig_topo": {
+   "n_big": 6,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 6,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.13,
+  "idempotence": 0.03,
+  "shift+2": {
+   "pert_vs_ref": 1.36,
+   "snap_vs_ref": 0.32,
+   "pert_vs_orig": 1.13,
+   "snap_vs_orig": 0.23,
+   "pert_b1": 1,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped": 4,
+    "snapped_half": 1
+   },
+   "flipped": [
+    0.342,
+    0.214,
+    0.372,
+    0.32,
+    0.443
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.96,
+   "snap_vs_ref": 0.75,
+   "pert_vs_orig": 1.12,
+   "snap_vs_orig": 0.89,
+   "pert_b1": 0,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped": 2,
+    "rejected_poor_fit": 4
+   },
+   "flipped": [
+    0.126,
+    0.087,
+    0.166,
+    0.14,
+    0.28,
+    0.172
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.45,
+   "snap_vs_ref": 0.3,
+   "pert_vs_orig": 0.38,
+   "snap_vs_orig": 0.39,
+   "pert_b1": 1,
+   "snap_b1": 0,
+   "statuses": {
+    "snapped": 2,
+    "snapped_half": 1,
+    "rejected_poor_fit": 3
+   },
+   "flipped": [
+    0.092,
+    0.087,
+    0.101,
+    0.084,
+    0.142,
+    0.127
+   ]
+  }
+ },
+ {
+  "crop": 8,
+  "statuses": {
+   "snapped": 16,
+   "small_kept": 1
+  },
+  "shifts": [
+   -1.04,
+   -0.97,
+   -0.91,
+   -0.62,
+   -0.27,
+   -0.55,
+   -0.94,
+   -1.01,
+   -0.95,
+   -0.73,
+   -0.66,
+   -0.8,
+   -0.76,
+   -1.01,
+   -0.95,
+   -1.58
+  ],
+  "orig_topo": {
+   "n_big": 17,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_topo": {
+   "n_big": 17,
+   "b1": 0,
+   "b2": 0
+  },
+  "snap_vs_orig": 0.38,
+  "idempotence": 0.06,
+  "shift+2": {
+   "pert_vs_ref": 1.62,
+   "snap_vs_ref": 1.13,
+   "pert_vs_orig": 1.06,
+   "snap_vs_orig": 0.71,
+   "pert_b1": 185,
+   "snap_b1": 142,
+   "statuses": {
+    "rejected_topology": 7,
+    "snapped": 2,
+    "snapped_half": 4,
+    "small_kept": 11
+   },
+   "flipped": [
+    0.507,
+    0.59,
+    0.547,
+    0.414,
+    0.466,
+    0.46,
+    0.53,
+    0.455,
+    0.446,
+    0.616,
+    0.601,
+    0.649,
+    0.911
+   ]
+  },
+  "shift-2": {
+   "pert_vs_ref": 0.7,
+   "snap_vs_ref": 0.37,
+   "pert_vs_orig": 1.06,
+   "snap_vs_orig": 0.73,
+   "pert_b1": 97,
+   "snap_b1": 97,
+   "statuses": {
+    "snapped": 9,
+    "snapped_half": 4,
+    "rejected_topology": 2,
+    "small_kept": 1
+   },
+   "flipped": [
+    0.171,
+    0.171,
+    0.22,
+    0.354,
+    0.306,
+    0.232,
+    0.113,
+    0.083,
+    0.2,
+    0.32,
+    0.209,
+    0.18,
+    0.204,
+    0.099,
+    0.106
+   ]
+  },
+  "drift2.5": {
+   "pert_vs_ref": 0.83,
+   "snap_vs_ref": 0.45,
+   "pert_vs_orig": 0.45,
+   "snap_vs_orig": 0.34,
+   "pert_b1": 222,
+   "snap_b1": 117,
+   "statuses": {
+    "snapped": 4,
+    "snapped_half": 5,
+    "rejected_topology": 3,
+    "small_kept": 2
+   },
+   "flipped": [
+    0.192,
+    0.251,
+    0.207,
+    0.234,
+    0.141,
+    0.152,
+    0.149,
+    0.405,
+    0.312,
+    0.369,
+    0.27,
+    0.251
+   ]
+  }
+ }
+]

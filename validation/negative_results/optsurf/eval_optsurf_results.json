@@ -1,0 +1,133 @@
+{
+ "info": {
+  "faces": 723,
+  "grid": [
+   952,
+   4834
+  ],
+  "cells": 104655,
+  "raster_s": 0.6
+ },
+ "runs": [
+  {
+   "P1": 0.05,
+   "P2": 0.4,
+   "lam": 0.0,
+   "h0_median": -2.72,
+   "h0_abs_p50": 3.96,
+   "h0_abs_gt3": 0.014,
+   "shift+3": {
+    "base": 3.0,
+    "err": 1.62,
+    "err_p50": 0.02,
+    "jump": 0.102,
+    "recovered": 0.46
+   },
+   "shift-3": {
+    "base": 3.0,
+    "err": 1.18,
+    "err_p50": 0.02,
+    "jump": 0.075,
+    "recovered": 0.61
+   },
+   "drift3": {
+    "base": 1.46,
+    "err": 0.69,
+    "err_p50": 0.04,
+    "jump": 0.042,
+    "recovered": 0.53
+   },
+   "secs": 330.0
+  },
+  {
+   "P1": 0.1,
+   "P2": 1.0,
+   "lam": 0.0,
+   "h0_median": -2.66,
+   "h0_abs_p50": 3.85,
+   "h0_abs_gt3": 0.014,
+   "shift+3": {
+    "base": 3.0,
+    "err": 1.54,
+    "err_p50": 0.04,
+    "jump": 0.098,
+    "recovered": 0.49
+   },
+   "shift-3": {
+    "base": 3.0,
+    "err": 1.16,
+    "err_p50": 0.03,
+    "jump": 0.074,
+    "recovered": 0.61
+   },
+   "drift3": {
+    "base": 1.46,
+    "err": 0.69,
+    "err_p50": 0.06,
+    "jump": 0.042,
+    "recovered": 0.53
+   },
+   "secs": 324.9
+  },
+  {
+   "P1": 0.1,
+   "P2": 1.0,
+   "lam": 0.02,
+   "h0_median": -1.86,
+   "h0_abs_p50": 3.12,
+   "h0_abs_gt3": 0.012,
+   "shift+3": {
+    "base": 3.0,
+    "err": 1.38,
+    "err_p50": 0.09,
+    "jump": 0.084,
+    "recovered": 0.54
+   },
+   "shift-3": {
+    "base": 3.0,
+    "err": 1.33,
+    "err_p50": 0.13,
+    "jump": 0.086,
+    "recovered": 0.56
+   },
+   "drift3": {
+    "base": 1.46,
+    "err": 0.82,
+    "err_p50": 0.08,
+    "jump": 0.051,
+    "recovered": 0.44
+   },
+   "secs": 333.6
+  },
+  {
+   "P1": 0.2,
+   "P2": 2.0,
+   "lam": 0.02,
+   "h0_median": -1.81,
+   "h0_abs_p50": 3.06,
+   "h0_abs_gt3": 0.012,
+   "shift+3": {
+    "base": 3.0,
+    "err": 1.24,
+    "err_p50": 0.11,
+    "jump": 0.071,
+    "recovered": 0.59
+   },
+   "shift-3": {
+    "base": 3.0,
+    "err": 1.27,
+    "err_p50": 0.15,
+    "jump": 0.079,
+    "recovered": 0.58
+   },
+   "drift3": {
+    "base": 1.46,
+    "err": 0.82,
+    "err_p50": 0.12,
+    "jump": 0.047,
+    "recovered": 0.44
+   },
+   "secs": 333.6
+  }
+ ]
+}

@@ -18,7 +18,10 @@ for s,i in [("w00","20231016151002"),("w01","20230702185753"),("w02","2023103114
 ("w05","20231012184424"),("w06","20231210121321"),("w07","20231007101619"),("w09","20230929220926")]:
     al.append(("phercparis4-"+s,PP%i))
 N9="PHerc0139/segments/%s/surface-volumes/9.362um-1.2m-113keV-volume-20250728140407.zarr"
-LOC="/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-tools/scratch/ink/data/%s/sv9/0"
+# Local copies of the native 9 um surface volumes for w035/w039: set INK_DATA (default ./data), layout
+# $INK_DATA/<segment>/sv9/0. These two segments are skipped if the path is missing.
+import os
+LOC=os.path.join(os.environ.get("INK_DATA","data"),"%s","sv9","0")
 nat=[("native-w035",LOC%"w035"),("native-w039",LOC%"w039"),
 ("native-w040",B+(N9%"20250831000000-w040_2025083102")+"/0"),("native-w041",B+(N9%"20260108000000-w041_2026010816")+"/0"),
 ("native-w044",B+(N9%"20260115000000-w044_2026011522")+"/0")]

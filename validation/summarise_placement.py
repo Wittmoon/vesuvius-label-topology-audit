@@ -1,7 +1,12 @@
-"""One row per audited public segment + a summary: python aggregate_all.py out.csv"""
-import csv, json, math, sys
+"""One row per audited public segment + a summary.
+
+usage: python summarise_placement.py out.csv [RESULTS_DIR]
+RESULTS_DIR holds one <segment>.json per segment (default: $R/all from placement_run_all.sh,
+i.e. ./out/placement/all).
+"""
+import csv, json, math, os, sys
 from pathlib import Path
-R = Path(__file__).parent / "all"
+R = Path(sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.environ.get("R", "out/placement"), "all"))
 COLS = ["surface", "n_vertices", "n_samples", "n_valid", "no_peak_frac", "off_sheet_frac",
         "offset_median", "offset_q25", "offset_q75", "offset_mean_abs", "offset_abs_gt_2_frac",
         "sheet_fwhm_median", "contrast_median", "snap_remeasure_sd",

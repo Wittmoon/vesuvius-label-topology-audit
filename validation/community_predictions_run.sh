@@ -1,9 +1,13 @@
 #!/bin/sh
 # nine community prediction volumes x two scrolls, one shared 768^3 window per scroll, 256^3 tiles
-export W=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-wt/label-topology-audit/vesuvius
-export PY=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa/vesuvius/.venv/bin/python
+# Paths (environment variables; the recorded runs used local paths, these defaults are placeholders):
+#   W   villa checkout vesuvius/ directory (has src/)     default: $PWD/villa/vesuvius
+#   PY  python with the branch's dependencies           default: python3
+#   R   output directory                                 default: $PWD/out/pred_audit
+export W=${W:-$PWD/villa/vesuvius}
+export PY=${PY:-python3}
 export B=https://dl.ash2txt.org/community-uploads/yupeng
-export R=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-tools/scratch/pred_audit
+export R=${R:-$PWD/out/pred_audit}
 {
 for model in m7 soc herc; do for th in 0.2 0.3 0.5; do
   echo "$model PHerc1447 $th 12288:13056,3840:4608,3584:4352"

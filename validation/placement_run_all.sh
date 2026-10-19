@@ -1,8 +1,14 @@
 #!/bin/sh
 # audit every public Scroll 1 segment; one process per segment, 4 at a time
-R=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-tools/scratch/label_quality/placement
-W=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-wt/label-topology-audit/vesuvius/src
-PY=/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa/vesuvius/.venv/bin/python
+# Environment variables (defaults in brackets):
+#   R   output directory; results go in $R/all           [$PWD/out/placement]
+#   W   villa checkout's vesuvius/src (PYTHONPATH)       [$PWD/villa/vesuvius/src]
+#   PY  python with the branch's dependencies            [python3]
+#   SEGMENTS  list of segment ids, one per line          [validation/scroll1_segments.txt next to this script]
+R=${R:-$PWD/out/placement}
+W=${W:-$PWD/villa/vesuvius/src}
+PY=${PY:-python3}
+SEGMENTS=${SEGMENTS:-$(cd "$(dirname "$0")" && pwd)/scroll1_segments.txt}
 VOL=https://dl.ash2txt.org/full-scrolls/Scroll1/PHercParis4.volpkg/volumes_zarr_standardized/54keV_7.91um_Scroll1A.zarr
 mkdir -p $R/all
 one() {
@@ -29,6 +35,6 @@ while read id; do
   one "$id" &
   n=$((n+1))
   if [ $n -ge 2 ]; then wait; n=0; fi
-done < $R/scroll1_segments.txt
+done < "$SEGMENTS"
 wait
 echo "ALL DONE $(date +%H:%M:%S)" >> $R/all/run_all.log

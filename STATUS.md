@@ -1,8 +1,11 @@
 # Status
 
+Code revision: <to be filled>
+Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-19).
+
 - 2026-10-18: branch `feat/label-topology-audit` pushed to the fork
   (https://github.com/Wittmoon/villa/tree/feat/label-topology-audit) and this
-  packet published. Pull request to ScrollPrize/villa: pending (see below).
+  packet published.
 - 2026-10-18, later: zarr input landed on the branch (`a620aca9e`); the 6 hand-checked
   CUT holes filed as https://github.com/ScrollPrize/villa/issues/2144; negative-result
   notes added under `notes/`.
@@ -12,6 +15,7 @@
 - 2026-10-19, later: surface placement audit run over all 255 public Scroll 1 segments, `data/scroll1_segment_placement.csv` + README subsection; `code.patch` regenerated at 49626183f (12 commits).
 - 2026-10-19 13:10 local: placement follow-up posted as PR #2147 comment (https://github.com/ScrollPrize/villa/pull/2147#issuecomment-6272805754) and in the Discord thread.
 - 2026-10-19, later: `--cache DIR` chunk cache on the placement tool; `code.patch` regenerated at 1f0508001 (13 commits).
-- 2026-10-19 ~15:00 local: ink render depth over all 29 ink_9um training segments (data/ink_render_depth.csv) and the peak-chosen inference window (validation/ink_peak_window.py): public w029 held-out AUC 0.775 -> 0.823 with no retraining; README subsection + negative-result note on per-column re-centring.
-- 2026-10-19 ~16:00 local: peak-chosen window tested on the two other validation-mask segments (pherc0814-46527, pherc1667-w029): helps on one of three, hurts on 0814 where the best window is in the opposite direction; README subsection rewritten as a window-sensitivity finding plus a negative result for the one-read rule. Overnight queue running (all 29 renders default vs peak, 5-window sweeps, seed43 and step-050000 checkpoints, placement cache timing).
+- 2026-10-19 ~15:00 local: ink render depth over all 29 ink_9um training segments (data/ink_render_depth.csv) and the peak-chosen inference window (validation/ink_peak_window.py): public w029 validation-mask AUC 0.775 -> 0.823 with no retraining; README subsection + negative-result note on per-column re-centring.
+- 2026-10-19 ~16:00 local: peak-chosen window tested on the two other validation-mask segments (pherc0814-46527, pherc1667-w029): helps on one of three, hurts on 0814 where the best window is in the opposite direction; README subsection rewritten as a window-sensitivity finding plus a negative result for the one-read rule. An overnight queue of further runs was started; only the rows in `data/ink_*scores*.csv` are in this packet.
 - 2026-10-19 ~16:30 local: two independent reviews (Claude agent, Codex) of the whole packet; overclaims corrected in README (14 located holes not "14 largest", fix_holes adds voxels into the 6 CUT pockets and was measured on only 1 of the 8 FILL holes, 18 not nine prediction runs, Socratic 1.5-2.3x and HercUNet 3.1-8.7x, w029 is a PHerc0139 segment, window-sensitivity caveat with no interval yet) and in the form (14 of 29 renders, median not "every" mesh, no "measured fix" wording). Reviews kept in the internal dir.
+- 2026-10-19, later: packet fixes after the Codex review: placement and ink wording, PR #2126 training-overlap disclosure, threshold-sweep prose checked against the CSVs, validation scripts take paths from environment variables, score and checkpoint-hash files added, negative-result JSON outputs added. `code.patch` and `CHECKSUMS.json` are not yet regenerated for the final code revision.

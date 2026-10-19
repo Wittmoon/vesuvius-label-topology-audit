@@ -1,0 +1,47 @@
+[
+ {
+  "shift": -0.5
+ },
+ {
+  "name": "traced (h=0)",
+  "agree2": 0.456,
+  "wrong_sheet": 0.0,
+  "err_p50": 2.5,
+  "err_p90": 4.5
+ },
+ {
+  "name": "learned+shift single R6 lam0.05",
+  "agree2": 0.232,
+  "wrong_sheet": 0.2911,
+  "err_p50": 4.23,
+  "err_p90": 9.0
+ },
+ {
+  "name": "learned+shift single R10 lam0.1",
+  "agree2": 0.328,
+  "wrong_sheet": 0.1918,
+  "err_p50": 3.28,
+  "err_p90": 8.5
+ },
+ {
+  "name": "learned+shift single R10 lam0.0",
+  "agree2": 0.077,
+  "wrong_sheet": 0.6374,
+  "err_p50": 7.15,
+  "err_p90": 11.5
+ },
+ {
+  "name": "learned+shift joint lam0.1 smin5 beta0.1",
+  "agree2": 0.41,
+  "wrong_sheet": 0.0188,
+  "err_p50": 2.53,
+  "err_p90": 4.67
+ },
+ {
+  "name": "learned+shift joint lam0.0 smin5 beta0.1",
+  "agree2": 0.143,
+  "wrong_sheet": 0.5662,
+  "err_p50": 6.51,
+  "err_p90": 11.01
+ }
+]
