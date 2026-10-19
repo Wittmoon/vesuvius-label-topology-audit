@@ -217,6 +217,38 @@ the exact command list is
   truth exists for these windows, so this ranks prediction topology, it does
   not score accuracy. The m7 and Socratic groups publish only pyramid level 0.
 
+#### Threshold sweep on the probability volumes
+
+The same windows cut at nine thresholds (0.1 to 0.9, uint8 cut `ceil(t*255)`)
+from the published probability volumes (`m7_PHerc1447`, `soc_PHerc0814`, ...),
+every cut from one read with `--threshold 26,51,...,230`. Full table:
+[data/threshold_sweep.csv](data/threshold_sweep.csv) (54 rows: model x
+scroll x threshold); commands in
+[validation/threshold_sweep_run.sh](validation/threshold_sweep_run.sh).
+
+| model | scroll | lowest b1 per Mvox fg at | b1 per Mvox at 0.1 / best / 0.7 | b2 at 0.2 / 0.4 / 0.6 |
+| --- | --- | --- | --- | --- |
+| m7 | PHerc1447 | 0.4 | 69 / 39 / 100 | 1,261 / 14 / 2 |
+| m7 | PHerc0814 | 0.3 | 73 / 66 / 222 | 466 / 18 / 0 |
+| Socratic | PHerc1447 | 0.4 | 97 / 56 / 1,041 | 3,652 / 102 / 9 |
+| Socratic | PHerc0814 | 0.3 | 130 / 110 / 1,761 | 5,108 / 139 / 10 |
+| HercUNet | PHerc1447 | 0.3 | 298 / 199 / 474 | 33,197 / 78,969 / 112,552 |
+| HercUNet | PHerc0814 | 0.3 | 267 / 203 / 1,051 | 167,541 / 323,748 / 469,453 |
+
+- For m7 and Socratic the hole density has a single minimum at 0.3-0.4 and
+  cavities fall by one to two orders of magnitude between 0.2 and 0.4, then
+  reach zero by 0.7. Cuts above 0.5 fragment the sheets: hole density rises
+  5-30x by 0.7 for Socratic, 2-3x for m7.
+- The hole minimum and the cavity collapse sit on the same cut, so the sweep
+  picks a threshold without a labelled reference: 0.3 to 0.4 for both models,
+  on both scrolls.
+- HercUNet's cavity count rises with the threshold up to 0.5-0.6, the opposite
+  of the other two. Its probability volume is thick (median thickness 3.5-5 at
+  0.3), and a higher cut hollows the thick sheets instead of separating them.
+  No cut in the sweep makes it behave like a surface model.
+- Caveats as above: one window per scroll, no ground truth, a cut's topology
+  ranks it against other cuts of the same model only.
+
 ## Files
 
 - `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `605e9d222`.
@@ -226,6 +258,9 @@ the exact command list is
   judgments.
 - `data/errata.csv`: 33 holes with crop ID, centre, both AI verdicts,
   consensus, human verdict (14 rows) and a suggested action.
+- `data/threshold_sweep.csv`: one row per model, scroll and threshold (54) of
+  the sweep on the probability volumes; `validation/threshold_sweep_run.sh` and
+  `validation/summarise_threshold_sweep.py` produce it
 - `data/community_predictions_audit.csv`: one row per community prediction
   volume and threshold (18 rows), 27 tiles each.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:
