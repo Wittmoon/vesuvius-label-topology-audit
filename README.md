@@ -281,6 +281,51 @@ global shift. It matters for anything that samples CT at the mesh surface
 (render depth, ink model inputs). Per-segment rows:
 `data/scroll1_segment_placement.csv`.
 
+### Where the placement goes next: render depth and the ink model's window
+
+If the mesh is off the sheet, the surface volume rendered from it puts the
+papyrus at the wrong depth, and the ink model reads a fixed 17-layer window
+around the centre of that render. The same profile measurement, applied to all
+29 `ink_9um` training renders (mean z profile over about 100 sampled chunks of
+the central half of each segment; `validation/ink_render_depth.py`, rows in
+`data/ink_render_depth.csv`), shows the sheet is never above centre and often
+below it:
+
+| peak minus centre layer | aligned 2.4 µm renders (centre 10) | native 9 µm renders (centre 14) |
+| --- | --- | --- |
+| 0 | 4 (PHerc0139 w028, w029, w041, w043) | 0 |
+| -1 | 11 | 0 |
+| -2 | 3 | 5 (all) |
+| -3 | 4 (PHerc1667 w018, PHercParis4 w02, w07, w09) | 0 |
+| -4 | 2 (PHercParis4 w00, w03) | 0 |
+
+The 2-layer-and-worse cases concentrate in PHercParis4 (6 of 8) and
+PHerc1667 (2 of 6); PHerc0139 sits within one layer.
+
+This is actionable without retraining. `validation/ink_peak_window.py`
+measures the peak of the render it is given and shifts the model's window so
+the peak lands at in-window layer 8, then runs the released `infer`. On the
+public Scroll 1 segment w029 (2.4 µm render pooled to 9 µm; `ink_9um` labels
+`pherc0139-w016`, released hybrid_3d2d seed42 step-075000, scored with
+`validation/ink_score.py` on the dataset's own validation-mask pixels only):
+
+| window | validation AUC | validation AP | supervision AUC |
+| --- | --- | --- | --- |
+| default (centre, layers 2-18) | 0.775 | 0.622 | 0.994 |
+| peak-chosen (layers 1-17) | 0.823 | 0.676 | 0.994 |
+| best of a 5-window sweep (layers 0-16) | 0.828 | 0.689 | 0.994 |
+
+One profile read recovers most of the gain the exhaustive sweep finds, and the
+training pixels are unchanged, so the effect is on held-out pixels. Two
+caveats: this is one held-out segment, and the released recipe already jitters
+the training window by ±2 layers, so the gain is from matching the depth the
+model expects rather than from new information. Per-column re-centring of the
+render at inference (shifting each column so its peak sits at the centre) is a
+negative result: it drops AUC from 0.999 to 0.677 on w035, see
+`notes/ink-recentring-negative-result.md`. On the training segments w035 and w039
+(supervision pixels, no validation mask released) the peak-chosen window leaves
+AUC at 0.999, so the shift does not hurt where the default already works. Run record: `validation/ink_w016_peak_window.json`.
+
 ## Files
 
 - `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `605e9d222`.

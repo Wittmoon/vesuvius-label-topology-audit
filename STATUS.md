@@ -12,3 +12,4 @@
 - 2026-10-19, later: surface placement audit run over all 255 public Scroll 1 segments, `data/scroll1_segment_placement.csv` + README subsection; `code.patch` regenerated at 49626183f (12 commits).
 - 2026-10-19 13:10 local: placement follow-up posted as PR #2147 comment (https://github.com/ScrollPrize/villa/pull/2147#issuecomment-6272805754) and in the Discord thread.
 - 2026-10-19, later: `--cache DIR` chunk cache on the placement tool; `code.patch` regenerated at 1f0508001 (13 commits).
+- 2026-10-19 ~15:00 local: ink render depth over all 29 ink_9um training segments (data/ink_render_depth.csv) and the peak-chosen inference window (validation/ink_peak_window.py): public w029 held-out AUC 0.775 -> 0.823 with no retraining; README subsection + negative-result note on per-column re-centring.
