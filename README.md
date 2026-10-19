@@ -302,29 +302,36 @@ below it:
 The 2-layer-and-worse cases concentrate in PHercParis4 (6 of 8) and
 PHerc1667 (2 of 6); PHerc0139 sits within one layer.
 
-This is actionable without retraining. `validation/ink_peak_window.py`
-measures the peak of the render it is given and shifts the model's window so
-the peak lands at in-window layer 8, then runs the released `infer`. On the
-public Scroll 1 segment w029 (2.4 µm render pooled to 9 µm; `ink_9um` labels
-`pherc0139-w016`, released hybrid_3d2d seed42 step-075000, scored with
-`validation/ink_score.py` on the dataset's own validation-mask pixels only):
+`validation/ink_peak_window.py` tests whether this is actionable without
+retraining: it measures the peak of the render it is given, shifts the model's
+17-layer window so the peak lands at in-window layer 8, and runs the released
+`infer`. Scored with `validation/ink_score.py` on the dataset's own
+validation-mask pixels only (released hybrid_3d2d seed42 step-075000), on the
+three `ink_9um` segments that ship a validation mask:
 
-| window | validation AUC | validation AP | supervision AUC |
-| --- | --- | --- | --- |
-| default (centre, layers 2-18) | 0.775 | 0.622 | 0.994 |
-| peak-chosen (layers 1-17) | 0.823 | 0.676 | 0.994 |
-| best of a 5-window sweep (layers 0-16) | 0.828 | 0.689 | 0.994 |
+| segment (labels) | profile peak | default window (layers 2-18) AUC / AP | peak-chosen window AUC / AP | best window in a 5-window sweep |
+| --- | --- | --- | --- | --- |
+| public Scroll 1 w029 at 2.4 µm pooled to 9 µm (`pherc0139-w016`) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
+| `pherc0814-46527` | 9 | 0.874 / 0.839 | 0.817 / 0.785 (layers 1-17) | 0.896 / 0.872 (layers 4-20) |
+| `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | sweep running |
 
-One profile read recovers most of the gain the exhaustive sweep finds, and the
-training pixels are unchanged, so the effect is on held-out pixels. Two
-caveats: this is one held-out segment, and the released recipe already jitters
-the training window by ±2 layers, so the gain is from matching the depth the
-model expects rather than from new information. Per-column re-centring of the
-render at inference (shifting each column so its peak sits at the centre) is a
-negative result: it drops AUC from 0.999 to 0.677 on w035, see
-`notes/ink-recentring-negative-result.md`. On the training segments w035 and w039
-(supervision pixels, no validation mask released) the peak-chosen window leaves
-AUC at 0.999, so the shift does not hurt where the default already works. Run record: `validation/ink_w016_peak_window.json`.
+The window matters on held-out pixels (0.73 to 0.83 AUC across five windows on
+w029, 0.81 to 0.90 on 0814-46527), but the mean density peak does not pick it:
+it helps on w029, is within noise on 1667-w029, and on 0814-46527 the best
+window lies in the opposite direction from the one the peak chooses. On the
+training segment PHercParis4 w02 (supervision pixels only, peak at layer 7) the
+peak window gives 0.988 against 0.992 for the default. So this is a measured
+negative result for the one-read window rule, and a measured sensitivity
+finding: the released model's held-out score moves by 0.05 to 0.10 AUC with
+window choice alone, which is larger than the gap between released checkpoints.
+Picking the window per segment needs something other than the mean profile; the
+training pixels are unchanged in every case (supervision AUC 0.994 on w029,
+0.999 on w035 and w039). The released recipe already jitters the training
+window by ±2 layers. Per-column re-centring of the render at inference
+(shifting each column so its peak sits at the centre) is also negative: it drops
+AUC from 0.999 to 0.677 on w035, see `notes/ink-recentring-negative-result.md`.
+Run records: `validation/ink_w016_peak_window.json`,
+`validation/ink_0814-46527_peak_window.json`, `validation/ink_1667-w029_peak_window.json`.
 
 ## Files
 
