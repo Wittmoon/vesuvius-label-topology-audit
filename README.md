@@ -56,9 +56,9 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `4272804e4` (code.patch = `git format-patch 3d56d06ec..4272804e4`).
+- Code revision: `c17d23955` (code.patch = `git format-patch 3d56d06ec..c17d23955`, 17 commits).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
-  `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e` (zarr
+  `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
   records below were made at those commits; they do not cover the surface placement
   audit or later fixes.
@@ -77,7 +77,14 @@ applied ([test record](validation/upstream-source-tests.json)); with the zarr
 input commit the branch has 35 tests, all passing
 ([record](validation/branch-tests-a620aca9e.json)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
-thickness included. The labels are 2-3 voxel sheets, so the crop-face
+thickness included. It was rerun again at `9ae381299`, after two review fixes
+(a fill the sheet never touches is no longer counted as a repair; contact with
+ignore voxels is now tested with the same 26-connectivity as the foreground):
+every total is unchanged (571 holes, 494 located, 206 cavities, 152 crops
+with a hole) and one crop moved, `sample_00205`, whose single big component
+touches ignore voxels only at a corner and is now counted open rather than
+closed (`n_closed_big` 7 to 6 over the set). The later commits touch the
+placement tool, input handling and docs, not the topology arithmetic. The labels are 2-3 voxel sheets, so the crop-face
 correction does not change them. Three real-data cases are also recorded in
 [validation/real-data-review.json](validation/real-data-review.json).
 
@@ -415,7 +422,7 @@ Run records: `validation/ink_w016_peak_window.json`,
 
 ## Files
 
-- `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `605e9d222`.
+- `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `9ae381299` (identical to the `605e9d222` run except `sample_00205`, see above).
 - `data/kaggle_ranked.csv`: 353 crops with any finding, worst first, with a reason.
 - `data/fix_holes_before_after.csv`: per crop and method.
 - `data/repair_tiles.csv`, `data/repair_review.csv`: tile index and per-tile

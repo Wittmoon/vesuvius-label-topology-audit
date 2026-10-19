@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/15] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/17] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -529,7 +529,7 @@ index 000000000..9321fc64e
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/15] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/17] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -643,7 +643,7 @@ index 9321fc64e..befc51f26 100644
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/15] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/17] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -1035,7 +1035,7 @@ index befc51f26..b15e79b9c 100644
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/15] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/17] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1444,7 +1444,7 @@ index b15e79b9c..ba977e4b5 100644
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/15] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/17] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1485,7 +1485,7 @@ index 2b5503795..14624a5a1 100644
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/15] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/17] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1812,7 +1812,7 @@ index ba977e4b5..750dc51aa 100644
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/15] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/17] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -2202,7 +2202,7 @@ index 750dc51aa..113996fad 100644
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/15] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/17] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2410,7 +2410,7 @@ index 113996fad..deb220f49 100644
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/15] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/17] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -3185,7 +3185,7 @@ index 000000000..9e7dc1d24
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/15] feat: update 4 Python files
+Subject: [PATCH 10/17] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3584,7 +3584,7 @@ index 9e7dc1d24..2b8014743 100644
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/15] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/17] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3639,7 +3639,7 @@ index 048f619e2..488ff418e 100644
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/15] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/17] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3707,7 +3707,7 @@ index 488ff418e..b064abb97 100644
 From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 14:02:10 -0400
-Subject: [PATCH 13/15] feat(surface-placement-audit): --cache DIR keeps CT
+Subject: [PATCH 13/17] feat(surface-placement-audit): --cache DIR keeps CT
  chunks on disk
 
 ChunkCache wraps the volume and stores each native chunk it reads as a .npy
@@ -3874,7 +3874,7 @@ index 2b8014743..916c8bb3b 100644
 From 9ae3812997806a4e0e86344bd09f2705abbb1117 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:08:00 -0400
-Subject: [PATCH 14/15] fix(label-topology-audit): islands are not repairs;
+Subject: [PATCH 14/17] fix(label-topology-audit): islands are not repairs;
  corner contact with ignore voxels opens a component
 
 A closing fill cut off from the sheet by blocked voxels raised the Euler
@@ -3951,7 +3951,7 @@ index deb220f49..90ac6e1c6 100644
 From 4272804e4773f8bce7115d208eaa254055eb11cd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:48:25 -0400
-Subject: [PATCH 15/15] fix(audit): cache identity, non-default spacing,
+Subject: [PATCH 15/17] fix(audit): cache identity, non-default spacing,
  censored peaks, streaming tiles
 
 - surface_placement_audit: ChunkCache keyed on source path/URL, level (and size/mtime for local files); two volumes with equal geometry no longer share chunks
@@ -4312,6 +4312,273 @@ index 916c8bb3b..7f31bfc85 100644
 +    tifffile.imwrite(p, sheet_volume(z0=32.0))
 +    m = one_surface(tmp_path, str(p), 30.0)
 +    assert m["n_valid"] > 0 and m["censored_frac"] == 0.0
+-- 
+2.56.0
+
+
+From 5d6b5781841fe69c27ee1cdbe589cfd28a477abf Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Mon, 19 Oct 2026 18:01:53 -0400
+Subject: [PATCH 16/17] fix(audit): URL inputs ending in .tif read as TIFF;
+ docs name fused_voxel_frac, b1_face and censored profiles
+
+---
+ vesuvius/docs/label-topology-audit.md                     | 7 ++++---
+ vesuvius/docs/surface-placement-audit.md                  | 3 ++-
+ .../src/vesuvius/image_proc/run/label_topology_audit.py   | 4 +++-
+ vesuvius/tests/test_label_topology_audit.py               | 8 ++++++++
+ 4 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
+index ed4172dab..94db26bdf 100644
+--- a/vesuvius/docs/label-topology-audit.md
++++ b/vesuvius/docs/label-topology-audit.md
+@@ -45,15 +45,16 @@ meaningful for topology). Zarr input is read lazily, so:
+ - `--tile N` splits the window into N-voxel cubes and audits each as its own
+   crop named `<name>_z<z0>_y<y0>_x<x0>`, with `aggregate.csv` and `ranked.csv`
+   as for `--batch`. Partial cubes at the far edge are dropped, so choose the
+-  window as a multiple of N. Topology is measured per cube: a hole or sheet cut
+-  by a cube face counts as open (`b1_face`), the same way crop faces do.
++  window as a multiple of N. Topology is measured per cube: a sheet cut by a
++  cube face is open at that face, and a hole that survives the cut is located
++  against the cube face (`b1_face`), the same way crop faces do.
+ - `--threshold T` binarises the input as `value >= T`, for probability volumes
+   (`128` for a uint8 probability at 0.5) and for `0/255` masks (`1`). It sets
+   the surface value to 1 and disables the ignore value.
+ - `--threshold T1,T2,...` audits every cut of each window from a single read,
+   as crops named `<name>_t<T>` (so `pred_z0_y0_x0_t128`), and writes
+   `ranked.csv`. Use it to pick a binarisation threshold for a probability
+-  volume: plot `b1_total_big`, `b2_total_big` and `fused_frac` against `T`
++  volume: plot `b1_total_big`, `b2_total_big` and `fused_voxel_frac` against `T`
+   per tile; a cut that is too high fragments the sheets, one that is too low
+   closes cavities between them.
+ 
+diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
+index 53b691758..dbaa44986 100644
+--- a/vesuvius/docs/surface-placement-audit.md
++++ b/vesuvius/docs/surface-placement-audit.md
+@@ -65,7 +65,8 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
+ | `no_peak_frac` | share of inside points with no qualifying peak (low contrast, air, or a shoulder) |
+ | `offset_median`, `offset_q25`, `offset_q75`, `offset_mean_abs` | signed offset from the surface point to the sheet peak, in voxels along the stored normal; positive means the peak lies in the normal direction |
+ | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
+-| `offset_at_limit_frac` | share at the search limit (`half`); a sheet further away than that |
++| `n_censored`, `censored_frac` | inside points with enough contrast whose profile rises to an end sample and has no accepted peak: the sheet may lie at or beyond the search limit (`half`) |
++| `offset_at_limit_frac` | share of valid offsets at `half` exactly; with the default grid an end sample cannot be an accepted peak, so this stays 0 and `censored_frac` carries the signal |
+ | `off_sheet_frac` | share of valid points where the CT at the point is below the half-maximum of its peak, i.e. the point is outside the sheet |
+ | `sheet_fwhm_median` | half-maximum width of the located sheet, voxels |
+ | `contrast_median` | median profile range |
+diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+index 51c0b7ff1..28d01ac78 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+@@ -383,7 +383,9 @@ def flat_keys() -> list[str]:
+ 
+ def _is_zarr(src: str) -> bool:
+     s = str(src)
+-    return s.rstrip("/").endswith(".zarr") or "://" in s or (Path(s) / ".zarray").exists() \
++    if "://" in s:  # a URL is zarr unless it names a tif
++        return not s.lower().endswith((".tif", ".tiff"))
++    return s.rstrip("/").endswith(".zarr") or (Path(s) / ".zarray").exists() \
+         or (Path(s) / ".zattrs").exists() or (Path(s) / "zarr.json").exists()
+ 
+ 
+diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
+index 007d6fdf3..879a5db18 100644
+--- a/vesuvius/tests/test_label_topology_audit.py
++++ b/vesuvius/tests/test_label_topology_audit.py
+@@ -452,3 +452,11 @@ def test_empty_crop_cannot_reach_a_gate_with_a_missing_value(tmp_path):
+     m, _ = lta.audit(np.full((20, 20, 20), 2, np.uint8))
+     flat = lta.flat(m)
+     assert all(flat[k] is not None for k in lta.flat_keys())
++
++
++def test_url_input_is_zarr_unless_it_names_a_tif():
++    from vesuvius.image_proc.run.label_topology_audit import _is_zarr
++    assert _is_zarr("https://host/vol.zarr")
++    assert _is_zarr("s3://bucket/vol")
++    assert not _is_zarr("https://host/label.tif")
++    assert not _is_zarr("https://host/label.TIFF")
+-- 
+2.56.0
+
+
+From c17d239558883c16632cd0aad810d25a09060650 Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Mon, 19 Oct 2026 18:06:47 -0400
+Subject: [PATCH 17/17] fix(audit): second review round: tif URLs fetched,
+ small obj vertex block, threshold name collisions refused, bounded symmetric
+ profile grid
+
+Default grid (half 8, step 1) is unchanged, so published placement results stand.
+---
+ vesuvius/docs/surface-placement-audit.md      |  3 ++-
+ .../image_proc/run/label_topology_audit.py    | 12 ++++++++--
+ .../image_proc/run/surface_placement_audit.py | 14 +++++++++--
+ vesuvius/tests/test_label_topology_audit.py   | 22 ++++++++++++++++++
+ .../tests/test_surface_placement_audit.py     | 23 ++++++++++++++++---
+ 5 files changed, 66 insertions(+), 8 deletions(-)
+
+diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
+index dbaa44986..fef405317 100644
+--- a/vesuvius/docs/surface-placement-audit.md
++++ b/vesuvius/docs/surface-placement-audit.md
+@@ -48,7 +48,8 @@ vesuvius.surface_placement_audit --surface seg_a.obj seg_b/ --volume ct.zarr \
+   rather than a peak, counts as no peak.
+ - `--workers` (8): threads for volume reads. `--seed` fixes the sample.
+ - `--cache DIR`: keep every CT chunk read as a `.npy` under `DIR` (one
+-  subdirectory per volume shape, chunking and dtype). A rerun against the same
++  subdirectory per volume source and level, plus its shape, chunking and
++  dtype; a local file also keys on size and mtime). A rerun against the same
+   remote volume, or the next surface on it, then reads from disk. A pass over
+   the public Scroll 1 segments at 20000 samples fills roughly 20–40 GB.
+ 
+diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+index 28d01ac78..87dd12073 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+@@ -383,8 +383,8 @@ def flat_keys() -> list[str]:
+ 
+ def _is_zarr(src: str) -> bool:
+     s = str(src)
+-    if "://" in s:  # a URL is zarr unless it names a tif
+-        return not s.lower().endswith((".tif", ".tiff"))
++    if "://" in s:  # a URL is zarr unless its path names a tif
++        return not s.split("?", 1)[0].lower().endswith((".tif", ".tiff"))
+     return s.rstrip("/").endswith(".zarr") or (Path(s) / ".zarray").exists() \
+         or (Path(s) / ".zattrs").exists() or (Path(s) / "zarr.json").exists()
+ 
+@@ -393,6 +393,11 @@ def open_volume(src: str, level: str = "0"):
+     """Return an array-like with .shape/.ndim/__getitem__ for a .tif file or a zarr array/group."""
+     if not _is_zarr(src):
+         import tifffile
++        if "://" in str(src):  # a tif URL: fetch it whole, tifffile reads paths and file objects only
++            import io
++            from urllib.request import urlopen
++            with urlopen(str(src)) as r:
++                return tifffile.imread(io.BytesIO(r.read()))
+         return tifffile.imread(src)
+     try:
+         import zarr
+@@ -469,6 +474,9 @@ def parse_thresholds(spec: str | None) -> list[float] | None:
+         raise ValueError(f"--threshold expects numbers separated by commas, got {spec!r}")
+     if not vals:
+         raise ValueError("--threshold is empty")
++    names = [f"{v:g}" for v in vals]
++    if len(set(names)) != len(names):
++        raise ValueError(f"--threshold values collide in crop names ({', '.join(names)}): keep them distinct at 6 digits")
+     return vals
+ 
+ 
+diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+index dbaa8abbd..06631fc10 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+@@ -123,6 +123,13 @@ def _vertex_region_end(reader, size: int, probe: int = 4096) -> int:
+             return False
+         return all(ln.startswith((b"v ", b"vn ")) for ln in lines)
+ 
++    if size <= 2 * probe:  # small file: scan it whole, no bisection
++        blob, pos = reader(0, size), 0
++        for ln in blob.split(b"\n"):
++            if not ln.startswith((b"v ", b"vn ", b"#")):
++                break
++            pos += len(ln) + 1
++        return min(pos, size)
+     lo, hi = 0, size
+     if not is_vertex_block(0):
+         # header comments first: skip ahead a little
+@@ -308,7 +315,9 @@ def read_profiles(vol, P: np.ndarray, N: np.ndarray, half: float, step: float, s
+     """
+     from scipy import ndimage as ndi
+ 
+-    t = np.arange(-half, half + step / 2, step)
++    # symmetric grid through zero, bounded by half (np.arange would overshoot for a non-integer ratio)
++    pos_t = np.arange(0, half + 1e-9, step)
++    t = np.concatenate([-pos_t[:0:-1], pos_t])
+     shape = np.asarray(vol.shape[-3:])
+     pad = int(math.ceil(half + 3 * sigma + 2))
+     prof = np.full((len(P), len(t)), np.nan, np.float32)
+@@ -344,7 +353,8 @@ def nearest_peak(prof: np.ndarray, t: np.ndarray, min_contrast: float, min_promi
+     """Offset of the nearest local maximum of each profile to t=0, and its contrast.
+ 
+     A peak counts when the profile range is at least ``min_contrast`` and the peak
+-    rises at least ``min_prominence`` x range above the lower of its two flanking minima.
++    rises at least ``min_prominence`` x range above the higher of its two flanking minima
++    (the prominence, so a shoulder on a bigger peak does not count).
+     Returns (offset, contrast, valid); offset is NaN when no peak qualifies.
+     """
+     n, m = prof.shape
+diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
+index 879a5db18..e75ec400c 100644
+--- a/vesuvius/tests/test_label_topology_audit.py
++++ b/vesuvius/tests/test_label_topology_audit.py
+@@ -460,3 +460,25 @@ def test_url_input_is_zarr_unless_it_names_a_tif():
+     assert _is_zarr("s3://bucket/vol")
+     assert not _is_zarr("https://host/label.tif")
+     assert not _is_zarr("https://host/label.TIFF")
++
++
++def test_tif_url_is_fetched_and_decoded(monkeypatch, tmp_path):
++    import io
++    arr = (np.arange(27, dtype=np.uint8) % 2).reshape(3, 3, 3)
++    tifffile.imwrite(tmp_path / "x.tif", arr)
++    payload = (tmp_path / "x.tif").read_bytes()
++    seen = []
++
++    class Resp(io.BytesIO):
++        def __enter__(self): return self
++        def __exit__(self, *a): return False
++
++    monkeypatch.setattr("urllib.request.urlopen", lambda url: (seen.append(url), Resp(payload))[1])
++    out = lta.open_volume("https://host/label.tif?x=1")
++    assert seen == ["https://host/label.tif?x=1"] and np.array_equal(out, arr)
++
++
++def test_threshold_values_that_share_a_crop_name_are_refused():
++    with pytest.raises(ValueError, match="collide"):
++        lta.parse_thresholds("0.5000001,0.5000002")
++    assert lta.parse_thresholds("0.5,0.6") == [0.5, 0.6]
+diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
+index 7f31bfc85..85ea3ac4f 100644
+--- a/vesuvius/tests/test_surface_placement_audit.py
++++ b/vesuvius/tests/test_surface_placement_audit.py
+@@ -260,12 +260,13 @@ def test_cache_keeps_levels_of_one_source_apart(tmp_path):
+ 
+ 
+ def test_non_default_spacing_picks_nearest_peak_by_distance_from_zero(tmp_path):
+-    # t = -8, -6.5, ..., -0.5, 1, 2.5, ...: no sample at 0. Sheets at -2 and +2.5; the nearer is -2,
+-    # but picking by index distance from the middle sample (t=+1) chose +2.5.
++    # step 1.5: t = ..., -3, -1.5, 0, 1.5, 3, .... Sheets at -2 and +2.5 sample at -1.5 and +3;
++    # the nearer is the negative one, but picking by index distance from the middle sample
++    # (before the grid was built through zero, t=+1) chose the positive sheet.
+     p = tmp_path / "ct.tif"
+     tifffile.imwrite(p, two_sheet_volume([28.0, 32.5]))
+     m = one_surface(tmp_path, str(p), 30.0, "--half", "8", "--step", "1.5", "--sigma", "0")
+-    assert m["offset_median"] == pytest.approx(-2.0, abs=0.3)
++    assert m["offset_median"] == pytest.approx(-1.5, abs=0.3)
+ 
+ 
+ def test_non_default_spacing_reads_the_surface_intensity_at_zero(tmp_path):
+@@ -292,3 +293,19 @@ def test_interior_peaks_are_not_censored(tmp_path):
+     tifffile.imwrite(p, sheet_volume(z0=32.0))
+     m = one_surface(tmp_path, str(p), 30.0)
+     assert m["n_valid"] > 0 and m["censored_frac"] == 0.0
++
++
++def test_small_obj_vertex_block_is_found_without_bisection():
++    # a sub-2 KB obj with a comment header used to be skipped past its own vertices
++    data = b"# made by hand\n# second line\n" + b"".join(
++        f"v {i} 0 0\nvn 0 0 1\n".encode() for i in range(3)) + b"f 1//1 2//2 3//3\n"
++    end = spa._vertex_region_end(lambda s, n: data[s:s + n], len(data), probe=4096)
++    assert data[:end].endswith(b"vn 0 0 1\n") and data[end:].startswith(b"f ")
++
++
++def test_profile_grid_is_symmetric_and_bounded():
++    vol = np.zeros((64, 64, 64), np.float32)
++    P = np.array([[32.0, 32.0, 32.0]]); N = np.array([[0.0, 0.0, 1.0]])
++    _, t, _ = spa.read_profiles(vol, P, N, half=8, step=1.5, sigma=1.0, workers=1)
++    assert t.min() >= -8 and t.max() <= 8 and 0.0 in t
++    assert np.allclose(t, -t[::-1])
 -- 
 2.56.0
 

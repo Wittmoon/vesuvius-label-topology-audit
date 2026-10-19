@@ -1,6 +1,6 @@
 # Status
 
-Code revision: `4272804e4` (code.patch reproduces this tree on `3d56d06ec`).
+Code revision: `c17d23955` (code.patch reproduces this tree on `3d56d06ec`).
 Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-19).
 
 - 2026-10-18: branch `feat/label-topology-audit` pushed to the fork
@@ -19,3 +19,4 @@ Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10
 - 2026-10-19 ~16:00 local: peak-chosen window tested on the two other validation-mask segments (pherc0814-46527, pherc1667-w029): helps on one of three, hurts on 0814 where the best window is in the opposite direction; README subsection rewritten as a window-sensitivity finding plus a negative result for the one-read rule. An overnight queue of further runs was started; only the rows in `data/ink_*scores*.csv` are in this packet.
 - 2026-10-19 ~16:30 local: two independent reviews (Claude agent, Codex) of the whole packet; overclaims corrected in README (14 located holes not "14 largest", fix_holes adds voxels into the 6 CUT pockets and was measured on only 1 of the 8 FILL holes, 18 not nine prediction runs, Socratic 1.5-2.3x and HercUNet 3.1-8.7x, w029 is a PHerc0139 segment, window-sensitivity caveat with no interval yet) and in the form (14 of 29 renders, median not "every" mesh, no "measured fix" wording). Reviews kept in the internal dir.
 - 2026-10-19, later: packet fixes after the Codex review: placement and ink wording, PR #2126 training-overlap disclosure, threshold-sweep prose checked against the CSVs, validation scripts take paths from environment variables, score and checkpoint-hash files added, negative-result JSON outputs added. `code.patch` and `CHECKSUMS.json` are not yet regenerated for the final code revision.
+- 2026-10-19, evening: second Codex review round (tif URL loading, small obj vertex block, threshold name collisions, bounded profile grid; all with regression tests, 70 passing). 892-crop audit rerun at `9ae381299`: one crop changed (`sample_00205` open, not closed), every total unchanged; `data/kaggle_audit_all.csv` and `data/kaggle_ranked.csv` replaced from that run. `code.patch` regenerated at `c17d23955` (17 commits); `CHECKSUMS.json` rebuilt.
