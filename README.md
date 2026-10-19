@@ -56,7 +56,7 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: <to be filled>
+- Code revision: `4272804e4` (code.patch = `git format-patch 3d56d06ec..4272804e4`).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
   `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
@@ -471,6 +471,7 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
 
 ## Limitations
 
+- The placement sampling grid `np.arange(-half, half + step/2, step)` can run past `half` when `step` does not divide it (t reaches 8.5 for half=8, step=1.5). The defaults are unaffected.
 - **Judging:** the spot check and the repair check were judged by an AI
   reviewer at thumbnail resolution, not by an expert annotator. The counts
   are indicative.

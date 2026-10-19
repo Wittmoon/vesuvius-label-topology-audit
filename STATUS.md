@@ -1,6 +1,6 @@
 # Status
 
-Code revision: <to be filled>
+Code revision: `4272804e4` (code.patch reproduces this tree on `3d56d06ec`).
 Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-19).
 
 - 2026-10-18: branch `feat/label-topology-audit` pushed to the fork
