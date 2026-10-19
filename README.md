@@ -249,6 +249,38 @@ scroll x threshold); commands in
 - Caveats as above: one window per scroll, no ground truth, a cut's topology
   ranks it against other cuts of the same model only.
 
+### Surface placement on the public Scroll 1 segments
+
+A second tool on the branch, `vesuvius.surface_placement_audit`, measures
+where a traced mesh sits relative to the papyrus sheet in the CT: it samples
+the mesh, reads a short CT profile along each stored normal, and reports the
+signed offset to the nearest density peak, with a snap-and-remeasure control
+(precision of the peak location) and tangent-neighbour controls at 2, 4 and 8
+voxels (the scale over which the offset is a property of the surface).
+
+Run on all 255 public Scroll 1 segments that have an obj (20230514182829 is a
+points file only), 20000 samples each against `54keV_7.91um_Scroll1A`; 224
+segments have 1000 or more valid samples. Quantiles across segments
+(10th / median / 90th):
+
+| metric | 10th | median | 90th |
+| --- | --- | --- | --- |
+| offset median (vox) | −1.5 | −0.5 | +1.5 |
+| share of points > 2 vox from the sheet peak | 0.31 | 0.48 | 0.58 |
+| off-sheet fraction | 0.12 | 0.25 | 0.37 |
+| snap remeasure sd (vox) | 0.25 | 0.34 | 0.42 |
+| tangent median |diff| at 2 / 4 / 8 vox | 0.5 / 0.5 / 0.5 | 0.5 / 0.5 / 1.0 | 0.5 / 0.5 / 1.0 |
+| tangent correlation at 2 / 4 / 8 vox | 0.79 / 0.62 / 0.41 | 0.85 / 0.72 / 0.54 | 0.89 / 0.79 / 0.66 |
+
+The median offset is small, but about half of the sampled points sit more
+than 2 voxels (16 µm) from the sheet peak. The controls say this is not
+drift: the peak location repeats to 0.3 voxels, and offsets agree at 2 and 4
+voxels apart but decorrelate by 8. The sheet wanders a few voxels inside one
+~18-voxel triangle, so this is a resolution limit of the mesh rather than a
+global shift. It matters for anything that samples CT at the mesh surface
+(render depth, ink model inputs). Per-segment rows:
+`data/scroll1_segment_placement.csv`.
+
 ## Files
 
 - `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `605e9d222`.
@@ -261,6 +293,10 @@ scroll x threshold); commands in
 - `data/threshold_sweep.csv`: one row per model, scroll and threshold (54) of
   the sweep on the probability volumes; `validation/threshold_sweep_run.sh` and
   `validation/summarise_threshold_sweep.py` produce it
+- `data/scroll1_segment_placement.csv`: one row per public Scroll 1 segment
+  (255) from `vesuvius.surface_placement_audit`, 20000 samples each;
+  `validation/placement_run_all.sh` and `validation/summarise_placement.py`
+  produce it.
 - `data/community_predictions_audit.csv`: one row per community prediction
   volume and threshold (18 rows), 27 tiles each.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:
