@@ -7,3 +7,4 @@
   CUT holes filed as https://github.com/ScrollPrize/villa/issues/2144; negative-result
   notes added under `notes/`.
 - 2026-10-18 17:20 local: PR opened as https://github.com/ScrollPrize/villa/pull/2147 (the earlier failures were the 3-open-PR limit for users without write access; #2131 is parked as a draft to make room).
+- 2026-10-18 evening: announced in the Vesuvius Discord #show-and-tell: https://discord.com/channels/1079907749569237093/1162822163171119194/threads/1561558653746675742
