@@ -171,6 +171,27 @@ labels exist for these crops.
   0.29), and the model was not trained on this scroll. This shows the audit works as a prediction check; it is not a
   benchmark of the model.
 
+**Do flagged labels disagree more with an independent prediction? Not
+detectably with this checkpoint (pre-registered, null).** The same local
+recto checkpoint was run on 53 Kaggle crops that have images on disk (one
+centred 256³ tile per crop, per-crop z-score): 27 crops the audit flags with an
+interior hole (`b1_interior > 0`), 23 it finds clean, 3 flagged only by a
+cavity or fusion (excluded). Dice at 0.5 against the label, masked to the
+labelled region, is 0.226 median (0.03-0.35) on flagged crops and 0.211
+(0.11-0.34) on clean ones; the one-sided Mann-Whitney test fixed in advance
+(flagged < clean) gives p = 0.74, tolerant recall and Dice at 0.3 agree, and
+foreground fraction does not explain it (Spearman -0.05). Per-crop numbers:
+[data/prediction_agreement_flagged_vs_clean.csv](data/prediction_agreement_flagged_vs_clean.csv).
+This is the low-power case the design named: the checkpoint reaches Dice 0.35
+at best on any Scroll 1 crop, so crop-level agreement is set by the model's
+transfer failure, not by defects that touch under 1% of label voxels. The null
+does not show the flags are useless; it shows this model cannot detect them. A
+hole-local read of the same maps on the 10 errata holes inside the predicted
+tiles says the same thing: probability inside each hole tracks its rim (ratio
+0.8-0.9) for FILL, CUT and UNCLEAR alike, so the map is not a cut/fill oracle
+either. A model trained on Scroll 1 labels is the test that could carry a
+signal.
+
 #### Community prediction volumes (zarr, read in place)
 
 With the zarr input landed, the same audit was run on 18 binarised
@@ -653,6 +674,10 @@ script. The recorded runs used local paths that are not in the packet.
 - `data/errata_hole_geometry.csv`: per errata hole, rim and shell thickness,
   density and principal-axis extents from `validation/errata_hole_geometry.py`
   (needs the audit's `locate_holes` output for the 20 crops, not shipped).
+- `data/prediction_agreement_flagged_vs_clean.csv`: one row per crop (53) of
+  the flagged-vs-clean prediction-agreement test: group, `b1_interior`,
+  foreground fraction, Dice and tolerant recall/precision at 0.3, 0.5 and on
+  the skeleton, from the local recto checkpoint on one centred 256³ tile.
 - `data/threshold_sweep.csv`: one row per model, scroll and threshold (54) of
   the sweep on the probability volumes; `validation/threshold_sweep_run.sh` and
   `validation/summarise_threshold_sweep.py` produce it
