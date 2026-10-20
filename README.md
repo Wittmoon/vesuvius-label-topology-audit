@@ -280,6 +280,40 @@ scroll x threshold); commands in
 - Caveats as above: one window per scroll, no ground truth, a cut's topology
   ranks it against other cuts of the same model only.
 
+### Two generations of the public PHerc0139 surface prediction
+
+The open-data bucket publishes two surface-prediction volumes for PHerc0139
+(`PHerc0139/representations/predictions/surfaces/`): `recto-090` from
+2025-07 and `m7-L0-th0.2` from 2026-04, both uint8 probabilities on the same
+20974x6621x6621 grid. The audit was run on 40 matched 256^3 crops (random,
+seed 0, picked where the older volume has at least 3% foreground at 1/8
+scale), each binarised at > 127, read over HTTPS. Per-crop rows:
+[data/public_surfaces_pherc0139_generations.csv](data/public_surfaces_pherc0139_generations.csv);
+crop list `validation/public_surfaces_crops.json`; `validation/public_surfaces_pull.py`
+and `validation/public_surfaces_run.sh` produce them.
+
+| median per crop | recto-090 (2025-07) | m7-L0 (2026-04) | newer is lower in N of 40 |
+| --- | --- | --- | --- |
+| foreground fraction | 0.32 | 0.19 | 35 |
+| thickness median / p95 (voxels) | 4.7 / 7.0 | 3.0 / 3.5 | 36 / 34 |
+| b1 (holes/handles), big components | 436 | 232 | 33 |
+| b2 (cavities) | 82 | 18 | 35 |
+| components (all / big) | 49 / 9 | 95 / 21 | 7 / 1 |
+| largest component share of foreground | 0.80 | 0.54 | 36 |
+| closed big components | 0 | 3 | 6 |
+| fused voxel fraction | 0.03 | 0.37 | 16 |
+| junction clusters | 76 | 104 | 9 |
+
+- The newer volume is thinner with fewer holes and cavities on most crops, and
+  more fragmented: twice the components, a smaller largest component, more
+  closed pieces and more junction clusters. Its fused voxel fraction is higher
+  on 24 of 40 crops.
+- A thinner surface has fewer holes partly by construction, so the hole and
+  cavity rows do not rank the models; the fragmentation and fusion rows are the
+  comparable part. The audit separates the two generations on every row, which
+  is what it is for; which generation is better for tracing is not decided here.
+- Caveats: one scroll, 40 crops, one threshold (127), no labelled reference.
+
 ### Second check: surface placement on the public Scroll 1 segments
 
 The audit has a second check next to topology, `vesuvius.surface_placement_audit`. It measures
@@ -359,7 +393,7 @@ Checkpoint hashes: `validation/ink_checkpoints.sha256`.
 | --- | --- | --- | --- | --- |
 | public PHerc0139 segment w029 at 2.4 µm pooled to 9 µm (`pherc0139-w016`) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
 | `pherc0814-46527` | 9 | 0.874 / 0.839 | 0.817 / 0.785 (layers 1-17) | 0.896 / 0.872 (layers 4-20) |
-| `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | not run (only layers 1-17 and 2-18 were scored) |
+| `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | 0.887 / 0.756 (layers 0-16) |
 
 The scores are on the dataset's validation-mask pixels. These are not
 unseen-scroll results: villa
@@ -382,8 +416,14 @@ On the training segment PHercParis4 w02 (supervision pixels only, peak at
 layer 7) the peak window gives 0.988 against 0.992 for the default; this figure
 is not in the packet's score files. So this is a measured negative result for
 the one-read window rule, and a measured sensitivity of the released model's
-validation score to window choice (0.05 to 0.10 AUC on the two segments with
-a full sweep). Picking the window per segment needs something other than the
+validation score to window choice (0.05 to 0.10 AUC on w029 and 0814-46527; 0.017 on 1667-w029). The same
+five windows scored with two other checkpoints (seed43 step-075000 and seed42
+step-050000, all three segments, step 3 rows of the overnight CSV) show that
+the best window depends on the checkpoint as well as the segment: on
+0814-46527 both prefer the deepest window (seed42-050000 0.816 at layers 0-16
+to 0.923 at 3-19), on w029 and 1667-w029 seed42-050000 is best at layers 0-16
+while seed43 is best at layers 1-17 or 2-18. A fixed window rule would need
+re-deriving per checkpoint. Picking the window per segment needs something other than the
 mean profile. Training-pixel scores are unchanged by the window (supervision
 AUC 0.994 on w029, 0.999 on w035 and w039; the per-segment default and
 peak-window rows are in
@@ -432,6 +472,10 @@ Run records: `validation/ink_w016_peak_window.json`,
 - `data/threshold_sweep.csv`: one row per model, scroll and threshold (54) of
   the sweep on the probability volumes; `validation/threshold_sweep_run.sh` and
   `validation/summarise_threshold_sweep.py` produce it
+- `data/public_surfaces_pherc0139_generations.csv`: one row per crop and
+  generation (80) of the PHerc0139 public surface-prediction comparison;
+  `validation/public_surfaces_pull.py`, `public_surfaces_run.sh`,
+  `public_surfaces_crops.json` produce it.
 - `data/scroll1_segment_placement.csv`: one row per public Scroll 1 segment
   (255) from `vesuvius.surface_placement_audit`, 20000 samples each;
   `validation/placement_run_all.sh` and `validation/summarise_placement.py`
@@ -439,7 +483,8 @@ Run records: `validation/ink_w016_peak_window.json`,
 - `data/ink_validation_scores.csv`: validation-mask AUC/AP of every ink
   prediction variant cited above (33 rows), from `validation/ink_score_table.sh`;
   `data/ink_supervision_and_validation_scores_overnight.csv`: the overnight
-  default-vs-peak-window scores, with checkpoint name. Checkpoint hashes in
+  queue (144 rows, steps 1-3): default-vs-peak-window on 11 segments, five-window
+  sweeps on the three validation segments with three checkpoints. Checkpoint hashes in
   `validation/ink_checkpoints.sha256`.
 - `validation/negative_results/`: raw JSON outputs of the label-snapping and
   trace-refinement experiments (see Notes below).

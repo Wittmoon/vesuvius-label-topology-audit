@@ -4,9 +4,9 @@ step,segment,checkpoint,window_start,mask,auc,ap,note
 1,pherc0139-w016,seed42-075000,centre,validation,0.775,0.622,default peak=9 shift=-1
 1,pherc0139-w016,seed42-075000,1,validation,0.823,0.676,peakwin peak=9 shift=-1
 1,pherc0139-w017,seed42-075000,centre,supervision,0.997,0.989,default peak=9 shift=-1
-1,pherc0139-w017,seed42-075000,1,supervision,0.997,0.990,peakwin peak=9 shift=-1
-1,pherc0139-w028,seed42-075000,centre,supervision,1.000,0.999,default peak=10 shift=0
-1,pherc0139-w028,seed42-075000,2,supervision,1.000,0.999,peakwin peak=10 shift=0
+1,pherc0139-w017,seed42-075000,1,supervision,0.997,0.99,peakwin peak=9 shift=-1
+1,pherc0139-w028,seed42-075000,centre,supervision,1.0,0.999,default peak=10 shift=0
+1,pherc0139-w028,seed42-075000,2,supervision,1.0,0.999,peakwin peak=10 shift=0
 1,pherc0139-w029,seed42-075000,centre,supervision,0.977,0.936,default peak=10 shift=0
 1,pherc0139-w029,seed42-075000,2,supervision,0.977,0.936,peakwin peak=10 shift=0
 1,pherc0139-w035,seed42-075000,centre,supervision,0.999,0.997,default peak=9 shift=-1
@@ -17,11 +17,129 @@ step,segment,checkpoint,window_start,mask,auc,ap,note
 1,pherc0139-w040,seed42-075000,1,supervision,0.996,0.994,peakwin peak=9 shift=-1
 1,pherc0139-w041,seed42-075000,centre,supervision,0.999,0.999,default peak=10 shift=0
 1,pherc0139-w041,seed42-075000,2,supervision,0.999,0.999,peakwin peak=10 shift=0
-1,pherc0139-w043,seed42-075000,centre,supervision,1.000,0.999,default peak=10 shift=0
-1,pherc0139-w043,seed42-075000,2,supervision,1.000,0.999,peakwin peak=10 shift=0
-1,pherc0814-46527,seed42-075000,centre,supervision,1.000,1.000,default peak=9 shift=-1
-1,pherc0814-46527,seed42-075000,1,supervision,1.000,1.000,peakwin peak=9 shift=-1
+1,pherc0139-w043,seed42-075000,centre,supervision,1.0,0.999,default peak=10 shift=0
+1,pherc0139-w043,seed42-075000,2,supervision,1.0,0.999,peakwin peak=10 shift=0
+1,pherc0814-46527,seed42-075000,centre,supervision,1.0,1.0,default peak=9 shift=-1
+1,pherc0814-46527,seed42-075000,1,supervision,1.0,1.0,peakwin peak=9 shift=-1
 1,pherc0814-46527,seed42-075000,centre,validation,0.874,0.839,default peak=9 shift=-1
 1,pherc0814-46527,seed42-075000,1,validation,0.817,0.785,peakwin peak=9 shift=-1
 1,pherc1667-w013,seed42-075000,centre,supervision,0.999,0.999,default peak=9 shift=-1
 1,pherc1667-w013,seed42-075000,1,supervision,0.999,0.998,peakwin peak=9 shift=-1
+1,pherc1667-w018,seed42-075000,centre,supervision,0.992,0.981,default peak=7 shift=-2
+1,pherc1667-w018,seed42-075000,0,supervision,0.991,0.98,peakwin peak=7 shift=-2
+1,pherc1667-w023,seed42-075000,centre,supervision,0.998,0.995,default peak=8 shift=-2
+1,pherc1667-w023,seed42-075000,0,supervision,0.998,0.993,peakwin peak=8 shift=-2
+1,pherc1667-w028,seed42-075000,centre,supervision,1.0,0.999,default peak=9 shift=-1
+1,pherc1667-w028,seed42-075000,1,supervision,1.0,0.999,peakwin peak=9 shift=-1
+1,pherc1667-w029,seed42-075000,centre,supervision,1.0,0.999,default peak=9 shift=-1
+1,pherc1667-w029,seed42-075000,1,supervision,1.0,0.999,peakwin peak=9 shift=-1
+1,pherc1667-w029,seed42-075000,centre,validation,0.87,0.735,default peak=9 shift=-1
+1,pherc1667-w029,seed42-075000,1,validation,0.881,0.753,peakwin peak=9 shift=-1
+1,pherc1667-w031,seed42-075000,centre,supervision,1.0,0.999,default peak=9 shift=-1
+1,pherc1667-w031,seed42-075000,1,supervision,0.999,0.998,peakwin peak=9 shift=-1
+1,phercparis4-w00,seed42-075000,centre,supervision,0.993,0.976,default peak=6 shift=-2
+1,phercparis4-w00,seed42-075000,0,supervision,0.99,0.969,peakwin peak=6 shift=-2
+1,phercparis4-w01,seed42-075000,centre,supervision,0.989,0.971,default peak=8 shift=-2
+1,phercparis4-w01,seed42-075000,0,supervision,0.987,0.965,peakwin peak=8 shift=-2
+1,phercparis4-w02,seed42-075000,centre,supervision,0.992,0.975,default peak=7 shift=-2
+1,phercparis4-w02,seed42-075000,0,supervision,0.988,0.963,peakwin peak=7 shift=-2
+1,phercparis4-w03,seed42-075000,centre,supervision,0.983,0.969,default peak=6 shift=-2
+1,phercparis4-w03,seed42-075000,0,supervision,0.978,0.959,peakwin peak=6 shift=-2
+1,phercparis4-w05,seed42-075000,centre,supervision,0.969,0.928,default peak=9 shift=-1
+1,phercparis4-w05,seed42-075000,1,supervision,0.968,0.921,peakwin peak=9 shift=-1
+1,phercparis4-w06,seed42-075000,centre,supervision,0.97,0.939,default peak=8 shift=-2
+1,phercparis4-w06,seed42-075000,0,supervision,0.964,0.926,peakwin peak=8 shift=-2
+1,phercparis4-w07,seed42-075000,centre,supervision,0.967,0.939,default peak=7 shift=-2
+1,phercparis4-w07,seed42-075000,0,supervision,0.96,0.928,peakwin peak=7 shift=-2
+1,phercparis4-w09,seed42-075000,centre,supervision,0.977,0.94,default peak=7 shift=-2
+1,phercparis4-w09,seed42-075000,0,supervision,0.972,0.928,peakwin peak=7 shift=-2
+2,pherc0139-w016,seed42-075000,0,supervision,0.992,0.981,
+2,pherc0139-w016,seed42-075000,0,validation,0.828,0.689,
+2,pherc0139-w016,seed42-075000,1,supervision,0.994,0.984,
+2,pherc0139-w016,seed42-075000,1,validation,0.823,0.676,
+2,pherc0139-w016,seed42-075000,2,supervision,0.994,0.984,
+2,pherc0139-w016,seed42-075000,2,validation,0.775,0.622,
+2,pherc0139-w016,seed42-075000,3,supervision,0.994,0.984,
+2,pherc0139-w016,seed42-075000,3,validation,0.763,0.596,
+2,pherc0139-w016,seed42-075000,4,supervision,0.993,0.98,
+2,pherc0139-w016,seed42-075000,4,validation,0.731,0.56,
+2,pherc0814-46527,seed42-075000,0,supervision,1.0,1.0,
+2,pherc0814-46527,seed42-075000,0,validation,0.807,0.774,
+2,pherc0814-46527,seed42-075000,1,supervision,1.0,1.0,
+2,pherc0814-46527,seed42-075000,1,validation,0.817,0.785,
+2,pherc0814-46527,seed42-075000,2,supervision,1.0,1.0,
+2,pherc0814-46527,seed42-075000,2,validation,0.874,0.839,
+2,pherc0814-46527,seed42-075000,3,supervision,1.0,1.0,
+2,pherc0814-46527,seed42-075000,3,validation,0.881,0.854,
+2,pherc0814-46527,seed42-075000,4,supervision,1.0,1.0,
+2,pherc0814-46527,seed42-075000,4,validation,0.896,0.872,
+2,pherc1667-w029,seed42-075000,0,supervision,1.0,0.999,
+2,pherc1667-w029,seed42-075000,0,validation,0.887,0.756,
+2,pherc1667-w029,seed42-075000,1,supervision,1.0,0.999,
+2,pherc1667-w029,seed42-075000,1,validation,0.881,0.753,
+2,pherc1667-w029,seed42-075000,2,supervision,1.0,0.999,
+2,pherc1667-w029,seed42-075000,2,validation,0.87,0.735,
+2,pherc1667-w029,seed42-075000,3,supervision,1.0,0.999,
+2,pherc1667-w029,seed42-075000,3,validation,0.883,0.753,
+2,pherc1667-w029,seed42-075000,4,supervision,1.0,0.999,
+2,pherc1667-w029,seed42-075000,4,validation,0.886,0.739,
+3,pherc0139-w016,seed43-075000,0,supervision,0.992,0.982,
+3,pherc0139-w016,seed43-075000,0,validation,0.92,0.809,
+3,pherc0139-w016,seed43-075000,1,supervision,0.993,0.983,
+3,pherc0139-w016,seed43-075000,1,validation,0.939,0.829,
+3,pherc0139-w016,seed43-075000,2,supervision,0.994,0.985,
+3,pherc0139-w016,seed43-075000,2,validation,0.936,0.814,
+3,pherc0139-w016,seed43-075000,3,supervision,0.995,0.986,
+3,pherc0139-w016,seed43-075000,3,validation,0.922,0.806,
+3,pherc0139-w016,seed43-075000,4,supervision,0.994,0.985,
+3,pherc0139-w016,seed43-075000,4,validation,0.91,0.791,
+3,pherc0814-46527,seed43-075000,0,supervision,1.0,0.999,
+3,pherc0814-46527,seed43-075000,0,validation,0.822,0.758,
+3,pherc0814-46527,seed43-075000,1,supervision,1.0,1.0,
+3,pherc0814-46527,seed43-075000,1,validation,0.841,0.772,
+3,pherc0814-46527,seed43-075000,2,supervision,1.0,1.0,
+3,pherc0814-46527,seed43-075000,2,validation,0.862,0.785,
+3,pherc0814-46527,seed43-075000,3,supervision,1.0,0.999,
+3,pherc0814-46527,seed43-075000,3,validation,0.87,0.8,
+3,pherc0814-46527,seed43-075000,4,supervision,1.0,0.999,
+3,pherc0814-46527,seed43-075000,4,validation,0.876,0.815,
+3,pherc1667-w029,seed43-075000,0,supervision,0.999,0.999,
+3,pherc1667-w029,seed43-075000,0,validation,0.892,0.773,
+3,pherc1667-w029,seed43-075000,1,supervision,1.0,0.999,
+3,pherc1667-w029,seed43-075000,1,validation,0.921,0.827,
+3,pherc1667-w029,seed43-075000,2,supervision,1.0,0.999,
+3,pherc1667-w029,seed43-075000,2,validation,0.931,0.83,
+3,pherc1667-w029,seed43-075000,3,supervision,1.0,0.999,
+3,pherc1667-w029,seed43-075000,3,validation,0.918,0.811,
+3,pherc1667-w029,seed43-075000,4,supervision,0.999,0.999,
+3,pherc1667-w029,seed43-075000,4,validation,0.917,0.82,
+3,pherc0139-w016,seed42-050000,0,supervision,0.991,0.975,
+3,pherc0139-w016,seed42-050000,0,validation,0.854,0.712,
+3,pherc0139-w016,seed42-050000,1,supervision,0.992,0.977,
+3,pherc0139-w016,seed42-050000,1,validation,0.831,0.664,
+3,pherc0139-w016,seed42-050000,2,supervision,0.992,0.975,
+3,pherc0139-w016,seed42-050000,2,validation,0.813,0.642,
+3,pherc0139-w016,seed42-050000,3,supervision,0.991,0.974,
+3,pherc0139-w016,seed42-050000,3,validation,0.805,0.653,
+3,pherc0139-w016,seed42-050000,4,supervision,0.988,0.969,
+3,pherc0139-w016,seed42-050000,4,validation,0.77,0.576,
+3,pherc0814-46527,seed42-050000,0,supervision,1.0,0.999,
+3,pherc0814-46527,seed42-050000,0,validation,0.816,0.801,
+3,pherc0814-46527,seed42-050000,1,supervision,1.0,0.999,
+3,pherc0814-46527,seed42-050000,1,validation,0.851,0.819,
+3,pherc0814-46527,seed42-050000,2,supervision,1.0,0.999,
+3,pherc0814-46527,seed42-050000,2,validation,0.893,0.858,
+3,pherc0814-46527,seed42-050000,3,supervision,1.0,0.999,
+3,pherc0814-46527,seed42-050000,3,validation,0.923,0.886,
+3,pherc0814-46527,seed42-050000,4,supervision,0.999,0.999,
+3,pherc0814-46527,seed42-050000,4,validation,0.923,0.889,
+3,pherc1667-w029,seed42-050000,0,supervision,0.998,0.997,
+3,pherc1667-w029,seed42-050000,0,validation,0.902,0.76,
+3,pherc1667-w029,seed42-050000,1,supervision,0.999,0.997,
+3,pherc1667-w029,seed42-050000,1,validation,0.897,0.739,
+3,pherc1667-w029,seed42-050000,2,supervision,0.999,0.997,
+3,pherc1667-w029,seed42-050000,2,validation,0.89,0.719,
+3,pherc1667-w029,seed42-050000,3,supervision,0.999,0.997,
+3,pherc1667-w029,seed42-050000,3,validation,0.886,0.731,
+3,pherc1667-w029,seed42-050000,4,supervision,0.999,0.997,
+3,pherc1667-w029,seed42-050000,4,validation,0.886,0.723,
