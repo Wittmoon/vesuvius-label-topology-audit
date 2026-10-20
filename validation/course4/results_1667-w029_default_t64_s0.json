@@ -1,0 +1,71 @@
+{
+ "segment": "1667-w029",
+ "pred": "default",
+ "tile": 64,
+ "shift": 0,
+ "n_tiles_with_mask": 127,
+ "n_eligible": 47,
+ "excluded_few_ink": 77,
+ "excluded_few_bg": 3,
+ "excluded_weak": 0,
+ "rho_offset_auc": 0.08299061659106129,
+ "ci_block4": [
+  -0.3005355823107288,
+  0.43382045932322066
+ ],
+ "ci_block2": [
+  -0.24459367745328725,
+  0.3398220410599755
+ ],
+ "ci_block8": [
+  -0.23587381607276,
+  0.47654834599773094
+ ],
+ "partial_rho": 0.019542090656799262,
+ "partial_ci_block4": [
+  -0.34164031403502954,
+  0.4650972925027431
+ ],
+ "toroidal_p": 0.75,
+ "n_null": 8,
+ "rho_offset_ap": -0.15054111846750654,
+ "covariate_rho_auc": {
+  "contrast": -0.26954209065679924,
+  "prominence": -0.18073543015726182,
+  "prevalence": -0.0824515757377093,
+  "edge_dist": 0.010002891025682827
+ },
+ "covariate_rho_offset": {
+  "contrast": -0.1715903373557917,
+  "prominence": 0.1270793816550626,
+  "prevalence": -0.34555285903829747,
+  "edge_dist": -0.2640351964461768
+ },
+ "bins": {
+  "<=1": {
+   "n": 0,
+   "auc_median": null,
+   "auc_mean": null
+  },
+  "1-2": {
+   "n": 0,
+   "auc_median": null,
+   "auc_mean": null
+  },
+  ">=2": {
+   "n": 47,
+   "auc_median": 0.9429651569435069,
+   "auc_mean": 0.8329090217832671
+  }
+ },
+ "offset_quartiles": [
+  3.0,
+  4.0,
+  5.0
+ ],
+ "auc_quartiles": [
+  0.756087897331302,
+  0.9429651569435069,
+  0.983302683589005
+ ]
+}

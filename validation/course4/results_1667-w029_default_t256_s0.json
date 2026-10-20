@@ -1,0 +1,12 @@
+{
+ "segment": "1667-w029",
+ "pred": "default",
+ "tile": 256,
+ "shift": 0,
+ "n_tiles_with_mask": 14,
+ "n_eligible": 9,
+ "excluded_few_ink": 5,
+ "excluded_few_bg": 0,
+ "excluded_weak": 0,
+ "verdict": "UNINFORMATIVE"
+}

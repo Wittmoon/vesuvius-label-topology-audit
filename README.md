@@ -435,7 +435,9 @@ w016 labels) validation AUC drops from 0.775 to 0.498 (`recentered` row in the
 scores CSV); the drop from 0.999 to 0.677 on w035 has no result file in the
 packet. Mechanism: see `notes/ink-recentring-negative-result.md`, where it is
 a hypothesis.
-Run records: `validation/ink_w016_peak_window.json`,
+Whether the per-column offset predicts where this model scores worse was
+tested under a pre-registration and is uninformative at the mask sizes
+available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
 `validation/ink_0814-46527_peak_window.json`, `validation/ink_1667-w029_peak_window.json`.
 
 ### Numbers a judge cannot rerun from this packet
@@ -520,6 +522,15 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   optimal-surface refinement on raw CT moves 2-20% of a trace's cells onto a
   neighbouring sheet; a learned cost helps on one crop and not on the next.
   What survives is an audit of where overlapping traces disagree.
+
+- [notes/ink-placement-offset-negative-result.md](notes/ink-placement-offset-negative-result.md):
+  a pre-registered test of whether the per-column off-sheet offset predicts
+  where the released ink model scores worse (tile-level Spearman, spatial block
+  bootstrap, toroidal-shift null) is uninformative: the ink_9um validation masks
+  are 2.5-6 tiles of 256 px. An exploratory 64-px rerun finds no signal (rho
+  +0.13 and +0.08, intervals spanning zero). The pre-registration, script and
+  per-tile rows are in `validation/course4/`. No claim about the ink model is
+  made from the placement audit.
 
 ## Limitations
 

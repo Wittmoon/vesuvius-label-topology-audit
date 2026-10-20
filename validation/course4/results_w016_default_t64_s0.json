@@ -1,0 +1,12 @@
+{
+ "segment": "w016",
+ "pred": "default",
+ "tile": 64,
+ "shift": 0,
+ "n_tiles_with_mask": 66,
+ "n_eligible": 28,
+ "excluded_few_ink": 38,
+ "excluded_few_bg": 1,
+ "excluded_weak": 0,
+ "verdict": "UNINFORMATIVE"
+}
