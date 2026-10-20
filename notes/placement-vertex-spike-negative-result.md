@@ -28,7 +28,18 @@ Result: negative. The placement audit measures CT placement at points it can
 sample; it does not see vertex-level geometry defects at hole edges, and a
 geometry check such as the PR's own footprint test is the right tool for
 those. Branch `fa2b1046d` adds `n_no_normal` to the JSON and a warning so the
-skip is visible; it does not make the spikes detectable.
+skip is visible; it does not make the spikes detectable by the CT metrics.
+
+Follow-up (branch `e34fec95c`): a grid check with no CT read, modelled on the
+PR's footprint test. Adjacent valid grid points are joined when their step is
+at most 4x the median step (39.7 voxels on this grid); the largest connected
+group is the surface, and any other group still tied to it by a long step is
+a spike. A first version that flagged points by their own long steps found 17
+of the 23 with 2 false, because the spikes come in runs along one grid row
+with short steps between them; the connected-group rule finds 23 of 23 with 0
+false on the main output and 0 on the input and the fixed output, in about
+a millisecond. Reported as `n_grid_spikes`, `grid_step_median`,
+`grid_step_max`, with row/col pairs in `<name>.grid_spikes.csv`.
 
 Side observation: the same segment audited through its tifxyz grid (20-voxel
 spacing) reads worse than through its obj in `data/scroll1_segment_placement.csv`

@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/19] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/20] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -529,7 +529,7 @@ index 000000000..9321fc64e
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/19] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/20] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -643,7 +643,7 @@ index 9321fc64e..befc51f26 100644
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/19] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/20] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -1035,7 +1035,7 @@ index befc51f26..b15e79b9c 100644
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/19] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/20] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1444,7 +1444,7 @@ index b15e79b9c..ba977e4b5 100644
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/19] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/20] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1485,7 +1485,7 @@ index 2b5503795..14624a5a1 100644
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/19] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/20] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1812,7 +1812,7 @@ index ba977e4b5..750dc51aa 100644
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/19] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/20] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -2202,7 +2202,7 @@ index 750dc51aa..113996fad 100644
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/19] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/20] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2410,7 +2410,7 @@ index 113996fad..deb220f49 100644
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/19] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/20] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -3185,7 +3185,7 @@ index 000000000..9e7dc1d24
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/19] feat: update 4 Python files
+Subject: [PATCH 10/20] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3584,7 +3584,7 @@ index 9e7dc1d24..2b8014743 100644
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/19] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/20] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3639,7 +3639,7 @@ index 048f619e2..488ff418e 100644
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/19] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/20] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3707,7 +3707,7 @@ index 488ff418e..b064abb97 100644
 From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 14:02:10 -0400
-Subject: [PATCH 13/19] feat(surface-placement-audit): --cache DIR keeps CT
+Subject: [PATCH 13/20] feat(surface-placement-audit): --cache DIR keeps CT
  chunks on disk
 
 ChunkCache wraps the volume and stores each native chunk it reads as a .npy
@@ -3874,7 +3874,7 @@ index 2b8014743..916c8bb3b 100644
 From 9ae3812997806a4e0e86344bd09f2705abbb1117 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:08:00 -0400
-Subject: [PATCH 14/19] fix(label-topology-audit): islands are not repairs;
+Subject: [PATCH 14/20] fix(label-topology-audit): islands are not repairs;
  corner contact with ignore voxels opens a component
 
 A closing fill cut off from the sheet by blocked voxels raised the Euler
@@ -3951,7 +3951,7 @@ index deb220f49..90ac6e1c6 100644
 From 4272804e4773f8bce7115d208eaa254055eb11cd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:48:25 -0400
-Subject: [PATCH 15/19] fix(audit): cache identity, non-default spacing,
+Subject: [PATCH 15/20] fix(audit): cache identity, non-default spacing,
  censored peaks, streaming tiles
 
 - surface_placement_audit: ChunkCache keyed on source path/URL, level (and size/mtime for local files); two volumes with equal geometry no longer share chunks
@@ -4319,7 +4319,7 @@ index 916c8bb3b..7f31bfc85 100644
 From 5d6b5781841fe69c27ee1cdbe589cfd28a477abf Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:01:53 -0400
-Subject: [PATCH 16/19] fix(audit): URL inputs ending in .tif read as TIFF;
+Subject: [PATCH 16/20] fix(audit): URL inputs ending in .tif read as TIFF;
  docs name fused_voxel_frac, b1_face and censored profiles
 
 ---
@@ -4405,7 +4405,7 @@ index 007d6fdf3..879a5db18 100644
 From c17d239558883c16632cd0aad810d25a09060650 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:06:47 -0400
-Subject: [PATCH 17/19] fix(audit): second review round: tif URLs fetched,
+Subject: [PATCH 17/20] fix(audit): second review round: tif URLs fetched,
  small obj vertex block, threshold name collisions refused, bounded symmetric
  profile grid
 
@@ -4586,7 +4586,7 @@ index 7f31bfc85..85ea3ac4f 100644
 From 582a625da2e64708863574113f63e784618f537a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 04:52:33 -0400
-Subject: [PATCH 18/19] docs(vesuvius): state what bridge_voxels locates and
+Subject: [PATCH 18/20] docs(vesuvius): state what bridge_voxels locates and
  what the placement controls show
 
 bridge_voxels counts foreground voxels within one voxel of two different
@@ -4721,7 +4721,7 @@ index e75ec400c..e45c9b5ee 100644
 From fa2b1046d50457be33f420dde86c58038f2a33c7 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 05:47:40 -0400
-Subject: [PATCH 19/19] surface_placement_audit: report tifxyz grid points that
+Subject: [PATCH 19/20] surface_placement_audit: report tifxyz grid points that
  have no normal and are not sampled
 
 Points at hole edges and the grid border have no computable normal, so the
@@ -4823,6 +4823,201 @@ index 85ea3ac4f..d67e94f19 100644
 +    rc, out, rows = run(tmp_path, ct, [str(d)])
 +    assert rc == 0
 +    assert json.load(open(out / "seg.json"))["n_no_normal"] == n_no_normal
++
++
+ def test_bad_arguments(tmp_path, ct):
+     with pytest.raises(SystemExit):
+         spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+-- 
+2.56.0
+
+
+From e34fec95c1076e86febde15886762a216bbaf827 Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Tue, 20 Oct 2026 06:07:20 -0400
+Subject: [PATCH 20/20] surface_placement_audit: grid spike check on tifxyz
+ input
+
+Adjacent valid grid points are joined when their distance is at most 4x
+the median step; the largest connected group is the surface and any other
+group still tied to it by a long step is a spike. Reported as
+n_grid_spikes, grid_step_median, grid_step_max (fail-on capable) with
+row/col pairs in <name>.grid_spikes.csv. Needs no CT read. Inspired by
+the footprint check in PR #2067; on segment 20231007101619 resampled on
+main it flags exactly that PR's 23 vertices and nothing on the fixed
+output. Islands with no tie are not flagged. One test.
+---
+ vesuvius/docs/surface-placement-audit.md      |  1 +
+ .../image_proc/run/surface_placement_audit.py | 65 ++++++++++++++++++-
+ .../tests/test_surface_placement_audit.py     | 27 +++++++-
+ 3 files changed, 89 insertions(+), 4 deletions(-)
+
+diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
+index e4209545c..77e9b1cc8 100644
+--- a/vesuvius/docs/surface-placement-audit.md
++++ b/vesuvius/docs/surface-placement-audit.md
+@@ -64,6 +64,7 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
+ | --- | --- |
+ | `n_samples`, `n_inside_volume`, `n_valid` | points drawn, inside the volume with the full profile, with a located peak |
+ | `n_no_normal` | tifxyz input only: valid grid points with no computable normal (hole edges, grid border), which are never sampled. Vertex-level defects that sit there, such as the resampling spikes of villa PR #2067, are invisible to this audit; the count says how much of the grid it did not look at |
++| `n_grid_spikes`, `grid_step_median`, `grid_step_max` | tifxyz input only, no CT read: adjacent valid grid points are joined when their distance is at most 4x the median step; the largest connected group is the surface, and any other group still tied to it by a long step is a spike (vertices thrown off the surface singly or as a run, the resampling defect of villa PR #2067, whose check inspired this one). Islands with no tie are left alone. Spike row/col pairs go to `<name>.grid_spikes.csv`. On segment 20231007101619 resampled on main it finds exactly the PR's 23 vertices and nothing on the fixed output |
+ | `no_peak_frac` | share of inside points with no qualifying peak (low contrast, air, or a shoulder) |
+ | `offset_median`, `offset_q25`, `offset_q75`, `offset_mean_abs` | signed offset from the surface point to the sheet peak, in voxels along the stored normal; positive means the peak lies in the normal direction |
+ | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
+diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+index 9c2882649..99a403602 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+@@ -46,6 +46,7 @@ METRICS = (
+     "snap_remeasure_sd", "snap_remeasure_abs_gt_2_frac",
+     "tangent_absdiff_median_2", "tangent_absdiff_median_4", "tangent_absdiff_median_8",
+     "tangent_corr_2", "tangent_corr_4", "tangent_corr_8",
++    "n_grid_spikes", "grid_step_median", "grid_step_max",
+ )
+ TANGENT_RADII = (2.0, 4.0, 8.0)
+ 
+@@ -197,6 +198,53 @@ def _sample_obj(src, size, reader, samples, blobs, rng, blob_bytes):
+     return P, N, cell_ids(P), declared
+ 
+ 
++def grid_step_check(x: np.ndarray, y: np.ndarray, z: np.ndarray, has_point: np.ndarray,
++                    factor: float = 4.0) -> dict[str, Any]:
++    """Geometry of a tifxyz grid without the CT. Adjacent valid grid points are joined
++    when their distance is at most ``factor`` times the median step; the largest
++    connected group is the surface. Any other group that is still tied to the rest by
++    a long step is a spike: vertices thrown off the surface, singly or as a run, the
++    class villa PR #2067 found after resampling. CT sampling cannot see them because
++    they sit at hole edges and have no normal. Groups with no tie at all are islands
++    of the grid, not spikes, and are left alone."""
++    from scipy.sparse import coo_matrix
++    from scipy.sparse.csgraph import connected_components
++
++    P = np.stack([z, y, x], -1).astype(np.float64)
++    n = has_point.size
++    idx = np.arange(n).reshape(has_point.shape)
++    a_all, b_all, d_all = [], [], []
++    for axis in (0, 1):
++        sl_a = [slice(None)] * 2
++        sl_b = [slice(None)] * 2
++        sl_a[axis] = slice(0, -1)
++        sl_b[axis] = slice(1, None)
++        both = has_point[tuple(sl_a)] & has_point[tuple(sl_b)]
++        a_all.append(idx[tuple(sl_a)][both])
++        b_all.append(idx[tuple(sl_b)][both])
++        d_all.append(np.linalg.norm(P[tuple(sl_b)][both] - P[tuple(sl_a)][both], axis=-1))
++    a, b, d = (np.concatenate(v) for v in (a_all, b_all, d_all))
++    if len(d) == 0:
++        return {"grid_step_median": float("nan"), "grid_step_max": float("nan"), "n_grid_spikes": 0,
++                "grid_spike_rc": np.zeros((0, 2), int)}
++    med = float(np.median(d))
++    short = d <= factor * med
++    graph = coo_matrix((np.ones(short.sum()), (a[short], b[short])), shape=(n, n))
++    _, comp = connected_components(graph, directed=False)
++    comp[~has_point.ravel()] = -1
++    sizes = np.bincount(comp[comp >= 0])
++    largest = int(np.argmax(sizes))
++    tied = np.zeros(len(sizes), bool)  # groups with a long step to another group
++    la, lb = comp[a[~short]], comp[b[~short]]
++    cross = la != lb
++    tied[la[cross]] = True
++    tied[lb[cross]] = True
++    tied[largest] = False
++    spike = (comp >= 0) & tied[np.maximum(comp, 0)]
++    return {"grid_step_median": round(med, 3), "grid_step_max": round(float(d.max()), 3),
++            "n_grid_spikes": int(spike.sum()), "grid_spike_rc": np.argwhere(spike.reshape(has_point.shape))}
++
++
+ def sample_tifxyz(path: str, samples: int, rng: np.random.Generator):
+     """Random points and normals from a tifxyz directory at its stored resolution."""
+     from vesuvius.tifxyz import read_tifxyz
+@@ -207,6 +255,7 @@ def sample_tifxyz(path: str, samples: int, rng: np.random.Generator):
+     has_point = np.isfinite(x) & (x > 0) & (y > 0) & (z > 0)
+     if surf._mask is not None:
+         has_point &= surf._mask.astype(bool)
++    grid = grid_step_check(x, y, z, has_point)
+     ok = has_point & np.isfinite(nx)
+     # grid points with no computable normal (hole edges, grid border) are not sampled;
+     # the count is reported so a defect that lives there is not silently skipped
+@@ -219,7 +268,7 @@ def sample_tifxyz(path: str, samples: int, rng: np.random.Generator):
+     P = np.stack([z.ravel()[pick], y.ravel()[pick], x.ravel()[pick]], 1).astype(np.float64)
+     N = np.stack([nz.ravel()[pick], ny.ravel()[pick], nx.ravel()[pick]], 1).astype(np.float64)
+     N /= np.linalg.norm(N, axis=1, keepdims=True) + 1e-12
+-    return P, N, cell_ids(P), int(ok.sum()), n_no_normal
++    return P, N, cell_ids(P), int(ok.sum()), n_no_normal, grid
+ 
+ 
+ def cell_ids(P: np.ndarray, size: float = 32.0) -> np.ndarray:
+@@ -564,10 +613,20 @@ def main(argv: Sequence[str] | None = None) -> int:
+     for src in a.surface:
+         name = surface_name(src)
+         n_no_normal = 0
++        grid: dict[str, Any] = {}
+         if is_tifxyz(src):
+-            P, N, patch, n_vert, n_no_normal = sample_tifxyz(src, a.samples, rng)
++            P, N, patch, n_vert, n_no_normal, grid = sample_tifxyz(src, a.samples, rng)
+             if n_no_normal:
+                 print(f"{name}: {n_no_normal} grid points have no normal and were not sampled", file=sys.stderr)
++            rc = grid.pop("grid_spike_rc")
++            if grid["n_grid_spikes"]:
++                print(f"{name}: {grid['n_grid_spikes']} grid points are more than 4x the median step from a "
++                      f"neighbour (max {grid['grid_step_max']} voxels, median {grid['grid_step_median']})",
++                      file=sys.stderr)
++                with open(os.path.join(a.out, f"{name}.grid_spikes.csv"), "w", newline="") as f:
++                    w = csv.writer(f)
++                    w.writerow(["row", "col"])
++                    w.writerows(rc.tolist())
+         else:
+             P, N, patch, n_vert = sample_obj(src, a.samples, a.blobs, rng)
+         prof, t, inside = read_profiles(vol, P, N, a.half, a.step, a.sigma, workers=a.workers)
+@@ -576,7 +635,7 @@ def main(argv: Sequence[str] | None = None) -> int:
+         m = summarize(off, contrast, valid, inside, patch, prof, t, a.half, a.min_contrast)
+         m.update(controls(vol, P, N, off, valid, a, rng))
+         m.update({"surface": name, "source": src, "volume": a.volume, "n_vertices": int(n_vert),
+-                  "n_no_normal": n_no_normal, "half": a.half, "step": a.step, "sigma": a.sigma,
++                  "n_no_normal": n_no_normal, **grid, "half": a.half, "step": a.step, "sigma": a.sigma,
+                   "min_contrast": a.min_contrast, "min_prominence": a.min_prominence})
+         with open(os.path.join(a.out, f"{name}.json"), "w") as f:
+             json.dump(m, f, indent=1)
+diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
+index d67e94f19..2328b863f 100644
+--- a/vesuvius/tests/test_surface_placement_audit.py
++++ b/vesuvius/tests/test_surface_placement_audit.py
+@@ -202,7 +202,7 @@ def test_tifxyz_points_without_a_normal_are_counted_not_silently_dropped(tmp_pat
+     x, y, z = xx.astype(np.float32), yy.astype(np.float32), np.full(xx.shape, 32.0, np.float32)
+     x[10:13, 10:13] = y[10:13, 10:13] = z[10:13, 10:13] = -1.0  # a 3 x 3 hole
+     d = write_tifxyz(tmp_path / "seg", Tifxyz(_x=x, _y=y, _z=z, _scale=(1.0, 1.0), path=None))
+-    P, N, _, n_ok, n_no_normal = spa.sample_tifxyz(str(d), 10_000, np.random.default_rng(0))
++    P, N, _, n_ok, n_no_normal, _grid = spa.sample_tifxyz(str(d), 10_000, np.random.default_rng(0))
+     assert n_no_normal > 0 and n_ok + n_no_normal == 24 * 24 - 9
+     assert np.isfinite(N).all() and len(P) == n_ok
+     rc, out, rows = run(tmp_path, ct, [str(d)])
+@@ -210,6 +210,31 @@ def test_tifxyz_points_without_a_normal_are_counted_not_silently_dropped(tmp_pat
+     assert json.load(open(out / "seg.json"))["n_no_normal"] == n_no_normal
+ 
+ 
++def test_grid_spikes_at_hole_edges_are_counted_and_located(tmp_path, ct):
++    """A vertex thrown far off the surface next to a hole (villa PR #2067's resampling
++    defect) has no normal and is never CT-sampled, so the grid check must catch it from
++    geometry alone: count it, locate it, and leave a clean grid at zero."""
++    from vesuvius.tifxyz.types import Tifxyz
++    from vesuvius.tifxyz.writer import write_tifxyz
++
++    yy, xx = np.meshgrid(np.linspace(16, 48, 24), np.linspace(16, 48, 24))
++    x, y, z = xx.astype(np.float32), yy.astype(np.float32), np.full(xx.shape, 32.0, np.float32)
++    x[10:13, 10:13] = y[10:13, 10:13] = z[10:13, 10:13] = -1.0
++    has = x > 0
++    clean = spa.grid_step_check(x, y, z, has)
++    assert clean["n_grid_spikes"] == 0 and abs(clean["grid_step_median"] - 32 / 23) < 1e-3
++    z[9, 10] = 32.0 + 400.0  # one hole-edge vertex 400 voxels off the plane
++    bad = spa.grid_step_check(x, y, z, has)
++    assert bad["n_grid_spikes"] == 1 and bad["grid_spike_rc"].tolist() == [[9, 10]]
++    assert bad["grid_step_max"] > 399
++    d = write_tifxyz(tmp_path / "seg", Tifxyz(_x=x, _y=y, _z=z, _scale=(1.0, 1.0), path=None))
++    rc, out, rows = run(tmp_path, ct, [str(d), "--fail-on", "n_grid_spikes=0"])
++    assert rc == 2
++    j = json.load(open(out / "seg.json"))
++    assert j["n_grid_spikes"] == 1 and "grid_spike_rc" not in j
++    assert [r for r in csv.DictReader(open(out / "seg.grid_spikes.csv"))][0] == {"row": "9", "col": "10"}
 +
 +
  def test_bad_arguments(tmp_path, ct):

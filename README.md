@@ -60,7 +60,7 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `fa2b1046d` (code.patch = `git format-patch 3d56d06ec..fa2b1046d`, 19 commits).
+- Code revision: `e34fec95c` (code.patch = `git format-patch 3d56d06ec..e34fec95c`, 20 commits).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
   `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
@@ -80,8 +80,8 @@ passed on the branch and on a fresh export of current upstream with the patch
 applied ([test record](validation/upstream-source-tests.json)); with the zarr
 input commit the branch has 35 tests, all passing
 ([record](validation/branch-tests-a620aca9e.json)); at the release revision
-`fa2b1046d` the two test files hold 41 + 24 test functions, 73 cases, all passing
-([record](validation/pytest_fa2b1046d.junit.xml)). The full
+`e34fec95c` the two test files hold 41 + 25 test functions, 74 cases, all passing
+([record](validation/pytest_e34fec95c.junit.xml)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
 thickness included. It was rerun again at `9ae381299`, after two review fixes
 (a fill the sheet never touches is no longer counted as a repair; contact with
@@ -369,7 +369,14 @@ of segment 20231007101619 interpolated from a missing neighbour (a median
 same with and without those vertices, because all 23 sit at hole edges where
 the grid has no computable normal and the sampler skips such points. Recorded
 as a negative in `notes/placement-vertex-spike-negative-result.md`; the JSON now
-reports the skipped count as `n_no_normal`. The same segment audited through
+reports the skipped count as `n_no_normal`, and a grid check that needs no CT
+read now catches this class: adjacent grid points are joined when their step is
+at most 4x the median, and any small group still tied to the surface by a long
+step is a spike (`n_grid_spikes`, rows in `<name>.grid_spikes.csv`). On the
+resampled grid it flags exactly the PR's 23 vertices and nothing on the fixed
+output. The idea is the PR's own footprint test, generalised to any cause.
+villa's `surface_preflight` already checks the stated scale against the measured
+step, so that class is not repeated here. The same segment audited through
 its tifxyz grid also reads worse than through its obj (no-peak 0.40 vs 0.31),
 so grid and mesh rows are not directly comparable.
 
@@ -561,6 +568,7 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   the placement audit does not detect the vertex spikes of villa PR #2067
   (23 of 8,113 vertices, median 1,065 voxels off): they sit at hole edges with
   no normal and are never sampled. Rows: `data/placement_pr2067_spike_check.csv`.
+  Led to the grid spike check (`n_grid_spikes`), which finds all 23 from geometry alone.
 
 ## Limitations
 
@@ -574,8 +582,10 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
 - **Isotropic grids:** both audits use voxel coordinates for distances,
   smoothing and tangent geometry and assume isotropic voxels.
 - **Grid points without a normal:** on tifxyz input, points at hole edges
-  and the grid border are not sampled (`n_no_normal`); defects that live
-  there are invisible to the placement audit.
+  and the grid border are not sampled (`n_no_normal`); the CT metrics do not
+  see defects there. The grid spike check covers vertices thrown off the
+  surface; it does not cover a vertex that is wrong by less than 4x the grid
+  step, nor a whole grid that is consistently misplaced.
 - **Inspection only:** the audit flags topology findings and measures changes. It does not repair
   merged sheets.
 

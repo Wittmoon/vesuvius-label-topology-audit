@@ -1,6 +1,6 @@
 # Status
 
-Code revision: `fa2b1046d` (code.patch reproduces this tree on `3d56d06ec`).
+Code revision: `e34fec95c` (code.patch reproduces this tree on `3d56d06ec`).
 Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-19).
 
 - 2026-10-18: branch `feat/label-topology-audit` pushed to the fork
@@ -24,3 +24,4 @@ Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10
 - 2026-10-20, later: pre-registered placement-offset vs ink-error test (`validation/course4/`, note under `notes/`): uninformative at the registered tiling, no signal in the exploratory 64-px rerun; recorded as a negative, not claimed.
 - 2026-10-20, evening: final Codex and Claude reviews of the packet. Fixed: README evidence links (sweeps and the Paris4 w02 figures are in the overnight CSV; an unsupported w035 re-centring figure removed), the 0814-46527 seed42-050000 window tie stated, step 1 of the overnight queue counted (24 segments), obsolete profile-grid limitation dropped, seed42 step-050000 checkpoint hash added, test record at the release revision (`validation/pytest_582a625da.junit.xml`, 72 cases). Branch `fa2b1046d`: `bridge_voxels` documented as locating one-voxel necks only (nonzero on 1 of 22 fused Kaggle crops) with tests, placement docs state the mesh-resolution explanation as a hypothesis, code.patch regenerated (18 commits). Submission form wording aligned with the README.
 - 2026-10-20, night: placement audit tested against villa PR #2067's vertex spikes on segment 20231007101619 (defect reproduced exactly; audit does not see it, the spikes sit at hole edges with no normal). Branch `fa2b1046d` reports the skipped count (`n_no_normal`, 73 tests); negative note, data CSV, README placement paragraph and limitation added; "cannot rerun" section renamed to say what it is (inputs not shipped). code.patch at 19 commits; CHECKSUMS rebuilt.
+- 2026-10-20, later that night: grid spike check added to the placement audit (branch `e34fec95c`, 74 tests): connected-group rule on grid steps, no CT read, finds all 23 PR #2067 vertices and nothing on clean grids. Negative note gains the follow-up; README placement paragraph, limitation and notes bullet updated; code.patch at 20 commits; test record and CHECKSUMS rebuilt.
