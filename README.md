@@ -2,26 +2,28 @@
 
 **Finding:** 17% of the public Vesuvius Challenge surface-label crops (152 of
 892) contain holes or handles, 571 in all: 314 interior (107 crops, 12%), 257
-on a crop face, where the crop truncated the sheet. Of 14 located interior holes in the
-20 worst crops (the 13 where two AI reviewers agreed, plus one they were unsure
-of; not the 14 largest), checked by hand in CT by the submitter, 8 sit on
-continuous papyrus and should be filled, and 6 are pockets between two sheets
-the label merged and should be cut. The existing repair script, `fix_holes.py`,
-adds voxels into all 6 of those pockets (`data/repair_tiles.csv`), which is the
-wrong direction; whether it fills the 8 was measured for only one of them, where
-it added nothing.
+on a crop face, where the crop truncated the sheet. Of 14 located interior
+holes in the 20 worst crops (the 13 where two AI reviewers agreed, plus one
+they were unsure of; not the 14 largest), checked by hand in CT by the
+submitter, 8 sit on continuous papyrus and should be filled, and 6 are pockets
+between two sheets the label merged and should be cut. The existing repair
+script, `fix_holes.py`, adds voxels into all 6 of those pockets
+(`data/repair_tiles.csv`), which is the wrong direction; whether it fills the
+8 was measured for only one of them, where it added nothing.
 
 Individual submission. Implementation, experiments and write-up were produced
 with AI assistance (Claude) under the submitter's direction; the 14-hole hand
 check in CT is the submitter's own.
 
-The immediate deliverable is a prioritised proofreading queue with human-checked
-examples where filling would make a merged-sheet label worse.
+The immediate deliverable is a prioritised proofreading queue with
+human-checked examples where filling would make a merged-sheet label worse.
 
 **Tool:** `vesuvius.label_topology_audit`, a dataset-level topology audit for
 3D surface labels: it ranks a folder of crops worst first, locates the small
 holes, writes the input `fix_holes.py` expects, and measures whether a repair
-removed the holes or just moved them.
+removed the holes or just moved them. A second tool on the same branch,
+`vesuvius.surface_placement_audit`, measures where a traced mesh sits on the
+papyrus sheet in the CT (Part 2).
 
 - Code: [ScrollPrize/villa](https://github.com/ScrollPrize/villa) branch
   [`feat/label-topology-audit`](https://github.com/Wittmoon/villa/tree/feat/label-topology-audit)
@@ -29,14 +31,15 @@ removed the holes or just moved them.
   [ScrollPrize/villa#2147](https://github.com/ScrollPrize/villa/pull/2147).
 - Data: result tables in `data/`, the hand-checked errata list in
   [data/errata.csv](data/errata.csv) (the 6 CUT holes are also filed as
-  [ScrollPrize/villa#2144](https://github.com/ScrollPrize/villa/issues/2144)), a synthetic example in `figures/`, test
-  and reproduction records in `validation/`.
+  [ScrollPrize/villa#2144](https://github.com/ScrollPrize/villa/issues/2144)),
+  a synthetic example in `figures/`, test and reproduction records in
+  `validation/`.
 - Progress Prize entry for October 2026.
 
-**Open problem addressed:** label quality for surface prediction. The
+**Open problem addressed:** the
 [2026 open problems](https://scrollprize.org/2026_open_problems) post asks for
 "datasets with labels better localized on the papyrus' recto" and for "a high
-level of topologic accuracy". It names holes and mergers among the failure
+level of topologic accuracy", and names holes and mergers among the failure
 modes that send a traced mesh onto the wrong wrap. This tool measures those
 failure modes in the training labels, ranks the crops so a person knows which
 to inspect first, and checks whether a repair actually removed them.
@@ -45,12 +48,10 @@ to inspect first, and checks whether a repair actually removed them.
 
 ### What it is
 
-`vesuvius.label_topology_audit` is a dataset-level QA pass for 3D surface labels.
-It runs before training, ranks a folder of label crops worst first, and reports
-candidate locations for small holes. It feeds the existing per-crop repair tool (`scripts/fix_holes.py`)
-and checks its output.
-
-Compared with what the repo already has:
+A dataset-level QA pass for 3D surface labels. It runs before training, ranks
+a folder of label crops worst first, reports candidate locations for small
+holes, feeds the existing per-crop repair tool (`scripts/fix_holes.py`) and
+checks its output. Compared with what the repo already has:
 
 | | `detect_holes.py` | this audit |
 | --- | --- | --- |
@@ -77,11 +78,11 @@ Compared with what the repo already has:
 | fused components | 22 (2%) | |
 
 - Holes concentrate in the later crops: 1% of crops 0-99 have one (1 of 98),
-  compared with 82% of crops 900+ (14 of 17).
-- Provisional AI spot check of 29 located holes: 12 judged apparent label defects,
-  0 judged real tears, 17 unclear (mostly at crop faces); 10 clean controls were
-  also inspected. These judgments are not an expert precision estimate. Interior
-  holes rank first to prioritize inspection.
+  compared with 82% of crops 900+ (14 of 17). None is explained by ignore
+  voxels.
+- Provisional AI spot check of 29 located holes: 12 judged apparent label
+  defects, 0 judged real tears, 17 unclear (mostly at crop faces); 10 clean
+  controls were also inspected. Not an expert precision estimate.
 
 #### fix_holes before/after, 10 worst crops
 
@@ -91,69 +92,57 @@ Compared with what the repo already has:
 | `close` k2 | 111 → 73 | 19 → 12 | 1,997 | 1 / 4 / 8 / 7 |
 | `close` k3 | 111 → 67 | 19 → 12 | 4,689 | 1 / 6 / 8 / 5 |
 
-- A lower Betti count is not the same as a correct repair. Provisional AI
-  inspection suggests some additions fill an inter-sheet wedge and join sheets.
-- Some unchanged holes appear to be pockets between merged sheets. If confirmed,
-  these would require separating the sheets rather than filling the pocket;
-  that operation is outside the repair methods evaluated here.
+A lower Betti count is not the same as a correct repair: some additions fill
+an inter-sheet wedge and join sheets, and some unchanged holes are pockets
+between merged sheets, which need separating rather than filling. That
+operation is outside the repair methods evaluated here.
 
 #### Errata list: 33 holes in the 20 worst crops (AI-reviewed, 14 human-checked)
 
 `data/errata.csv` lists the up-to-3 largest located interior holes in each of
 the 20 top-ranked crops that have one, with crop ID and hole centre (zyx). Two
 AI reviewers judged each hole independently from CT slices with the label
-overlaid. The verdicts were FILL (the hole sits on continuous papyrus),
-CUT (a pocket between two sheets the label merged) or UNCLEAR.
+overlaid: FILL (the hole sits on continuous papyrus), CUT (a pocket between
+two sheets the label merged) or UNCLEAR. They agree on 21 of 33: 7 consensus
+FILL (3 crops), 7 consensus CUT (5 crops), 19 disagreement or both UNCLEAR.
 
-| | count |
-| --- | --- |
-| reviewers agree | 21 / 33 |
-| consensus FILL | 7 (3 crops) |
-| consensus CUT | 7 (5 crops) |
-| disagreement or both UNCLEAR | 19 |
+The submitter then checked 14 holes in a local slice viewer, scrolling
+through the CT in three planes with the overlay on and off, with the AI
+verdicts hidden until after each judgment: 13 of the 14 consensus holes
+(E24, crop 687, consensus CUT, was skipped by oversight) plus E01, where both
+reviewers were unsure. The human agreed with all 13 consensus verdicts (6
+CUT, 7 FILL) and judged E01 FILL (`human_verdict` column). The reviewer is not
+an expert annotator and the 13 were chosen because the AI reviewers agreed,
+so 13 of 13 is not an independent precision estimate. The 19 rows without a
+verdict remain unchecked; one of them, E22 (118,530 voxels), is a surface
+concavity the locator reports as a hole (`locate_holes` has no upper volume
+cap).
 
-A human then checked 14 holes in a local slice viewer, scrolling through the CT
-in three planes with the overlay on and off. The viewer hid the AI verdicts by
-default, and the reviewer judged each hole before seeing them. The check covered 13 of the 14
-consensus holes plus E01; E24 (crop 687, consensus CUT) was skipped by
-oversight. The human agreed with all 13 consensus verdicts: 6 CUT, 7 FILL.
-They judged E01, where both AI reviewers were unsure, to be FILL. The
-`human_verdict` column records this. The reviewer is the submitter, not an
-expert annotator, and the 13 were chosen because the AI reviewers agreed, so
-the 13-of-13 agreement is not an independent precision estimate. The 19 rows
-without a verdict remain unchecked. One of them, E22 (118,530 voxels), is a
-surface concavity the locator reports as a hole, not a hole; `locate_holes`
-has no upper volume cap.
-
-The CUT rows matter most. These holes are pockets between sheets the label
-merged, so `fix_holes` would fill them with the wrong answer. The list is a
-starting point for an annotator, not a correction.
+The CUT rows matter most: `fix_holes` would fill them with the wrong answer.
+The list is a starting point for an annotator, not a correction.
 
 **Automatic cut/fill signal (labels only, no CT): thickness is negative, size
-is suggestive.** `validation/errata_hole_geometry.py` measures, for each of the
-33 holes, the label thickness on a 2-voxel rim and a 3-8 voxel shell
-(2 x distance transform minus 1), label density in a 10-voxel ball and the
-hole's principal-axis extents (`data/errata_hole_geometry.csv`). Rim thickness
-is 1.0 on 30 of 33 holes and never reaches 5 anywhere: the Kaggle labels are
-one voxel thin, so a pocket between merged sheets is two thin sheets joined at
-their edges, not thick label, and thickness does not separate CUT from FILL.
-Density does not either (CUT 0.17-0.35, FILL 0.22-0.32). Hole size does, on
-the holes that were reviewed: the 7 consensus CUT holes are 133-5,167 voxels
-(long axis 8-40), the 7 consensus FILL holes 14-120 voxels (long axis
-1.5-14), and the human-only FILL hole E01 is 164. A cut at about 125 voxels
+is suggestive.** `validation/errata_hole_geometry.py` measures rim and shell
+thickness, local label density and principal-axis extents for each of the 33
+holes (`data/errata_hole_geometry.csv`). Rim thickness is 1.0 on 30 of 33
+holes: the Kaggle labels are one voxel thin, so a pocket between merged sheets
+is two thin sheets joined at their edges, and neither thickness nor density
+(CUT 0.17-0.35, FILL 0.22-0.32) separates the classes. Size does, on the
+reviewed holes: the 7 consensus CUT holes are 133-5,167 voxels, the 7
+consensus FILL holes 14-120, E01 (human FILL) 164; a cut at about 125 voxels
 puts 14 of these 15 on the right side. This is an observation on 15 holes
-chosen from the top of the ranking, not a validated classifier; 13 of the 18
-UNCLEAR holes are above 125 voxels by the errata count. The script's nearest-component match
-recounts three holes differently from `errata.csv` (E01, E21, E28), and the
-class ranges above use the errata counts.
+from the top of the ranking, not a validated classifier; 13 of the 18 UNCLEAR
+holes are above 125 voxels. The script's nearest-component match recounts
+E01, E21 and E28 differently from `errata.csv`; the ranges above use the
+errata counts.
 
 #### Audit on model predictions
 
-The same audit, run on a binarised surface prediction (probability > 0.5),
-looks at prediction topology rather than label topology. The model is a local
-recto-surface 3D U-Net checkpoint trained on other scrolls, not Scroll 1. The
-volumes are two 320³ Scroll 1 CT crops around segment `20230827161847`. No
-labels exist for these crops.
+The same audit on a binarised surface prediction (probability > 0.5) looks at
+prediction topology rather than label topology. The model is a local
+recto-surface 3D U-Net checkpoint trained on other scrolls, not Scroll 1; the
+volumes are two 320³ Scroll 1 CT crops around segment `20230827161847`, with
+no labels.
 
 | | crop 1 | crop 2 | Kaggle labels, worst crop |
 | --- | --- | --- | --- |
@@ -164,47 +153,39 @@ labels exist for these crops.
 | junction clusters | 176 | 310 | 13 |
 | thickness median / p95 (voxels) | 8.4 / 11.8 | 1.0 / 11.0 | 1.8 / 3.0 (median crop) |
 
-- Binarised at 0.5, this checkpoint's output on Scroll 1 has 28-81x the worst
-  label crop's hole count and fuses most sheets. Thresholding a prediction
-  like this and tracing it would hit the failure modes the open-problems post names.
-- Caveats: one checkpoint, one threshold, two crops (mean probability 0.28 and
-  0.29), and the model was not trained on this scroll. This shows the audit works as a prediction check; it is not a
-  benchmark of the model.
+Binarised at 0.5, this checkpoint's output on Scroll 1 has 28-81x the worst
+label crop's hole count and fuses most sheets. One checkpoint, one threshold,
+two crops, a model not trained on this scroll: this shows the audit works as
+a prediction check, not a benchmark of the model.
 
 **Do flagged labels disagree more with an independent prediction? Not
-detectably with this checkpoint (pre-registered, null).** The same local
-recto checkpoint was run on 53 Kaggle crops that have images on disk (one
-centred 256³ tile per crop, per-crop z-score): 27 crops the audit flags with an
-interior hole (`b1_interior > 0`), 23 it finds clean, 3 flagged only by a
-cavity or fusion (excluded). Dice at 0.5 against the label, masked to the
-labelled region, is 0.226 median (0.03-0.35) on flagged crops and 0.211
-(0.11-0.34) on clean ones; the one-sided Mann-Whitney test fixed in advance
-(flagged < clean) gives p = 0.74, tolerant recall and Dice at 0.3 agree, and
-foreground fraction does not explain it (Spearman -0.05). Per-crop numbers:
+detectably with this checkpoint (pre-registered, null).** The same checkpoint
+was run on 53 Kaggle crops (one centred 256³ tile per crop): 27 the audit
+flags with an interior hole, 23 it finds clean, 3 flagged only by a cavity or
+fusion (excluded). Dice at 0.5 against the label is 0.226 median on flagged
+crops and 0.211 on clean ones; the one-sided Mann-Whitney test fixed in
+advance (flagged < clean) gives p = 0.74, the secondary metrics agree, and
+foreground fraction does not explain it (Spearman -0.05). Per-crop rows:
 [data/prediction_agreement_flagged_vs_clean.csv](data/prediction_agreement_flagged_vs_clean.csv).
 This is the low-power case the design named: the checkpoint reaches Dice 0.35
 at best on any Scroll 1 crop, so crop-level agreement is set by the model's
 transfer failure, not by defects that touch under 1% of label voxels. The null
-does not show the flags are useless; it shows this model cannot detect them. A
-hole-local read of the same maps on the 10 errata holes inside the predicted
-tiles says the same thing: probability inside each hole tracks its rim (ratio
-0.8-0.9) for FILL, CUT and UNCLEAR alike, so the map is not a cut/fill oracle
-either. A model trained on Scroll 1 labels is the test that could carry a
-signal.
+does not show the flags are useless; it shows this model cannot detect them.
+Probability inside the 10 errata holes that fall in the predicted tiles tracks
+the rim (ratio 0.8-0.9) for FILL, CUT and UNCLEAR alike, so the map is not a
+cut/fill oracle either. A model trained on Scroll 1 labels is the test that
+could carry a signal.
 
 #### Community prediction volumes (zarr, read in place)
 
-With the zarr input landed, the same audit was run on 18 binarised
+With the zarr input landed, the audit was run on 18 binarised
 surface-prediction volumes published by Yupeng Li at
-`https://dl.ash2txt.org/community-uploads/yupeng/` (three models: m7, Socratic,
-HercUNet; two scrolls: PHerc1447, PHerc0814; thresholds 0.2, 0.3, 0.5, using
-the published `_thX.zarr` masks). One 768³ window per scroll, deep inside the
-scroll (PHerc1447 `12288:13056,3840:4608,3584:4352`; PHerc0814
-`9344:10112,2688:3456,2688:3456`), split into 27 tiles of 256³, read over
-HTTP without downloading or converting the volumes. Full table:
+`https://dl.ash2txt.org/community-uploads/yupeng/` (m7, Socratic, HercUNet;
+PHerc1447, PHerc0814; thresholds 0.2, 0.3, 0.5, the published `_thX.zarr`
+masks). One 768³ window per scroll, deep inside the scroll, split into 27
+tiles of 256³, read over HTTP. Full table:
 [data/community_predictions_audit.csv](data/community_predictions_audit.csv);
-the exact command list is
-[validation/community_predictions_run.sh](validation/community_predictions_run.sh).
+commands: [validation/community_predictions_run.sh](validation/community_predictions_run.sh).
 
 | model | scroll | thr | fg | b1 total | b1 per Mvox fg | b2 total | fused frac | thick median |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -215,75 +196,42 @@ the exact command list is
 | HercUNet | PHerc1447 | 0.3 | 29% | 26,207 | 199 | 38,335 | 0.60 | 3.5 |
 | HercUNet | PHerc0814 | 0.3 | 39% | 35,882 | 203 | 223,487 | 0.69 | 5.0 |
 
-- Per foreground voxel, m7 has the fewest holes and handles, Socratic 1.5-2.3x
-  more, HercUNet 3.1-8.7x more, on both scrolls and at every threshold
-  (ratios of `b1_per_Mvox_fg` in `data/community_predictions_audit.csv`).
-- Threshold effects (ratios of `b1_per_Mvox_fg` and `b2_total` in the CSV): going
-  from 0.3 to 0.5 raises hole density for every model, by 1.13x (m7, PHerc1447)
-  to 2.99x (HercUNet, PHerc0814); the other four ratios are 1.38-1.96x. Going
-  from 0.3 to 0.2 raises cavities 5.2-10.3x for m7 and Socratic, but lowers them
-  for HercUNet (0.87x on PHerc1447, 0.75x on PHerc0814). Of the three
-  thresholds, 0.3 has the lowest hole density for all three models, but the
-  margin over 0.2 is only 1.6% for HercUNet on PHerc0814 (12% on PHerc1447).
+- Per foreground voxel, m7 has the fewest holes and handles, Socratic
+  1.5-2.3x more, HercUNet 3.1-8.7x more, on both scrolls and at every
+  threshold.
+- Of the three published cuts, 0.3 has the lowest hole density for every
+  model: 0.5 raises it 1.13-2.99x, 0.2 raises cavities 5-10x for m7 and
+  Socratic. A nine-threshold sweep of the probability volumes
+  ([data/threshold_sweep.csv](data/threshold_sweep.csv), 54 rows,
+  [validation/threshold_sweep_run.sh](validation/threshold_sweep_run.sh))
+  puts the hole minimum and the cavity collapse on the same cut, 0.3-0.4, for
+  m7 and Socratic on both scrolls, so the sweep picks a threshold without a
+  labelled reference. Cuts above 0.5 fragment: at 0.7 hole density is 16-19x
+  its minimum for Socratic and 2.6-3.4x for m7.
 - HercUNet's output is thicker (median 3.5-5 voxels) and carries tens to
   hundreds of thousands of cavities per window, so it behaves like a volume
-  label rather than a thin sheet; the numbers are not comparable to the other
-  two as a surface model, and the table reports them as measured.
+  label rather than a thin sheet; its cavities rise with the threshold up to
+  0.5, the opposite of the other two, and no cut gives it the hole density of
+  m7 or Socratic.
 - PHerc0814 has a higher fused fraction than PHerc1447 for every model at
-  every threshold, and a higher hole density in 8 of 9 model-threshold pairs
-  (the exception is HercUNet at 0.2: 206.6 against 225.1; at 0.3 the two are
-  within 2%).
-- Caveats: one window per scroll, chosen deep in the volume and not by any
-  label; tile faces count as crop faces (b1 face is 1-4% of b1); no ground
-  truth exists for these windows, so this ranks prediction topology, it does
-  not score accuracy. The m7 and Socratic groups publish only pyramid level 0.
+  every threshold.
+- Caveats: one window per scroll, not chosen by any label; tile faces count
+  as crop faces (1-4% of b1); no ground truth, so this ranks prediction
+  topology, it does not score accuracy.
 
-##### Threshold sweep on the probability volumes
+#### A reading-grade reference: two generations of the public PHerc0139 prediction
 
-The same windows cut at nine thresholds (0.1 to 0.9, uint8 cut `ceil(t*255)`)
-from the published probability volumes (`m7_PHerc1447`, `soc_PHerc0814`, ...),
-every cut from one read with `--threshold 26,51,...,230`. Full table:
-[data/threshold_sweep.csv](data/threshold_sweep.csv) (54 rows: model x
-scroll x threshold); commands in
-[validation/threshold_sweep_run.sh](validation/threshold_sweep_run.sh).
-
-| model | scroll | lowest b1 per Mvox fg at | b1 per Mvox at 0.1 / best / 0.7 | b2 at 0.2 / 0.4 / 0.6 |
-| --- | --- | --- | --- | --- |
-| m7 | PHerc1447 | 0.4 | 69 / 39 / 100 | 1,261 / 14 / 2 |
-| m7 | PHerc0814 | 0.3 | 73 / 66 / 222 | 466 / 18 / 0 |
-| Socratic | PHerc1447 | 0.4 | 97 / 56 / 1,041 | 3,652 / 102 / 9 |
-| Socratic | PHerc0814 | 0.3 | 130 / 110 / 1,761 | 5,108 / 139 / 10 |
-| HercUNet | PHerc1447 | 0.3 | 298 / 199 / 474 | 33,197 / 78,969 / 112,552 |
-| HercUNet | PHerc0814 | 0.3 | 267 / 203 / 1,051 | 167,541 / 323,748 / 469,453 |
-
-- For m7 and Socratic the hole density has a single minimum at 0.3-0.4 and
-  cavities fall 26-90x between 0.2 and 0.4. They reach zero by 0.7, except m7
-  on PHerc1447, which still has one cavity at 0.7 (zero at 0.8). Cuts above 0.5
-  raise hole density: at 0.7 it is 16-19x its minimum for Socratic and 2.6-3.4x
-  for m7.
-- The hole minimum and the cavity collapse sit on the same cut, so the sweep
-  picks a threshold without a labelled reference: 0.3 to 0.4 for both models,
-  on both scrolls.
-- HercUNet's cavity count is lower at 0.2 than at 0.3 on both scrolls and
-  rises with the threshold up to 0.5 (PHerc1447 150,269; PHerc0814 504,525)
-  before falling, the opposite of the other two. One reading is
-  that its thick volume (median thickness 3.5-5 at 0.3) is hollowed by a higher
-  cut rather than separated; this was not tested. No cut in the sweep gives it
-  the hole density or cavity count of m7 or Socratic.
-- Caveats as above: one window per scroll, no ground truth, a cut's topology
-  ranks it against other cuts of the same model only.
-
-#### Two generations of the public PHerc0139 surface prediction
-
-The open-data bucket publishes two surface-prediction volumes for PHerc0139
-(`PHerc0139/representations/predictions/surfaces/`): `recto-090` from
-2025-07 and `m7-L0-th0.2` from 2026-04, both uint8 probabilities on the same
-20974x6621x6621 grid. The audit was run on 40 matched 256^3 crops (random,
-seed 0, picked where the older volume has at least 3% foreground at 1/8
-scale), each binarised at > 127, read over HTTPS. Per-crop rows:
+PHerc0139 is a scroll the Challenge has extracted text from (title and author
+evidence, Angelotti et al. 2026, arXiv 2606.29085; the scroll that paper reads
+in full, PHerc1667, has no surface-prediction volume in the open-data bucket
+as of 2026-10-20). The bucket publishes two surface predictions for PHerc0139
+(`PHerc0139/representations/predictions/surfaces/`): `recto-090` from 2025-07
+and `m7-L0-th0.2` from 2026-04, uint8 probabilities on the same grid. The
+audit was run on 40 matched 256³ crops (random, seed 0, where the older volume
+has at least 3% foreground), binarised at > 127, read over HTTPS. Rows:
 [data/public_surfaces_pherc0139_generations.csv](data/public_surfaces_pherc0139_generations.csv);
-crop list `validation/public_surfaces_crops.json`; `validation/public_surfaces_pull.py`
-and `validation/public_surfaces_run.sh` produce them.
+`validation/public_surfaces_pull.py`, `public_surfaces_run.sh`,
+`public_surfaces_crops.json` produce them.
 
 | median per crop | recto-090 (2025-07) | m7-L0 (2026-04) | newer is lower in N of 40 |
 | --- | --- | --- | --- |
@@ -297,138 +245,113 @@ and `validation/public_surfaces_run.sh` produce them.
 | fused voxel fraction | 0.03 | 0.37 | 16 |
 | junction clusters | 76 | 104 | 9 |
 
-- The newer volume is thinner with fewer holes and cavities on most crops, and
-  more fragmented: twice the components, a smaller largest component, more
-  closed pieces and more junction clusters. Its fused voxel fraction is higher
-  on 20 of 40 crops (lower on 16, equal on 4).
-- A thinner surface has fewer holes partly by construction, so the hole and
-  cavity rows do not rank the models; the fragmentation and fusion rows are the
-  comparable part. The audit separates the two generations on every row, which
-  is what it is for; which generation is better for tracing is not decided here.
-- Caveats: one scroll, 40 crops, one threshold (127), no labelled reference.
+- The newer volume is thinner with fewer holes and cavities on most crops,
+  and more fragmented: twice the components, a smaller largest component,
+  more closed pieces and more junction clusters. A thinner surface has fewer
+  holes partly by construction, so the fragmentation and fusion rows are the
+  comparable part.
+- As a yardstick: a prediction good enough to extract text from still carries
+  a median of 232 holes per 256³ crop at this cut, against a maximum of 34 in
+  any 320³ Kaggle label crop. The audit separates the two generations on every
+  row, which is what it is for; which generation traces better is not decided
+  here. One scroll, 40 crops, one threshold, no labelled reference.
 
 ### What would help next, and what we are asking the community
 
-These are the gaps the issue table in Part 2 leaves, in the order we think they matter.
-Comments on PR #2147 or in the Discord thread are welcome on any of them,
-especially from anyone who has a segment that shows the problem.
-
-1. **Cut or fill, adjudicated.** The hole mask should say whether a located
-   hole is a gap in one sheet (fill) or a pocket between two merged sheets
-   (cut). Six of the 14 hand-checked holes in #2144 are cuts, judged by one
-   person. We are asking for a second annotator on those 14 and on the 19
-   AI-reviewed holes in `data/errata.csv`, and for anyone who has a crop
-   where `fix_holes.py` joined two sheets. Thickness along the hole's normal
-   was the obvious automatic signal; it was tried and does not separate the
-   classes (the labels are one voxel thin), while hole size does on the 15
-   reviewed holes (see the errata section). A second human annotator on the
-   19 unreviewed rows would test that size rule.
-2. **Paired-mesh validation.** #1845 and #1912 each have a pair of meshes
-   for the same segment with a measured ink difference. Running the
-   placement audit on both members of each pair, and seeing whether its
-   offset row orders them the same way the ink score does, is the cheapest
-   test of whether the row is worth anything downstream. We do not have
-   those pairs locally; pointers welcome. Since this was written, the 2026-10-20 comment on #1912 published a fine-to-coarse pixel map and checker (github.com/slchicoineau-creator/tifxyz-canvas-map, 207 published mesh pairs); that is the natural source of pairs for this test.
+1. **Cut or fill, adjudicated.** Six of the 14 hand-checked holes in #2144
+   are cuts, judged by one person. A second annotator on those 14 and on the
+   19 unreviewed rows of `data/errata.csv` would test the 125-voxel size rule
+   above; a crop where `fix_holes.py` joined two sheets would make the case
+   directly.
+2. **Paired-mesh validation.** #1845 and #1912 each have a pair of meshes for
+   the same segment with a measured ink difference. Running the placement
+   audit on both members of each pair and checking whether its offset row
+   orders them as the ink score does is the cheapest downstream test. The
+   2026-10-20 comment on #1912 published 207 mesh pairs with a fine-to-coarse
+   pixel map (github.com/slchicoineau-creator/tifxyz-canvas-map); that is the
+   natural source.
 3. **Sheet switch.** The most asked-for check (#1641, #1621, the Open
-   Problems list) and the one neither audit does. #1641 already carries a
-   conservative detector with a planted-winding example; we have not run it
-   against our placement output. A proxy within the audit would report the
-   index of the peak each sample sits on and flag runs where neighbours sit
-   on different peaks, but a peak index is not a winding identity, so this
-   needs a segment with a known switch to test against before it is worth
-   building.
+   Problems list) and the one neither audit does. A peak index is not a
+   winding identity, so this needs a segment with a known switch before it is
+   worth building; #1641's planted-winding example has not been run against
+   our output.
 4. **Catalog sweep.** The placement audit has been run on every public
-   Scroll 1 segment and both PHerc0139 generations. Running it on a
-   schedule over the whole catalog with `aggregate.csv` published would turn
-   single findings into a trend. We have not done this and are not asking
-   to own it; the question is whether maintainers want the rows.
+   Scroll 1 segment and both PHerc0139 generations. Running it on a schedule
+   with `aggregate.csv` published would turn single findings into a trend; the
+   question is whether maintainers want the rows.
 
-The one feature we would build next, if the first ask gets a second
-annotator: a reviewable correction bundle per crop (CT and label review
-crops, CUT / FILL / UNCLEAR decisions, reversible deltas, before and after
-Betti numbers) so a reviewed repair can be checked and applied, not just
-ranked.
+The one feature we would build next, if the first ask gets a second annotator:
+a reviewable correction bundle per crop (CT and label review crops,
+CUT / FILL / UNCLEAR decisions, reversible deltas, before and after Betti
+numbers) so a reviewed repair can be checked and applied, not just ranked.
 
 ## Part 2: surface placement audit and ink experiments (secondary)
 
-This part is controls and side results, not the main deliverable: the surface placement audit, its checks against villa PRs, and the ink experiments.
+Controls and side results, not the main deliverable.
 
 ### Where the two audits sit in the villa pipeline
 
-Both audits are modules of villa's `vesuvius` package on the same branch as
-`vesuvius.surface_preflight`, listed in the same tools table in
-`vesuvius/README.md`. They are not a separate package and not part of the test
-suite. The pipeline, and where each check runs:
+Both are modules of villa's `vesuvius` package on the same branch, listed in
+the tools table in `vesuvius/README.md`. The tracing branch (trace, preflight,
+flatten, render) and the label branch (labels, audit, repair, train) meet at
+the ink model:
 
-| step | villa tool | check that runs here | question it answers |
-| --- | --- | --- | --- |
-| 1. trace a segment | `vc_grow_seg_from_seed`, `vc_grow_seg_from_segments` | | |
-| 2. gate the surface file | `vesuvius.surface_preflight` (PRs #1463, #1840) | preflight | are x/y/z/meta.json present, does the stated scale match the measured grid step, is the bbox inside the volume, is there CT support |
-| 3. measure the trace | **`vesuvius.surface_placement_audit`** | placement audit | how far the surface sits from the nearest density peak, how repeatable that is, how it varies across the surface; plus grid spikes, interior grid holes, wrong-frame warnings. It does not determine the cause or verify which sheet the peak belongs to |
-| 4. flatten and render | `vc_flatten`, `vc_render_tifxyz` | | |
-| 5. make or load surface labels | Kaggle crops, label transfer | | |
-| 6. gate the labels | **`vesuvius.label_topology_audit`** | topology audit | holes, islands, cavities, fused sheets, thickness, ranked worst first, hole masks for `fix_holes.py`, before/after deltas |
-| 7. repair | `scripts/fix_holes.py` (repairs), `scripts/detect_holes.py` (detects) | topology audit `--after` | did the repair close the holes without adding handles |
-| 8. train the surface model, predict | `vesuvius.train`, `vesuvius.predict` | topology audit on predictions | does the model's output have the same defects as its labels |
-| 9. ink model | `ink-detection/` | experiment only: the validation script in "Where the placement goes next", not the placement CLI on a render | does the render depth sample the sheet |
-
-Steps 1 to 4 are the tracing branch and 5 to 8 the label branch; they meet at
-the ink model. Preflight guards tifxyz inputs and fails closed; with `--volume`
-it also samples CT support under the surface. The placement audit measures the
-trace itself and never fails by default; `--fail-on` turns any metric into a
-gate. For tifxyz, run `surface_preflight --volume` first and the placement
-audit after it passes. For obj input, which preflight does not read, the
-placement audit's outside-volume and empty-profile warnings are the only
-frame check, so confirm the mesh and volume pairing by hand. Both warnings go
-to stderr and exit 0; a pipeline that should stop on them needs `--fail-on`
-(for example `--fail-on no_peak_frac=0.5`). The topology audit is a dataset pass: run it once on a label
-folder, take the ranked list to the per-crop tools, run it again with
-`--after`.
-
-Villa changes this work builds on, cites, or overlaps with:
-
-| villa PR | what it fixed or added | relation |
+| step | villa tool | check that runs here |
 | --- | --- | --- |
-| #1463, #1840 | `surface_preflight`: CT support, then scale vs step and bbox | complementary, with one overlap: preflight's support gate and the placement audit's empty-profile warning both catch a surface in empty space (both verified on the #2112 case below). The audit's own ground is the surface that has CT under it but sits off the sheet; it does not repeat the scale check |
-| #2067 | blended vertices at hole edges in `repair_tifxyz_spacing` | the grid spike check is the geometric test from that PR's footprint analysis, now run on any tifxyz input; finds all 23 affected vertices on segment 20231007101619 |
-| #2128 | `vc_flatten` quality filter dropping triangles inside its flattening mesh | motivation for `n_grid_holes`, not a demonstrated catch: dropped triangles need not become invalid points in the written grid, and no affected output has been run through the audit |
-| #2112, #2137 | missing `original_volume_downscale` and physical scale in catalog metadata | outside-volume and empty-profile warnings; shown on a real #2112 case in `notes/placement-outside-volume-pr2112.md`, where `surface_preflight --volume` also fails the wrong-frame mesh on CT support |
-| #2151, #2056 | inverse or wrong scale on resampled or spiral surfaces | preflight's job; not repeated |
-| #2150 | half-cell shift on grid rotation | not covered; a round-trip test belongs in that tool, not here |
-| #1985 | `vc_flatten` rejects scale mismatches before raster allocation | a consumer of preflight's scale check downstream; the same pattern (gate at the point of use) is where `--fail-on` on the placement audit belongs |
-| `scripts/detect_holes.py`, `fix_holes.py` | per-crop Betti numbers, hole masks, repair | the topology audit shares the Betti helper, ranks the dataset, and writes the masks they consume |
+| trace a segment | `vc_grow_seg_from_seed` | |
+| gate the surface file | `vesuvius.surface_preflight` (PRs #1463, #1840) | files present, stated scale vs measured step, bbox, CT support |
+| measure the trace | **`vesuvius.surface_placement_audit`** | offset to the nearest density peak, its repeatability and variation along the surface; grid spikes, interior grid holes, wrong-frame warnings |
+| flatten and render | `vc_flatten`, `vc_render_tifxyz` | |
+| gate the labels | **`vesuvius.label_topology_audit`** | holes, cavities, fused sheets, thickness, ranked worst first, hole masks |
+| repair | `scripts/fix_holes.py` | topology audit `--after`: did the repair close holes without adding handles |
+| train and predict | `vesuvius.train`, `vesuvius.predict` | topology audit on predictions |
+| ink model | `ink-detection/` | experiment only: does the render depth sample the sheet |
+
+Preflight fails closed; the placement audit never fails by default and
+`--fail-on` turns any metric into a gate (its outside-volume and
+empty-profile warnings go to stderr and exit 0). For tifxyz, run
+`surface_preflight --volume` first; for obj, which preflight does not read,
+the audit's warnings are the only frame check.
+
+Relation to villa changes: preflight (#1463, #1840) and the audit's
+empty-profile warning both catch a surface in empty space (both verified on
+the #2112 case below); the audit's own ground is a surface with CT under it
+that sits off the sheet, and it does not repeat preflight's scale check
+(#2151, #2056, #1985). The grid spike check is PR #2067's footprint test run
+on any tifxyz input and finds all 23 affected vertices on segment
+20231007101619. `n_grid_holes` is motivated by #2128's dropped flattening
+triangles, not a demonstrated catch. The outside-volume and empty-profile
+warnings answer #2112 and #2137. The half-cell shift of #2150 is not covered.
 
 ### What this responds to
 
-Issues on the villa tracker that asked for, or ran into, the things the two
-audits measure (filed by others unless marked; none asks for a tool by name):
+Villa issues that asked for, or ran into, what the two audits measure (filed
+by others unless marked):
 
-| issue | what was asked or reported | what the packet gives |
+| issue | asked or reported | what the packet gives |
 | --- | --- | --- |
-| #1640 (closed) | surface labels sit about 2.3 voxels off the sheet's density maximum, on the recto face | same quantity, on traced meshes rather than the labels that issue measured: offset to the density peak with snap and tangent controls that bound how repeatable it is; 255 segments in `data/scroll1_segment_placement.csv`. It does not say why the offset is there |
-| #1912 | PHerc0139 on-scan meshes up to 100 um off the inked surface on 3 of 8 segments | motivates: the audit reports per-segment offset to the density peak, which is not the same as offset to the inked surface. The two-generation PHerc0139 comparison in this README is of prediction volumes, not of the transferred meshes that issue measured; that issue's own five-window depth sweep is the closer tool |
-| #1549 | a mesh row rides about 97 voxels of dark CT with no sheet under it | the empty-profile warning and `no_peak_frac`; a local version of the same defect |
-| #1845 | rendering from the coarser published mesh costs 0.04 AUC and nothing says which mesh to pick | motivates: the 0.04 mixes mesh spacing and transform effects, and the audit has not been run on that pair. The render-depth and window measurements in "Where the placement goes next" are the related experiment; not a mesh picker |
-| #2144 (ours) | 6 of 14 hand-checked label holes are pockets between merged sheets, cut not fill | the errata list (`data/errata.csv`) with the six human-judged CUT cases. The generic fused-sheet metric does not identify those six; `fix_holes.py` would join the sheets, so the hole mask carries no cut/fill hint yet |
-| #1641, #1621 | a conservative sheet-switch detector; the spiral metric scores a whole-winding displacement as zero | **not covered.** The placement audit measures distance to the nearest peak, so a clean jump to the neighbouring sheet reads as well placed. See the limitation below |
-| #1675 | `vc_grow_seg_from_seed` produces cross-cutting, non-sheet surfaces | potentially measurable, not demonstrated: a cross-cutting surface should show as high `no_peak_frac` and low tangent agreement, but no such surface has been run and there is no single score for it |
-| #1522, #1727, #1977 | declared scale does not match the real grid density or frame on hundreds of published segments | preflight's gate (PRs #1463, #1840) and the fixes in PRs #2056 and #2151; the audit's grid checks do not repeat the scale check |
-| #1660 | a mesh/volume frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings; the #2112 note shows the inside-but-empty case |
-| #1547 | two published surfaces trace substantially the same sheet | not covered; a cross-segment overlap check is a different tool |
+| #1640 (closed) | labels sit about 2.3 voxels off the sheet's density maximum | the same quantity on traced meshes, with snap and tangent controls; 255 segments in `data/scroll1_segment_placement.csv`. It does not say why the offset is there |
+| #1912 | PHerc0139 on-scan meshes up to 100 um off the inked surface | motivates: offset to the density peak is not offset to the inked surface; that issue's five-window depth sweep is the closer tool |
+| #1549 | a mesh row rides about 97 voxels of dark CT with no sheet | the empty-profile warning and `no_peak_frac` |
+| #1845 | the coarser published mesh costs 0.04 AUC, nothing says which mesh to pick | motivates; the audit has not been run on that pair |
+| #2144 (ours) | 6 of 14 hand-checked holes are pockets to cut, not fill | the errata list; the hole mask carries no cut/fill hint yet |
+| #1641, #1621 | sheet-switch detector; whole-winding displacement scores zero | **not covered**: distance to the nearest peak reads a clean jump to the neighbouring sheet as well placed |
+| #1675 | cross-cutting, non-sheet surfaces | potentially measurable (high `no_peak_frac`, low tangent agreement), not demonstrated |
+| #1522, #1727, #1977 | declared scale does not match the grid on hundreds of segments | preflight's gate; not repeated |
+| #1660 | a frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings |
+| #1547 | two surfaces trace the same sheet | not covered |
 
-### Second check: surface placement on the public Scroll 1 segments
+### Surface placement on the public Scroll 1 segments
 
-The audit has a second check next to topology, `vesuvius.surface_placement_audit`. It measures
-where a traced mesh sits relative to the papyrus sheet in the CT: it samples
-the mesh, reads a short CT profile along each stored normal, and reports the
+`vesuvius.surface_placement_audit` samples a mesh (obj or tifxyz, local or
+URL), reads a short CT profile along each stored normal, and reports the
 signed offset to the nearest density peak, with a snap-and-remeasure control
 (precision of the peak location) and tangent-neighbour controls at 2, 4 and 8
 voxels (the scale over which the offset is a property of the surface).
 
-Run on all 255 public Scroll 1 segments that have an obj (20230514182829 is a
-points file only), 20000 samples each against `54keV_7.91um_Scroll1A`; 224
-segments have 1000 or more valid samples. Quantiles across segments
-(10th / median / 90th):
+Run on all 255 public Scroll 1 segments that have an obj (20230514182829 is
+points only), 20000 samples each against `54keV_7.91um_Scroll1A`; 224 have
+1000 or more valid samples. Quantiles across those segments:
 
 | metric | 10th | median | 90th |
 | --- | --- | --- | --- |
@@ -439,66 +362,44 @@ segments have 1000 or more valid samples. Quantiles across segments
 | tangent median abs. diff. at 2 / 4 / 8 vox | 0.5 / 0.5 / 0.58 | 0.5 / 0.5 / 1.0 | 0.5 / 0.5 / 1.0 |
 | tangent correlation at 2 / 4 / 8 vox | 0.79 / 0.62 / 0.41 | 0.85 / 0.72 / 0.54 | 0.89 / 0.79 / 0.66 |
 
-What was measured. The median offset is small. The 0.48 in the second row is
-the median, across the 224 segments with 1000 or more valid samples, of each
-segment's fraction of valid samples with an offset beyond 2 voxels
-(`offset_abs_gt_2_frac`); it is not a pooled fraction over all sampled points.
-The snap remeasure sd shows that the peak location is repeatable to about 0.3
-voxels once a peak is found. The tangent correlations fall from a median of 0.85
-at 2 voxels to 0.54 at 8 voxels, so the offset varies along the surface on a
-scale of a few voxels.
+The median offset is small, but a median of 48% of sampled points per segment
+sit more than 2 voxels (16 µm) from the sheet peak (the 0.48 is the median of
+per-segment fractions, not a pooled fraction). The snap sd shows the peak
+location is repeatable to about 0.3 voxels; the tangent correlation falls from
+0.85 at 2 voxels to 0.54 at 8, so the offset varies along the surface on a
+scale of a few voxels, within one triangle of a mesh with about 18 voxels
+between vertices. Neither control shows that the detected peak is the correct
+papyrus surface, and neither identifies the cause; the mesh-resolution reading
+was not tested (for instance against a finer mesh). The method assumes
+isotropic voxels. Per-segment rows: `data/scroll1_segment_placement.csv`.
 
-What was not shown. Neither control establishes that the detected peak is the
-correct papyrus surface (rather than another layer or an edge), and neither
-identifies the cause of the offsets or excludes drift of the mesh from the
-sheet. One hypothesis is that the mesh, which has about 18 voxels between
-vertices, cannot follow a sheet that wanders a few voxels inside one triangle;
-this was not tested (for instance by comparing against a finer mesh). The
-measurement matters for anything that samples CT at the mesh surface (render
-depth, ink model inputs). The method assumes isotropic voxels: distances,
-smoothing and tangent geometry use voxel coordinates without spacing. Per-segment
-rows: `data/scroll1_segment_placement.csv`.
+What it does not catch: the 23 vertex spikes of villa PR #2067 on segment
+20231007101619 (median 1,065 voxels off) sit at hole edges with no computable
+normal and are never sampled, so the CT metrics are identical with and without
+them (`notes/placement-vertex-spike-negative-result.md`). The JSON now reports
+the skipped count (`n_no_normal`), and a grid check with no CT read catches
+the class: adjacent grid points are joined when their step is at most 4x the
+median, and a small group tied to the surface by a long step is a spike
+(`n_grid_spikes`). It flags exactly the PR's 23 vertices and nothing on the
+input or fixed grids (`data/placement_pr2067_grid_checks.csv`). Two more
+grid-side reports: `n_grid_holes` (interior holes of the grid) and
+`outside_volume_frac` with a warning above 0.1. On a real PR #2112 case
+(PHerc0139 segment 20260422000000 without its factor-4 downscale) the
+quarter-scale mesh stays inside the large volume, in empty space, so the
+bounds warning does not fire but the profiles do: no peak at any of 3,000
+samples against no-peak 0.45 for the published mesh, so the audit also warns
+when fewer than 5% of inside points find a peak
+(`notes/placement-outside-volume-pr2112.md`). Grid and obj rows of the same
+segment are not directly comparable (no-peak 0.40 vs 0.31,
+`data/placement_pr2067_spike_check.csv`).
 
-What it does not catch. Tested against villa PR #2067, which found 23 vertices
-of segment 20231007101619 interpolated from a missing neighbour (a median
-1,065 voxels off) after grid resampling on main: the audit's metrics are the
-same with and without those vertices, because all 23 sit at hole edges where
-the grid has no computable normal and the sampler skips such points. Recorded
-as a negative in `notes/placement-vertex-spike-negative-result.md`; the JSON now
-reports the skipped count as `n_no_normal`, and a grid check that needs no CT
-read now catches this class: adjacent grid points are joined when their step is
-at most 4x the median, and any small group still tied to the surface by a long
-step is a spike (`n_grid_spikes`, rows in `<name>.grid_spikes.csv`). On the
-resampled grid it flags exactly the PR's 23 vertices and nothing on the input
-or the fixed output (`data/placement_pr2067_grid_checks.csv`). The idea is the PR's own footprint test, generalised to any cause.
-villa's `surface_preflight` already checks the stated scale against the measured
-step, so that class is not repeated here. Two more grid-side reports from the
-same PR survey: `n_grid_holes` counts interior holes of the grid (a flattening
-with interior gaps exits 0 and passes a step check; villa PR #2128's dropped
-flattening triangles are the motivating case, not a tested one), and `outside_volume_frac` with a warning above 0.1, since
-a surface mostly outside the volume is in the wrong coordinate frame (missing
-downscale or physical scale, villa PRs #2112 and #2137) and its offsets mean
-nothing. Tried on a real PR #2112 case (PHerc0139 segment 20260422000000, the
-normalized mesh without its factor-4 downscale): the volume is so large that the
-quarter-scale mesh stays inside its bounds, in empty space, so the outside-volume
-warning does not fire. The profiles do: no peak at any of 3,000 samples, contrast
-0, against no-peak 0.45 and contrast 84 for the published mesh. The audit now
-also warns when fewer than 5% of inside points find a peak
-(`notes/placement-outside-volume-pr2112.md`). Separately, Scroll 1 segment 20231007101619 (the PR #2067 case) audited
-through its tifxyz grid reads worse than through its obj (no-peak 0.40 vs
-0.31, `data/placement_pr2067_spike_check.csv` against
-`data/scroll1_segment_placement.csv`), so grid and mesh rows are not directly
-comparable.
+### Render depth and the ink model's window (negative result)
 
-### Where the placement goes next: render depth and the ink model's window
-
-If the mesh is off the sheet, the surface volume rendered from it puts the
-papyrus at the wrong depth, and the ink model reads a fixed 17-layer window
-around the centre of that render. The same profile measurement, applied to all
-29 `ink_9um` training renders (mean z profile over about 100 sampled chunks of
-the central half of each segment; `validation/ink_render_depth.py`, rows in
-`data/ink_render_depth.csv`), shows the sheet is never above centre and often
-below it:
+If the mesh is off the sheet, the render puts the papyrus at the wrong depth,
+and the ink model reads a fixed 17-layer window around the render's centre.
+The same profile measurement on all 29 `ink_9um` training renders
+(`validation/ink_render_depth.py`, `data/ink_render_depth.csv`) shows the
+sheet is never above centre and often below it:
 
 | peak minus centre layer | aligned 2.4 µm renders (centre 10) | native 9 µm renders (centre 14) |
 | --- | --- | --- |
@@ -508,110 +409,62 @@ below it:
 | -3 | 4 (PHerc1667 w018, PHercParis4 w02, w07, w09) | 0 |
 | -4 | 2 (PHercParis4 w00, w03) | 0 |
 
-The 2-layer-and-worse cases concentrate in PHercParis4 (7 of 8) and
-PHerc1667 (2 of 6); PHerc0139 sits within one layer.
-
-`validation/ink_peak_window.py` tests whether this is actionable without
-retraining: it measures the peak of the render it is given, shifts the model's
-17-layer window so the peak lands at in-window layer 8, and runs the released
-`infer`. Scored with `validation/ink_score.py` on the dataset's own
-validation-mask pixels only (released hybrid_3d2d seed42 step-075000), on the
-three `ink_9um` segments that ship a validation mask. Every AUC/AP in this
-section is in [data/ink_validation_scores.csv](data/ink_validation_scores.csv)
-or, for the five-window sweeps and the checkpoint comparison, in
-[data/ink_supervision_and_validation_scores_overnight.csv](data/ink_supervision_and_validation_scores_overnight.csv),
-regenerated with `validation/ink_score_table.sh` from the local prediction
-files (layer start `L<k>`; `default` = layers 2-18, `peakwin` = peak-chosen).
-Checkpoint hashes: `validation/ink_checkpoints.sha256`.
+`validation/ink_peak_window.py` shifts the 17-layer window so the measured
+peak lands at in-window layer 8 and runs the released `infer`; scored with
+`validation/ink_score.py` on the dataset's validation-mask pixels (released
+hybrid_3d2d seed42 step-075000) on the three `ink_9um` segments that ship a
+mask. All scores: [data/ink_validation_scores.csv](data/ink_validation_scores.csv)
+and, for the five-window sweeps and checkpoint comparison,
+[data/ink_supervision_and_validation_scores_overnight.csv](data/ink_supervision_and_validation_scores_overnight.csv);
+checkpoint hashes in `validation/ink_checkpoints.sha256`.
 
 | segment (labels) | profile peak | default window (layers 2-18) AUC / AP | peak-chosen window AUC / AP | best window in a 5-window sweep |
 | --- | --- | --- | --- | --- |
-| `pherc0139-w016` (the public PHerc0139 segment w029 at 2.4 µm, pooled to 9 µm; not the `pherc0139-w029` render of the depth table) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
+| `pherc0139-w016` (the public PHerc0139 segment w029 at 2.4 µm, pooled to 9 µm) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
 | `pherc0814-46527` | 9 | 0.874 / 0.839 | 0.817 / 0.785 (layers 1-17) | 0.896 / 0.872 (layers 4-20) |
 | `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | 0.887 / 0.756 (layers 0-16) |
 
-The scores are on the dataset's validation-mask pixels. These are not
-unseen-scroll results: villa
+These are within-segment scores, not unseen-scroll results: villa
 [PR #2126](https://github.com/ScrollPrize/villa/pull/2126) reports that 233 of
-282 validation crops share image voxels with training crops, although their
-supervised labels are disjoint. Until spatial isolation is shown for this
-checkpoint, read them as within-segment scores.
-
-With that caveat, the window changes the score: AUC ranges 0.73 to 0.83 across
-five windows on w016 and 0.81 to 0.90 across five on 0814-46527. The mean density
-peak does not reliably pick the window. It raises AUC on w016 (0.775 to 0.823)
-and on 1667-w029 (0.870 to 0.881), and lowers it on 0814-46527 (0.874 to
-0.817), where the best scored window (layers 4-20) lies in the opposite
-direction from the one the peak chooses. There are no intervals, so whether the
-1667-w029 change (0.011 AUC) is distinguishable from zero is unknown. Other
-variables moved the score more: the seed43 checkpoint scores 0.936 on w016
-(seed42 0.775) and 0.931 on 1667-w029 (0.870), and a mirror-TTA run scores 0.891
-on w016, in [data/ink_validation_scores.csv](data/ink_validation_scores.csv).
-On the training segment PHercParis4 w02 (supervision pixels only, peak at
-layer 7) the peak window gives 0.988 against 0.992 for the default (step 1 rows
-of the overnight CSV). So this is a measured negative result for
-the one-read window rule, and a measured sensitivity of the released model's
-validation score to window choice (0.05 to 0.10 AUC on w016 and 0814-46527; 0.017 on 1667-w029). The same
-five windows scored with two other checkpoints (seed43 step-075000 and seed42
-step-050000, all three segments, step 3 rows of the overnight CSV) show that
-the best window depends on the checkpoint as well as the segment: on
-0814-46527 seed43 is best at the deepest window (layers 4-20) and seed42-050000
-rises from 0.816 at layers 0-16 to 0.923 at both 3-19 and 4-20 (a tie on AUC;
-AP 0.886 against 0.889), on w016 and 1667-w029 seed42-050000 is best at layers
-0-16 while seed43 is best at layers 1-17 or 2-18. A fixed window rule would need
-re-deriving per checkpoint. Picking the window per segment needs something other than the
-mean profile. Training-pixel scores change by at most 0.007 with the window (lower on all
-eight PHercParis4 renders, 0.992 to 0.988 on w02 and 0.967 to 0.960 on w07, and by
-0.001 on 1667-w018 and w031; unchanged elsewhere, supervision
-AUC 0.994 on w016, 0.999 on w035 and w039; the per-segment default and
-peak-window rows are in
-[data/ink_supervision_and_validation_scores_overnight.csv](data/ink_supervision_and_validation_scores_overnight.csv),
-whose step 1 covers 24 segments, most on training pixels only). The released recipe already jitters the training window
-by +-2 layers. Per-column re-centring of the render at inference (shifting each
-column so its peak sits at the centre) is also negative: on w016 validation AUC drops from 0.775 to 0.498 (`recentered` row in the
-scores CSV). Mechanism: see `notes/ink-recentring-negative-result.md`, where it is
-a hypothesis.
-Whether the per-column offset predicts where this model scores worse was
-tested under a pre-registration and is uninformative at the mask sizes
-available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
-`validation/ink_0814-46527_peak_window.json`, `validation/ink_1667-w029_peak_window.json`.
+282 validation crops share image voxels with training crops. With that caveat,
+the window moves the score by 0.05 to 0.10 AUC on w016 and 0814-46527 (0.017
+on 1667-w029), but the one-read peak rule raises AUC on two segments and lowers
+it on the third, where the best window lies in the opposite direction; there
+are no intervals. The best window also depends on the checkpoint (seed43 and
+seed42-050000 rows of the overnight CSV), so a fixed rule would need
+re-deriving per checkpoint. Other variables move the score more: seed43 scores
+0.936 on w016 and 0.931 on 1667-w029, mirror TTA 0.891 on w016. Per-column
+re-centring at inference is also negative (w016 AUC 0.775 to 0.498;
+`notes/ink-recentring-negative-result.md`). Whether the per-column offset
+predicts where the model scores worse was tested under a pre-registration and
+is uninformative at the mask sizes available (Notes). Run records:
+`validation/ink_*_peak_window.json`.
 
 ## Code
 
-- Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `1dc04b189` (code.patch = `git format-patch 3d56d06ec..1dc04b189`, 23 commits).
-- Earlier commits, kept for history only and not the release revision: `6e4a88154`,
-  `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
-  input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
-  records below were made at those commits; they do not cover the surface placement
-  audit or later fixes.
+- Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on
+  `3d56d06ec`. Release revision `1dc04b189` (code.patch =
+  `git format-patch 3d56d06ec..1dc04b189`, 23 commits).
 - Files: `vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py`,
-  `vesuvius/src/vesuvius/image_proc/topology.py`, `vesuvius/src/vesuvius/scripts/detect_holes.py`
-  (CPU path now uses the shared helper), `vesuvius/tests/test_label_topology_audit.py`
-  (35 tests at `a620aca9e`), `vesuvius/docs/label-topology-audit.md`.
-- Environment for the numbers below: macOS arm64, Python 3.14.8, numpy 2.4.6,
-  scipy 1.18.0, scikit-image 0.26.0, connected-components-3d 4.0.0,
-  tifffile 2026.6.1, matplotlib 3.11.0. CPU only.
-
-Code review added input and pairing checks, a bounded thickness proxy at crop
-faces, support for singleton axes and clearer ranking text. All 31 audit tests
-passed on the branch and on a fresh export of current upstream with the patch
-applied ([test record](validation/upstream-source-tests.json)); with the zarr
-input commit the branch has 35 tests, all passing
-([record](validation/branch-tests-a620aca9e.json)); at the release revision
-`1dc04b189` the two test files hold 41 + 31 test functions, 80 cases, all passing
-([record](validation/pytest_1dc04b189.junit.xml)). The full
-892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
-thickness included. It was rerun again at `9ae381299`, after two review fixes
-(a fill the sheet never touches is no longer counted as a repair; contact with
-ignore voxels is now tested with the same 26-connectivity as the foreground):
-every total is unchanged (571 holes, 494 located, 206 cavities, 152 crops
-with a hole) and one crop moved, `sample_00205`, whose single big component
-touches ignore voxels only at a corner and is now counted open rather than
-closed (`n_closed_big` 7 to 6 over the set). The later commits touch the
-placement tool, input handling and docs, not the topology arithmetic. The labels are 2-3 voxel sheets, so the crop-face
-correction does not change them. Three real-data cases are also recorded in
-[validation/real-data-review.json](validation/real-data-review.json).
+  `.../image_proc/run/surface_placement_audit.py`,
+  `.../image_proc/topology.py`, `.../scripts/detect_holes.py` (CPU path uses
+  the shared helper), `vesuvius/tests/test_label_topology_audit.py`,
+  `vesuvius/tests/test_surface_placement_audit.py`,
+  `vesuvius/docs/label-topology-audit.md`, `vesuvius/docs/surface-placement-audit.md`.
+- Tests: at `1dc04b189` the two test files hold 41 + 31 test functions, 80
+  cases, all passing ([record](validation/pytest_1dc04b189.junit.xml)).
+  Earlier records: 31 audit tests on a fresh export of upstream with the patch
+  applied ([record](validation/upstream-source-tests.json)), 35 at `a620aca9e`
+  ([record](validation/branch-tests-a620aca9e.json)).
+- Reruns: the 892-crop audit was rerun at `605e9d222` (every metric matches)
+  and at `9ae381299` after two review fixes (a fill the sheet never touches is
+  not a repair; ignore contact tested at 26-connectivity): every total is
+  unchanged and one crop, `sample_00205`, moves from closed to open. Later
+  commits touch the placement tool, input handling and docs, not the topology
+  arithmetic. Three real-data cases: [validation/real-data-review.json](validation/real-data-review.json).
+- Environment: macOS arm64, Python 3.14.8, numpy 2.4.6, scipy 1.18.0,
+  scikit-image 0.26.0, connected-components-3d 4.0.0, tifffile 2026.6.1. CPU
+  only.
 
 ## Reproduce
 
@@ -628,43 +481,34 @@ python src/vesuvius/scripts/fix_holes.py --in-dir fix_in --ignore-value 2 --meth
 vesuvius.label_topology_audit --batch BEFORE --after AFTER --out fix_out
 ```
 
-`figures/make_synthetic.py` builds the synthetic example below; no scroll data
-is needed.
+`figures/make_synthetic.py` builds the synthetic example; no scroll data is
+needed. The scripts in `validation/` take their paths from environment
+variables (`W`, `PY`, `R`; `INK_ROOT`, `INK_DATA`, `VESUVIUS_PYTHON`,
+`VESUVIUS_SRC` for the ink scripts), documented at the top of each script.
 
-The scripts in `validation/` take their paths from environment variables
-(`W` = villa `vesuvius/src` or `vesuvius/` as noted in each script's header, `PY`
-= python with the branch installed, `R` = output directory; `INK_ROOT`,
-`INK_DATA`, `VESUVIUS_PYTHON`, `VESUVIUS_SRC` for the ink scripts). Defaults are
-placeholders relative to the working directory, documented at the top of each
-script. The recorded runs used local paths that are not in the packet.
-
-## Reproducing the numbers: inputs this packet does not ship
+Inputs this packet does not ship:
 
 - Every ink result needs the `ink_9um` labels, the surface volumes and the
-  released `hybrid_3d2d` checkpoints (hashes in `validation/ink_checkpoints.sha256`;
-  weights not included). The AUC/AP
-  tables are recorded, not recomputed from published predictions: the
-  prediction tifs are not in the packet. Predictions are not guaranteed bitwise
-  reproducible across machines.
+  released `hybrid_3d2d` checkpoints (hashes in `validation/ink_checkpoints.sha256`).
+  The AUC/AP tables are recorded, not recomputed: the prediction tifs are not
+  included, and predictions are not bitwise reproducible across machines.
 - The placement tables need the public Scroll 1 meshes and volume over HTTP
-  (`validation/placement_run_all.sh`, list in `validation/scroll1_segments.txt`);
-  the per-segment CSV is the recorded output. The rerun was not repeated for
-  this release.
-- The render-depth table (`validation/ink_render_depth.py`) reads 29 surface
-  volumes over HTTP plus two local native-9 um copies (`INK_DATA`); only its
-  output CSV is included. Run and error logs of the original runs are not.
-- Repair judgments (AI and the submitter's) and the errata verdicts are in the
-  CSVs; the provisional 29-hole AI spot check (12 / 0 / 17, 10 controls) has only
-  its tile list (`data/spot_check_tiles.csv`), not per-hole verdicts. The tile
-  images they were made from are withheld (CC BY-NC) and cannot be re-judged.
-- The two-crop prediction audit (955 / 2,754 holes) ran on a local checkpoint
-  that is not released; its two aggregate rows are
-  `data/prediction_audit_scroll1_crops.csv`.
-- The numbers in `notes/`: see the notes section below.
+  (`validation/placement_run_all.sh`, `validation/scroll1_segments.txt`); the
+  per-segment CSV is the recorded output.
+- The render-depth table reads 29 surface volumes over HTTP plus two local
+  native 9 µm copies; only its output CSV is included.
+- The provisional 29-hole AI spot check has only its tile list
+  (`data/spot_check_tiles.csv`), not per-hole verdicts; the tiles are withheld
+  (CC BY-NC).
+- The two-crop prediction audit and the agreement test ran on a local
+  checkpoint that is not released; their outputs are
+  `data/prediction_audit_scroll1_crops.csv` and
+  `data/prediction_agreement_flagged_vs_clean.csv`.
 
 ## Files
 
-- `data/kaggle_audit_all.csv`: one row per crop, all metrics, from one run at `9ae381299` (identical to the `605e9d222` run except `sample_00205`, see above).
+- `data/kaggle_audit_all.csv`: one row per crop, all metrics, from the run at
+  `9ae381299`.
 - `data/kaggle_ranked.csv`: 353 crops with any finding, worst first, with a reason.
 - `data/fix_holes_before_after.csv`: per crop and method.
 - `data/repair_tiles.csv`, `data/repair_review.csv`: tile index and per-tile
@@ -672,119 +516,90 @@ script. The recorded runs used local paths that are not in the packet.
 - `data/errata.csv`: 33 holes with crop ID, centre, both AI verdicts,
   consensus, human verdict (14 rows) and a suggested action.
 - `data/errata_hole_geometry.csv`: per errata hole, rim and shell thickness,
-  density and principal-axis extents from `validation/errata_hole_geometry.py`
-  (needs the audit's `locate_holes` output for the 20 crops, not shipped).
+  density and principal-axis extents (`validation/errata_hole_geometry.py`).
 - `data/prediction_agreement_flagged_vs_clean.csv`: one row per crop (53) of
-  the flagged-vs-clean prediction-agreement test: group, `b1_interior`,
-  foreground fraction, Dice and tolerant recall/precision at 0.3, 0.5 and on
-  the skeleton, from the local recto checkpoint on one centred 256³ tile.
-- `data/threshold_sweep.csv`: one row per model, scroll and threshold (54) of
-  the sweep on the probability volumes; `validation/threshold_sweep_run.sh` and
-  `validation/summarise_threshold_sweep.py` produce it
-- `data/public_surfaces_pherc0139_generations.csv`: one row per crop and
-  generation (80) of the PHerc0139 public surface-prediction comparison;
-  `validation/public_surfaces_pull.py`, `public_surfaces_run.sh`,
-  `public_surfaces_crops.json` produce it.
-- `data/scroll1_segment_placement.csv`: one row per public Scroll 1 segment
-  (255) from `vesuvius.surface_placement_audit`, 20000 samples each;
-  `validation/placement_run_all.sh` and `validation/summarise_placement.py`
-  produce it.
-- `data/ink_validation_scores.csv`: validation-mask AUC/AP of every ink
-  prediction variant cited above (31 rows), from `validation/ink_score_table.sh`;
-  `data/ink_supervision_and_validation_scores_overnight.csv`: the overnight
-  queue (144 rows, steps 1-3): default-vs-peak-window on 24 segments, five-window
-  sweeps on the three validation segments with three checkpoints. Checkpoint hashes in
-  `validation/ink_checkpoints.sha256`.
-- `validation/negative_results/`: raw JSON outputs of the label-snapping and
-  trace-refinement experiments (see Notes below).
-- `validation/scroll1_segments.txt`: the 255 segment IDs `placement_run_all.sh`
-  reads.
+  the flagged-vs-clean test: group, `b1_interior`, foreground fraction, Dice
+  and tolerant recall/precision at 0.3, 0.5 and on the skeleton.
 - `data/prediction_audit_scroll1_crops.csv`: the two aggregate rows of the
-  two-crop prediction audit (local checkpoint, not released).
-- `data/placement_pr2112_preflight_normalized.json`, `data/placement_pr2112_preflight_published.json`: villa `surface_preflight --volume` reports on the two PR #2112 meshes (FAIL on CT support, PASS).
-- `data/placement_pr2067_grid_checks.csv`: `n_grid_spikes` and `n_grid_holes` on the three PR #2067 grids (input, main output, fixed output) at `1dc04b189`.
-- `data/placement_pr2067_spike_check.csv`: placement metrics of segment 20231007101619's tifxyz grid before and after the PR #2067 resampling, main and fixed, with the number of spike vertices the audit sampled (0).
-- `data/spot_check_tiles.csv`: the 39 tiles (29 located holes, 10 controls) of
-  the provisional AI spot check; verdicts were not recorded per tile.
+  two-crop prediction audit.
 - `data/community_predictions_audit.csv`: one row per community prediction
   volume and threshold (18 rows), 27 tiles each.
+- `data/threshold_sweep.csv`: one row per model, scroll and threshold (54);
+  `validation/threshold_sweep_run.sh`, `validation/summarise_threshold_sweep.py`.
+- `data/public_surfaces_pherc0139_generations.csv`: one row per crop and
+  generation (80) of the PHerc0139 comparison.
+- `data/scroll1_segment_placement.csv`: one row per public Scroll 1 segment
+  (255), 20000 samples each; `validation/placement_run_all.sh`,
+  `validation/summarise_placement.py`.
+- `data/placement_pr2067_grid_checks.csv`, `data/placement_pr2067_spike_check.csv`:
+  grid checks and placement metrics on the three PR #2067 grids.
+- `data/placement_pr2112_outside_volume.csv`: placement audit rows for the two
+  PR #2112 meshes; `data/placement_pr2112_preflight_normalized.json`,
+  `..._published.json`: villa `surface_preflight --volume` reports on the same
+  two meshes (FAIL on CT support, PASS).
+- `data/ink_render_depth.csv`, `data/ink_validation_scores.csv` (31 rows),
+  `data/ink_supervision_and_validation_scores_overnight.csv` (144 rows): the
+  ink tables above, from `validation/ink_score_table.sh`.
+- `data/spot_check_tiles.csv`: the 39 tiles of the provisional AI spot check.
+- `validation/negative_results/`: raw JSON of the label-snapping and
+  trace-refinement experiments.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:
-  the synthetic example. It has two sheets with a gap through both, a hole at
-  a crop face, and two bridges that make one handle. The audit reports
-  b1 = 5: 3 interior (2 located, 1 unlocated, the handle) and 2 on the face.
+  the synthetic example (two sheets with a gap through both, a hole at a crop
+  face, two bridges making one handle; the audit reports b1 = 5: 3 interior,
+  2 on the face).
 
-Not included: crop images, label crops, and tiles rendered from them.
-The source data is licensed CC BY-NC 4.0; this packet links it rather than
-redistributing it. The tile
-sheets used for the spot checks are kept locally for the same reason.
+Not included: crop images, label crops, and tiles rendered from them. The
+source data is CC BY-NC 4.0; this packet links it rather than redistributing
+it.
 
 ## Notes: what did not work
 
-Side experiments are recorded in `notes/` as negative results, so they are not
-repeated blind. None is part of the prize claim. Their scripts are not released.
-The raw JSON outputs of the label-snapping and trace-refinement runs are in
-`validation/negative_results/` (snap/, multisurf/, multisurf2/, optsurf/); the
-notes' figures were not re-derived from them for this release, and some
-figures in the notes may not appear in these files. The ink re-centring note
-has result rows in `data/ink_validation_scores.csv` for one of its two figures.
+Side experiments recorded in `notes/` as negative results so they are not
+repeated blind. None is part of the prize claim; their scripts are not
+released, their raw outputs are in `validation/negative_results/`.
 
-- [notes/label-snapping-negative-result.md](notes/label-snapping-negative-result.md):
-  snapping labels to the CT edge works on synthetic perturbations of the
-  Kaggle crops only with a direction prior taken from the clean labels, and
-  does not transfer to a real traced segment.
-- [notes/trace-refinement-negative-result.md](notes/trace-refinement-negative-result.md):
+- [label-snapping](notes/label-snapping-negative-result.md): snapping labels
+  to the CT edge works on synthetic perturbations only with a direction prior
+  from the clean labels, and does not transfer to a real traced segment.
+- [trace-refinement](notes/trace-refinement-negative-result.md):
   optimal-surface refinement on raw CT moves 2-20% of a trace's cells onto a
-  neighbouring sheet; a learned cost helps on one crop and not on the next.
-  What survives is an audit of where overlapping traces disagree.
-
-- [notes/ink-placement-offset-negative-result.md](notes/ink-placement-offset-negative-result.md):
-  a pre-registered test of whether the per-column off-sheet offset predicts
-  where the released ink model scores worse (tile-level Spearman, spatial block
-  bootstrap, toroidal-shift null) is uninformative: the ink_9um validation masks
-  are 2.5-6 tiles of 256 px. An exploratory 64-px rerun finds no signal (rho
-  +0.13 and +0.08, intervals spanning zero). The pre-registration, script and
-  per-tile rows are in `validation/course4/`. No claim about the ink model is
-  made from the placement audit.
-- [notes/placement-outside-volume-pr2112.md](notes/placement-outside-volume-pr2112.md):
-  a surface missing its downscale factor (villa PR #2112) stays inside a
-  large volume; the profiles, not the bounds check, catch it.
-- [notes/placement-vertex-spike-negative-result.md](notes/placement-vertex-spike-negative-result.md):
-  the placement audit does not detect the vertex spikes of villa PR #2067
-  (23 of 8,113 vertices, median 1,065 voxels off): they sit at hole edges with
-  no normal and are never sampled. Rows: `data/placement_pr2067_spike_check.csv`.
-  Led to the grid spike check (`n_grid_spikes`), which finds all 23 from geometry alone.
+  neighbouring sheet; a learned cost helps on one crop and not the next.
+- [ink-placement-offset](notes/ink-placement-offset-negative-result.md): a
+  pre-registered test of whether the per-column off-sheet offset predicts
+  where the ink model scores worse is uninformative (the validation masks are
+  2.5-6 tiles of 256 px); an exploratory 64-px rerun finds no signal.
+  Pre-registration and rows in `validation/course4/`.
+- [ink-recentring](notes/ink-recentring-negative-result.md): per-column
+  re-centring at inference drops w016 AUC from 0.775 to 0.498.
+- [placement-outside-volume-pr2112](notes/placement-outside-volume-pr2112.md)
+  and [placement-vertex-spike](notes/placement-vertex-spike-negative-result.md):
+  the two placement cases described in Part 2.
 
 ## Limitations
 
 - **Judging:** the spot check and the repair check were judged by an AI
-  reviewer at thumbnail resolution, not by an expert annotator. The counts
-  are indicative.
+  reviewer at thumbnail resolution, not by an expert annotator; the 14-hole
+  check is the submitter's.
 - **Hole location:** holes wider than a 3-step closing (about 6 voxels) are
-  counted but not located.
+  counted but not located; `locate_holes` has no upper volume cap.
 - **Thresholds:** tiny 100, thick 7, piece 500 and junction ratio 0.3 are
   heuristics, not tuned on reviewed data.
-- **Isotropic grids:** both audits use voxel coordinates for distances,
-  smoothing and tangent geometry and assume isotropic voxels.
-- **Grid points without a normal:** on tifxyz input, points at hole edges
-  and the grid border are not sampled (`n_no_normal`); the CT metrics do not
-  see defects there. The grid spike check covers vertices thrown off the
-  surface; it does not cover a vertex that is wrong by less than 4x the grid
-  step. `n_grid_holes` has no baseline: the 255 Scroll 1 segments were audited
-  as obj, so how many interior grid pockets an ordinary trace carries is not
-  measured here. A whole grid in the wrong frame shows up as `outside_volume_frac`
-  when it leaves the volume, or as an all-empty profile set when it stays
-  inside; a consistent shift within reach of the profile is measured as
-  offset like any other.
-- **Cut/fill size rule:** the ~125-voxel split between CUT and FILL holes was
-  read off 15 reviewed holes from the 20 worst crops and has not been tested on
-  holes nobody reviewed.
-- **Inspection only:** the audit flags topology findings and measures changes. It does not repair
-  merged sheets.
+- **Cut/fill size rule:** the ~125-voxel split was read off 15 reviewed holes
+  and has not been tested on holes nobody reviewed.
+- **Isotropic grids:** both audits assume isotropic voxels.
+- **Grid points without a normal:** on tifxyz input, points at hole edges and
+  the grid border are not sampled (`n_no_normal`). The grid spike check does
+  not cover a vertex wrong by less than 4x the grid step; `n_grid_holes` has
+  no baseline, since the 255 Scroll 1 segments were audited as obj.
+- **Sheet switch:** neither audit detects a trace that jumps cleanly to the
+  neighbouring sheet.
+- **Inspection only:** the audit flags findings and measures changes; it does
+  not separate merged sheets.
 
 ## License
 
-The code patch carries the villa repository's license. Everything else in this
-packet (tables, figures, scripts, text) is MIT, see [LICENSE](LICENSE). The
-numbers in `data/` were computed from the CC BY-NC 4.0 surface labels; the
-labels themselves are not redistributed; the per-crop metrics and hole
+The code patch carries the villa repository's license. Everything else in
+this packet (tables, figures, scripts, text) is MIT, see [LICENSE](LICENSE).
+The numbers in `data/` were computed from the CC BY-NC 4.0 surface labels;
+the labels themselves are not redistributed; the per-crop metrics and hole
 coordinates derived from them are.
