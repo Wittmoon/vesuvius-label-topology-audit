@@ -14,6 +14,9 @@ Individual submission. Implementation, experiments and write-up were produced
 with AI assistance (Claude) under the submitter's direction; the 14-hole hand
 check in CT is the submitter's own.
 
+The immediate deliverable is a prioritised proofreading queue with human-checked
+examples where filling would make a merged-sheet label worse.
+
 **Tool:** `vesuvius.label_topology_audit`, a dataset-level topology audit for
 3D surface labels: it ranks a folder of crops worst first, locates the small
 holes, writes the input `fix_holes.py` expects, and measures whether a repair
@@ -68,18 +71,22 @@ suite. The pipeline, and where each check runs:
 | --- | --- | --- | --- |
 | 1. trace a segment | `vc_grow_seg_from_seed`, `vc_grow_seg_from_segments` | | |
 | 2. gate the surface file | `vesuvius.surface_preflight` (PR #2077) | preflight | are x/y/z/meta.json present, does the stated scale match the measured grid step, is the bbox inside the volume, is there CT support |
-| 3. measure the trace | **`vesuvius.surface_placement_audit`** | placement audit | is the surface on the papyrus sheet in the CT, how far off, is that precise, is it a shift or the mesh's resolution; plus grid spikes, interior grid holes, wrong-frame warnings |
+| 3. measure the trace | **`vesuvius.surface_placement_audit`** | placement audit | how far the surface sits from the nearest density peak, how repeatable that is, how it varies across the surface; plus grid spikes, interior grid holes, wrong-frame warnings. It does not determine the cause or verify which sheet the peak belongs to |
 | 4. flatten and render | `vc_flatten`, `vc_render_tifxyz` | | |
 | 5. make or load surface labels | Kaggle crops, label transfer | | |
 | 6. gate the labels | **`vesuvius.label_topology_audit`** | topology audit | holes, islands, cavities, fused sheets, thickness, ranked worst first, hole masks for `fix_holes.py`, before/after deltas |
-| 7. repair | `scripts/fix_holes.py`, `scripts/detect_holes.py` | topology audit `--after` | did the repair close the holes without adding handles |
-| 8. train the surface model, predict | `vesuvius.predict` | topology audit on predictions | does the model's output have the same defects as its labels |
-| 9. ink model | `ink-detection/` | placement audit on the render window | does the render depth sample the sheet (see "Where the placement goes next") |
+| 7. repair | `scripts/fix_holes.py` (repairs), `scripts/detect_holes.py` (detects) | topology audit `--after` | did the repair close the holes without adding handles |
+| 8. train the surface model, predict | `vesuvius.train`, `vesuvius.predict` | topology audit on predictions | does the model's output have the same defects as its labels |
+| 9. ink model | `ink-detection/` | experiment only: the validation script in "Where the placement goes next", not the placement CLI on a render | does the render depth sample the sheet |
 
-Preflight guards inputs and fails closed. The placement audit measures the
+Steps 1 to 4 are the tracing branch and 5 to 8 the label branch; they meet at
+the ink model. Preflight guards tifxyz inputs and fails closed; with `--volume`
+it also samples CT support under the surface. The placement audit measures the
 trace itself and never fails by default; `--fail-on` turns any metric into a
-gate. Run it after preflight passes, on anything that will be rendered or used
-for labels. The topology audit is a dataset pass: run it once on a label
+gate. For tifxyz, run `surface_preflight --volume` first and the placement
+audit after it passes. For obj input, which preflight does not read, the
+placement audit's outside-volume and empty-profile warnings are the only
+frame check, so confirm the mesh and volume pairing by hand. The topology audit is a dataset pass: run it once on a label
 folder, take the ranked list to the per-crop tools, run it again with
 `--after`.
 
@@ -87,12 +94,13 @@ Villa changes this work builds on, cites, or overlaps with:
 
 | villa PR | what it fixed or added | relation |
 | --- | --- | --- |
-| #2077 | `surface_preflight`: scale vs step, bbox, CT support | complementary; the placement audit assumes it has passed and does not repeat the scale check |
+| #2077 | `surface_preflight`: scale vs step, bbox, CT support | complementary, with one overlap: preflight's support gate and the placement audit's empty-profile warning both catch a surface in empty space (both verified on the #2112 case below). The audit's own ground is the surface that has CT under it but sits off the sheet; it does not repeat the scale check |
 | #2067 | blended vertices at hole edges in `repair_tifxyz_spacing` | the grid spike check is the geometric test from that PR's footprint analysis, now run on any tifxyz input; finds all 23 affected vertices on segment 20231007101619 |
-| #2128 | `vc_flatten` quality filter punching interior holes | `n_grid_holes` reports them on any grid |
-| #2112, #2137 | missing `original_volume_downscale` and physical scale in catalog metadata | outside-volume and empty-profile warnings; shown on a real #2112 case in `notes/placement-outside-volume-pr2112.md` |
+| #2128 | `vc_flatten` quality filter dropping triangles inside its flattening mesh | motivation for `n_grid_holes`, not a demonstrated catch: dropped triangles need not become invalid points in the written grid, and no affected output has been run through the audit |
+| #2112, #2137 | missing `original_volume_downscale` and physical scale in catalog metadata | outside-volume and empty-profile warnings; shown on a real #2112 case in `notes/placement-outside-volume-pr2112.md`, where `surface_preflight --volume` also fails the wrong-frame mesh on CT support |
 | #2151, #2056 | inverse or wrong scale on resampled or spiral surfaces | preflight's job; not repeated |
 | #2150 | half-cell shift on grid rotation | not covered; a round-trip test belongs in that tool, not here |
+| #1985 | `vc_flatten` rejects scale mismatches before raster allocation | a consumer of preflight's scale check downstream; the same pattern (gate at the point of use) is where `--fail-on` on the placement audit belongs |
 | `scripts/detect_holes.py`, `fix_holes.py` | per-crop Betti numbers, hole masks, repair | the topology audit shares the Betti helper, ranks the dataset, and writes the masks they consume |
 
 ### What this responds to
@@ -102,13 +110,13 @@ audits measure (filed by others unless marked; none asks for a tool by name):
 
 | issue | what was asked or reported | what the packet gives |
 | --- | --- | --- |
-| #1640 (closed) | surface labels sit about 2.3 voxels off the sheet's density maximum, on the recto face | the placement audit measures exactly this, with the snap and tangent controls that say whether it is a shift or resolution; 255 segments in `data/scroll1_segment_placement.csv` |
-| #1912 | PHerc0139 on-scan meshes up to 100 um off the inked surface on 3 of 8 segments | per-segment offset report; two generations of the PHerc0139 surface compared in this README |
+| #1640 (closed) | surface labels sit about 2.3 voxels off the sheet's density maximum, on the recto face | demonstrated: the placement audit measures exactly this offset, with snap and tangent controls that bound how repeatable it is; 255 segments in `data/scroll1_segment_placement.csv`. It does not say why the offset is there |
+| #1912 | PHerc0139 on-scan meshes up to 100 um off the inked surface on 3 of 8 segments | motivates: the audit reports per-segment offset to the density peak, which is not the same as offset to the inked surface. The two-generation PHerc0139 comparison in this README is of prediction volumes, not of the transferred meshes that issue measured; that issue's own five-window depth sweep is the closer tool |
 | #1549 | a mesh row rides about 97 voxels of dark CT with no sheet under it | the empty-profile warning and `no_peak_frac`; a local version of the same defect |
-| #1845 | rendering from the coarser published mesh costs 0.04 AUC and nothing says which mesh to pick | the render-depth and window measurements in "Where the placement goes next"; not a mesh picker yet |
-| #2144 (ours) | 6 of 14 hand-checked label holes are pockets between merged sheets, cut not fill | the errata list and the fused-sheet check; `fix_holes.py` would join the sheets, so the hole mask carries no cut/fill hint yet |
+| #1845 | rendering from the coarser published mesh costs 0.04 AUC and nothing says which mesh to pick | motivates: the 0.04 mixes mesh spacing and transform effects, and the audit has not been run on that pair. The render-depth and window measurements in "Where the placement goes next" are the related experiment; not a mesh picker |
+| #2144 (ours) | 6 of 14 hand-checked label holes are pockets between merged sheets, cut not fill | the errata list (`data/errata.csv`) with the six human-judged CUT cases. The generic fused-sheet metric does not identify those six; `fix_holes.py` would join the sheets, so the hole mask carries no cut/fill hint yet |
 | #1641, #1621 | a conservative sheet-switch detector; the spiral metric scores a whole-winding displacement as zero | **not covered.** The placement audit measures distance to the nearest peak, so a clean jump to the neighbouring sheet reads as well placed. See the limitation below |
-| #1675 | `vc_grow_seg_from_seed` produces cross-cutting, non-sheet surfaces | partly: a cross-cutting surface shows as high `no_peak_frac` and low tangent agreement, but there is no single score for it |
+| #1675 | `vc_grow_seg_from_seed` produces cross-cutting, non-sheet surfaces | potentially measurable, not demonstrated: a cross-cutting surface should show as high `no_peak_frac` and low tangent agreement, but no such surface has been run and there is no single score for it |
 | #1522, #1727, #1977 | declared scale does not match the real grid density or frame on hundreds of published segments | preflight's gate (PR #2077) and the fixes in PRs #2056 and #2151; the audit's grid checks do not repeat the scale check |
 | #1660 | a mesh/volume frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings; the #2112 note shows the inside-but-empty case |
 | #1547 | two published surfaces trace substantially the same sheet | not covered; a cross-segment overlap check is a different tool |
@@ -119,28 +127,38 @@ These are the gaps the table above leaves, in the order we think they matter.
 Comments on PR #2147 or in the Discord thread are welcome on any of them,
 especially from anyone who has a segment that shows the problem.
 
-1. **Sheet switch.** The most asked-for check (#1641, #1621, the Open
-   Problems list) and the one neither audit does. The placement audit's
-   per-sample profile already sees every peak within `--half` voxels; a
-   first step is to report the index of the peak each sample sits on and
-   flag runs where neighbouring samples sit on different peaks. That is a
-   proxy, not a detector, and we would rather build it against a known
-   switch than guess.
-2. **Cut or fill.** The hole mask should say whether a located hole is a
-   gap in one sheet (fill) or a pocket between two merged sheets (cut).
-   Thickness along the hole's normal is the obvious signal; 6 of 14
-   hand-checked holes in #2144 are the test set.
-3. **Which mesh to render from.** #1845 shows the choice costs ink
-   accuracy. A per-mesh placement row next to the render would let the
-   renderer pick; the audit already produces the row.
+1. **Cut or fill, adjudicated.** The hole mask should say whether a located
+   hole is a gap in one sheet (fill) or a pocket between two merged sheets
+   (cut). Six of the 14 hand-checked holes in #2144 are cuts, judged by one
+   person. We are asking for a second annotator on those 14 and on the 19
+   AI-reviewed holes in `data/errata.csv`, and for anyone who has a crop
+   where `fix_holes.py` joined two sheets. Thickness along the hole's normal
+   is the obvious automatic signal; it has not been tried.
+2. **Paired-mesh validation.** #1845 and #1912 each have a pair of meshes
+   for the same segment with a measured ink difference. Running the
+   placement audit on both members of each pair, and seeing whether its
+   offset row orders them the same way the ink score does, is the cheapest
+   test of whether the row is worth anything downstream. We do not have
+   those pairs locally; pointers welcome.
+3. **Sheet switch.** The most asked-for check (#1641, #1621, the Open
+   Problems list) and the one neither audit does. #1641 already carries a
+   conservative detector with a planted-winding example; we have not run it
+   against our placement output. A proxy within the audit would report the
+   index of the peak each sample sits on and flag runs where neighbours sit
+   on different peaks, but a peak index is not a winding identity, so this
+   needs a segment with a known switch to test against before it is worth
+   building.
 4. **Catalog sweep.** The placement audit has been run on every public
-   Scroll 1 segment and both PHerc0139 generations. Running it as a
-   scheduled job over the whole catalog, with `aggregate.csv` published,
-   would turn single findings into a dashboard. We have not done this.
+   Scroll 1 segment and both PHerc0139 generations. Running it on a
+   schedule over the whole catalog with `aggregate.csv` published would turn
+   single findings into a trend. We have not done this and are not asking
+   to own it; the question is whether maintainers want the rows.
 
-What we are not planning: a repair step inside the audits (the audits
-measure, `fix_holes.py` repairs), a scale check (preflight owns it), or a
-sheet-switch detector built without a known switch to test against.
+The one feature we would build next, if the first ask gets a second
+annotator: a reviewable correction bundle per crop (CT and label review
+crops, CUT / FILL / UNCLEAR decisions, reversible deltas, before and after
+Betti numbers) so a reviewed repair can be checked and applied, not just
+ranked.
 
 ## Code
 
@@ -463,8 +481,8 @@ output. The idea is the PR's own footprint test, generalised to any cause.
 villa's `surface_preflight` already checks the stated scale against the measured
 step, so that class is not repeated here. Two more grid-side reports from the
 same PR survey: `n_grid_holes` counts interior holes of the grid (a flattening
-whose quality filter punched through the surface, villa PR #2128, exits 0 and
-passes a step check), and `outside_volume_frac` with a warning above 0.1, since
+with interior gaps exits 0 and passes a step check; villa PR #2128's dropped
+flattening triangles are the motivating case, not a tested one), and `outside_volume_frac` with a warning above 0.1, since
 a surface mostly outside the volume is in the wrong coordinate frame (missing
 downscale or physical scale, villa PRs #2112 and #2137) and its offsets mean
 nothing. Tried on a real PR #2112 case (PHerc0139 segment 20260422000000, the
@@ -619,6 +637,7 @@ available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
   reads.
 - `data/prediction_audit_scroll1_crops.csv`: the two aggregate rows of the
   two-crop prediction audit (local checkpoint, not released).
+- `data/placement_pr2112_preflight_normalized.json`, `data/placement_pr2112_preflight_published.json`: villa `surface_preflight --volume` reports on the two PR #2112 meshes (FAIL on CT support, PASS).
 - `data/placement_pr2067_spike_check.csv`: placement metrics of segment 20231007101619's tifxyz grid before and after the PR #2067 resampling, main and fixed, with the number of spike vertices the audit sampled (0).
 - `data/spot_check_tiles.csv`: the 39 tiles (29 located holes, 10 controls) of
   the provisional AI spot check; verdicts were not recorded per tile.

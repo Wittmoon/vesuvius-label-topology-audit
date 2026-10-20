@@ -1,0 +1,284 @@
+{
+  "configuration": {
+    "bbox_tolerance": 0.01,
+    "block_rows": 256,
+    "margin_voxels": 0.0,
+    "max_support_samples": 200,
+    "minimum_support_fraction": 0.95,
+    "scale_tolerance": 2.0,
+    "support_sampling": "evenly ranked valid vertices; nearest CT voxel",
+    "support_threshold": 0.0
+  },
+  "gates": [
+    {
+      "message": "required TIFXYZ files are present",
+      "name": "tifxyz_required_files",
+      "observed": {
+        "missing": []
+      },
+      "passed": true,
+      "required": true,
+      "threshold": {
+        "missing": []
+      }
+    },
+    {
+      "message": "metadata is valid",
+      "name": "tifxyz_metadata",
+      "observed": {
+        "scale_xy": [
+          0.05,
+          0.05
+        ]
+      },
+      "passed": true,
+      "required": true,
+      "threshold": null
+    },
+    {
+      "message": "coordinate arrays match",
+      "name": "tifxyz_coordinate_shapes",
+      "observed": {
+        "x": [
+          87,
+          261
+        ],
+        "y": [
+          87,
+          261
+        ],
+        "z": [
+          87,
+          261
+        ]
+      },
+      "passed": true,
+      "required": true,
+      "threshold": "matching 2D arrays"
+    },
+    {
+      "message": "volume is a 3D z/y/x array",
+      "name": "volume_is_3d",
+      "observed": [
+        76953,
+        26511,
+        26511
+      ],
+      "passed": true,
+      "required": true,
+      "threshold": "positive z/y/x shape"
+    },
+    {
+      "message": "surface has valid vertices",
+      "name": "valid_surface_vertices",
+      "observed": 20561,
+      "passed": true,
+      "required": true,
+      "threshold": "> 0"
+    },
+    {
+      "message": "surface has connected quads",
+      "name": "valid_surface_quads",
+      "observed": 20201,
+      "passed": true,
+      "required": true,
+      "threshold": "> 0"
+    },
+    {
+      "message": "selected coordinates are finite",
+      "name": "finite_selected_coordinates",
+      "observed": 0,
+      "passed": true,
+      "required": true,
+      "threshold": 0
+    },
+    {
+      "message": "all valid coordinates lie inside the volume margin",
+      "name": "coordinates_within_volume",
+      "observed": {
+        "out_of_bounds_count": 0
+      },
+      "passed": true,
+      "required": true,
+      "threshold": {
+        "margin_voxels": 0.0,
+        "out_of_bounds_count": 0
+      }
+    },
+    {
+      "message": "metadata scale agrees with the emitted grid spacing",
+      "name": "tifxyz_scale_consistency",
+      "observed": {
+        "columns": {
+          "expected_spacing_voxels": 20.0,
+          "implied_scale": 0.05005602361508416,
+          "median_spacing_bounds_voxels": [
+            19.869724993175744,
+            20.086092112395058
+          ],
+          "median_spacing_voxels": 19.977615635027277,
+          "pair_count": 20463,
+          "ratio": 0.9988807817513639,
+          "ratio_range": [
+            0.9934862496587873,
+            1.0043046056197529
+          ]
+        },
+        "rows": {
+          "expected_spacing_voxels": 20.0,
+          "implied_scale": 0.05005602361508416,
+          "median_spacing_bounds_voxels": [
+            19.869724993175744,
+            20.086092112395058
+          ],
+          "median_spacing_voxels": 19.977615635027277,
+          "pair_count": 20298,
+          "ratio": 0.9988807817513639,
+          "ratio_range": [
+            0.9934862496587873,
+            1.0043046056197529
+          ]
+        }
+      },
+      "passed": true,
+      "required": true,
+      "threshold": {
+        "ratio_within": [
+          0.5,
+          2.0
+        ]
+      }
+    },
+    {
+      "message": "metadata bbox covers the valid vertices",
+      "name": "tifxyz_bbox_consistency",
+      "observed": {
+        "bbox": [
+          [
+            2291.887939453125,
+            2785.26123046875,
+            8233.3779296875
+          ],
+          [
+            3771.50927734375,
+            3763.0458984375,
+            9893.15625
+          ]
+        ],
+        "coordinate_bounds_xyz": {
+          "x": [
+            2291.887939453125,
+            3771.50927734375
+          ],
+          "y": [
+            2785.26123046875,
+            3763.0458984375
+          ],
+          "z": [
+            8233.3779296875,
+            9893.15625
+          ]
+        },
+        "max_excess_voxels": 0.0
+      },
+      "passed": true,
+      "required": true,
+      "threshold": {
+        "bbox_tolerance_voxels": 0.01
+      }
+    },
+    {
+      "message": "sampled surface points lack sufficient CT signal support",
+      "name": "sampled_volume_signal_support",
+      "observed": {
+        "sample_count": 200,
+        "support_fraction": 0.0,
+        "supported_count": 0
+      },
+      "passed": false,
+      "required": true,
+      "threshold": {
+        "absolute_signal_greater_than": 0.0,
+        "minimum_support_fraction": 0.95
+      }
+    }
+  ],
+  "schema_version": 2,
+  "status": "FAIL",
+  "summary": {
+    "passed_required_gates": 10,
+    "required_gate_count": 11
+  },
+  "surface": {
+    "coordinate_bounds_xyz": {
+      "x": [
+        2291.887939453125,
+        3771.50927734375
+      ],
+      "y": [
+        2785.26123046875,
+        3763.0458984375
+      ],
+      "z": [
+        8233.3779296875,
+        9893.15625
+      ]
+    },
+    "grid_spacing_voxels": {
+      "columns": {
+        "median_spacing_bounds_voxels": [
+          19.869724993175744,
+          20.086092112395058
+        ],
+        "median_spacing_voxels": 19.977615635027277,
+        "pair_count": 20463,
+        "zero_length_pair_count": 0
+      },
+      "rows": {
+        "median_spacing_bounds_voxels": [
+          19.869724993175744,
+          20.086092112395058
+        ],
+        "median_spacing_voxels": 19.977615635027277,
+        "pair_count": 20298,
+        "zero_length_pair_count": 0
+      }
+    },
+    "meta_sha256": "73da04c37a4e78bcae24b20acd6fd93bf1338403362b248e74f1204a6e0db8f0",
+    "out_of_bounds_count": 0,
+    "path": "/Volumes/Studio-SSD/Claude/projects/other/vesuvius-villa-tools/scratch/pr2112_demo/in_norm",
+    "scale_xy": [
+      0.05,
+      0.05
+    ],
+    "selected_nonfinite_count": 0,
+    "stored_shape_yx": [
+      87,
+      261
+    ],
+    "uuid": "output_tifxyz",
+    "valid_quad_count": 20201,
+    "valid_vertex_count": 20561
+  },
+  "volume": {
+    "chunks_zyx": [
+      128,
+      128,
+      128
+    ],
+    "dtype": "uint8",
+    "path": "https://vesuvius-challenge-open-data.s3.us-east-1.amazonaws.com/PHerc0139/volumes/20260102150214-2.399um-0.2m-78keV-masked.zarr",
+    "requested_array_key": null,
+    "resolved_array_key": "0",
+    "sampled_signal_support": {
+      "sample_count": 200,
+      "support_fraction": 0.0,
+      "supported_count": 0
+    },
+    "shape_zyx": [
+      76953,
+      26511,
+      26511
+    ]
+  }
+}
