@@ -9,7 +9,8 @@ submitter, 8 sit on continuous papyrus and should be filled, and 6 are pockets
 between two sheets the label merged and should be cut. The existing repair
 script, `fix_holes.py`, adds voxels into all 6 of those pockets
 (`data/repair_tiles.csv`), which is the wrong direction; whether it fills the
-8 was measured for only one of them, where it added nothing.
+8 was measured for only one of them, where `2d_hole_fill` added nothing
+(`closed_k3` added one voxel).
 
 Individual submission. Implementation, experiments and write-up were produced
 with AI assistance (Claude) under the submitter's direction; the 14-hole hand
@@ -165,7 +166,8 @@ flags with an interior hole, 23 it finds clean, 3 flagged only by a cavity or
 fusion (excluded). Dice at 0.5 against the label is 0.226 median on flagged
 crops and 0.211 on clean ones; the one-sided Mann-Whitney test fixed in
 advance (flagged < clean) gives p = 0.74, the secondary metrics agree, and
-foreground fraction does not explain it (Spearman -0.05). Per-crop rows:
+foreground fraction does not explain it (Spearman -0.05 over all 53 crops,
+-0.10 over the 50 tested). Per-crop rows:
 [data/prediction_agreement_flagged_vs_clean.csv](data/prediction_agreement_flagged_vs_clean.csv);
 pre-registration, amendments and run notes:
 [validation/prediction_agreement_preregistration.md](validation/prediction_agreement_preregistration.md).
@@ -234,7 +236,8 @@ PHerc0139 is a scroll the Challenge has recovered text from (title and author
 evidence, Angelotti et al. 2026, arXiv 2606.29085). Which prediction that
 reading used is not stated, so nothing here rates either generation as
 readable. The scroll that paper reads in full, PHerc1667, has no
-surface-prediction folder in the open-data bucket (listing of 2026-10-20:
+`predictions/surfaces/` folder in the open-data bucket, only a
+`predictions/lasagna/` one (listing of 2026-10-20:
 `validation/open_data_surface_predictions_listing_2026-10-20.txt`). The bucket
 holds three surface predictions for PHerc0139
 (`PHerc0139/representations/predictions/surfaces/`); the audit compares the
@@ -242,7 +245,8 @@ oldest and the newest, `recto-090` from 2025-07 and `m7-L0-th0.2` from
 2026-04, uint8 probabilities on the same grid (the third,
 `recto-2um-ps192-L0-th0.5` from 2026-02, was not run). The
 audit was run on 40 matched 256³ crops (random, seed 0, where the older volume
-has at least 3% foreground), binarised at > 127, read over HTTPS. Rows:
+has at least 3% foreground, tested on its 1/8-scale level; one crop is 1.8%
+at full scale), binarised at > 127, read over HTTPS. Rows:
 [data/public_surfaces_pherc0139_generations.csv](data/public_surfaces_pherc0139_generations.csv);
 `validation/public_surfaces_pull.py`, `public_surfaces_run.sh`,
 `public_surfaces_crops.json` produce them.
@@ -371,7 +375,7 @@ points only), 20000 samples each against `54keV_7.91um_Scroll1A`; 224 have
 | metric | 10th | median | 90th |
 | --- | --- | --- | --- |
 | offset median (vox) | −1.5 | −0.5 | +1.5 |
-| share of points > 2 vox from the sheet peak | 0.31 | 0.48 | 0.58 |
+| share of points > 2 vox from the sheet peak | 0.32 | 0.48 | 0.58 |
 | off-sheet fraction | 0.12 | 0.25 | 0.37 |
 | snap remeasure sd (vox) | 0.25 | 0.34 | 0.42 |
 | tangent median abs. diff. at 2 / 4 / 8 vox | 0.5 / 0.5 / 0.58 | 0.5 / 0.5 / 1.0 | 0.5 / 0.5 / 1.0 |
