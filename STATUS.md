@@ -1,6 +1,6 @@
 # Status
 
-Code revision: `30db2ad5a` (code.patch reproduces this tree on `3d56d06ec`).
+Code revision: `1dc04b189` (code.patch reproduces this tree on `3d56d06ec`).
 Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-19).
 
 - 2026-10-18: branch `feat/label-topology-audit` pushed to the fork
@@ -27,3 +27,4 @@ Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10
 - 2026-10-20, later that night: grid spike check added to the placement audit (branch `e34fec95c`, 74 tests): connected-group rule on grid steps, no CT read, finds all 23 PR #2067 vertices and nothing on clean grids. Negative note gains the follow-up; README placement paragraph, limitation and notes bullet updated; code.patch at 20 commits; test record and CHECKSUMS rebuilt.
 - 2026-10-20, late: grid interior-hole count and outside-volume warning added (branch `383736993`, 76 tests) after a survey of recent villa PRs (#2128, #2112, #2137); villa preflight already covers scale-vs-step (#2151, #2056), not duplicated. Sandbox worktree `feat/audit-sandbox` created for merging other people's open PRs in demos; the submission branch stays clean. code.patch at 21 commits; test record and CHECKSUMS rebuilt.
 - 2026-10-20, night 2: PR #2112 demo on a real PHerc0139 segment: the wrong-frame mesh stays inside the large volume, so the outside-volume warning is silent; the profiles catch it (no peak 1.00, contrast 0). Branch `30db2ad5a` warns when under 5% of inside points find a peak (77 tests). Note and CSV added; code.patch at 22 commits; test record and CHECKSUMS rebuilt.
+- 2026-10-20, night 3: sonnet code review of the grid checks applied (branch `1dc04b189`, 80 tests): tied groups over 5% of the surface are folds not spikes, duplicate vertices no longer zero the median, obj input carries NaN grid metrics. README gains "Where the two audits sit in the villa pipeline", a villa-PR relation table, "What this responds to" (10 tracker issues, verified) and "What would help next". code.patch at 23 commits; test record and CHECKSUMS rebuilt.

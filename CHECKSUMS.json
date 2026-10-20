@@ -1,7 +1,7 @@
 {
  "LICENSE": "f06db0ee909f2f8746128b8279713ced1aefd03f3a235d1f9476a831e6e36541",
- "README.md": "1f4efb3437869166574e980c113c529807aa2c6cb75ecc61ac824360aea42f04",
- "STATUS.md": "a3ed452a6a9fa579b1b3fcfe13b4399e805fd9dbcdced989804c7eb8a418a86f",
+ "README.md": "a7c1310815ee47ce5fef89f66960d2b7e9c60ac455c1665d174926091ae7d932",
+ "STATUS.md": "cb8d3068c32007f1f0bf0a7e51ee9db2cbb54abc7f683d37cffd85219bc8cfe1",
  "code.patch": "1795f085665ed46d8e2252805d9f4b9db7771d2c2fc8227cb6ae4f47ab6f86c9",
  "data/community_predictions_audit.csv": "57b518604fcf0e48635f9b1b7f35a15c161f85aeeb5f0ac66ab35ff9e8c69fb4",
  "data/errata.csv": "263423043a9031b5b15694ab26cd581733c39e1968a9989bc98491d8839aac84",
@@ -81,7 +81,6 @@
  "validation/public_surfaces_crops.json": "4c771491fea7ef5f437d3d0a90d2fd058c90674176cdefef8060c8c04fc74e39",
  "validation/public_surfaces_pull.py": "940ae52449cf3dd1a1e9c7d9b79bb6a4a0e5d5f0876861d1297bccd53be4daae",
  "validation/public_surfaces_run.sh": "1f03a1daca223210d1acfbc52ec5596e44e666e5af602e88d284c2e6bca8dc6b",
- "validation/pytest_30db2ad5a.junit.xml": "43a3348f579d97ca0b9447140fdfd97c45ee250443b6ce18134a0d698ed79e43",
  "validation/real-data-review.json": "51998dd0bb6507637d539454b99ac48a75bba8afda950047ba5127c25d590822",
  "validation/review_real_data.py": "cf98987ea239dcf8153bf31e70d608024d2d534c86d6b48f44b5044cdd0ebddc",
  "validation/scroll1_segments.txt": "263c6f974e3cbb3f6dbdfff939ec53e3cae5035263d0a3971356e4dbd8b2d978",
