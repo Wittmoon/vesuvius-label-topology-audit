@@ -1,0 +1,162 @@
+[
+ {
+  "code": "B01",
+  "input": "w034_GAP",
+  "row": 4629,
+  "offset_l2": 3.0,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B02",
+  "input": "w036_GAP",
+  "row": 2303,
+  "offset_l2": 0.5,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B03",
+  "input": "w034_OUT",
+  "row": 1194,
+  "offset_l2": null,
+  "valid": false,
+  "call": "air"
+ },
+ {
+  "code": "B04",
+  "input": "w036_OUT",
+  "row": 556,
+  "offset_l2": -5.5,
+  "valid": true,
+  "call": "edge"
+ },
+ {
+  "code": "B05",
+  "input": "w036_GAP",
+  "row": 4695,
+  "offset_l2": 0.0,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B06",
+  "input": "w036_OUT",
+  "row": 3248,
+  "offset_l2": 0.0,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B07",
+  "input": "w036_OUT",
+  "row": 1978,
+  "offset_l2": -1.0,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B08",
+  "input": "w034_OUT",
+  "row": 799,
+  "offset_l2": 4.5,
+  "valid": true,
+  "call": "air"
+ },
+ {
+  "code": "B09",
+  "input": "w034_GAP",
+  "row": 3567,
+  "offset_l2": 5.0,
+  "valid": true,
+  "call": "between"
+ },
+ {
+  "code": "B10",
+  "input": "w036_GAP",
+  "row": 3079,
+  "offset_l2": -3.0,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B11",
+  "input": "w034_OUT",
+  "row": 2052,
+  "offset_l2": 0.0,
+  "valid": true,
+  "call": "between"
+ },
+ {
+  "code": "B12",
+  "input": "w034_OUT",
+  "row": 1494,
+  "offset_l2": 2.5,
+  "valid": true,
+  "call": "edge"
+ },
+ {
+  "code": "B13",
+  "input": "w034_OUT",
+  "row": 2889,
+  "offset_l2": -1.5,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B14",
+  "input": "w034_GAP",
+  "row": 2674,
+  "offset_l2": 2.5,
+  "valid": true,
+  "call": "between"
+ },
+ {
+  "code": "B15",
+  "input": "w036_GAP",
+  "row": 1381,
+  "offset_l2": -1.5,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B16",
+  "input": "w034_GAP",
+  "row": 1868,
+  "offset_l2": -6.0,
+  "valid": true,
+  "call": "sheet"
+ },
+ {
+  "code": "B17",
+  "input": "w036_OUT",
+  "row": 1515,
+  "offset_l2": -3.0,
+  "valid": true,
+  "call": "edge"
+ },
+ {
+  "code": "B18",
+  "input": "w036_GAP",
+  "row": 4124,
+  "offset_l2": -3.5,
+  "valid": true,
+  "call": "air"
+ },
+ {
+  "code": "B19",
+  "input": "w034_GAP",
+  "row": 4242,
+  "offset_l2": null,
+  "valid": false,
+  "call": "between"
+ },
+ {
+  "code": "B20",
+  "input": "w036_OUT",
+  "row": 2118,
+  "offset_l2": 0.5,
+  "valid": true,
+  "call": "sheet"
+ }
+]

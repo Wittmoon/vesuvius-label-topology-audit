@@ -1,0 +1,28 @@
+w033_OUT: 2933 grid points have no normal and were not sampled
+w033_OUT: valid 4697/5000 offset median -0.50 IQR [-2.00, +1.50] |off|>2 0.36 off-sheet 0.29 no-peak 0.06 snap-sd 0.46 tangent|diff| 2/4/8 0.5/0.5/1.0
+w033_GAP: 4053 grid points have no normal and were not sampled
+w033_GAP: valid 4619/5000 offset median +0.00 IQR [-2.00, +1.50] |off|>2 0.38 off-sheet 0.30 no-peak 0.08 snap-sd 0.42 tangent|diff| 2/4/8 0.5/0.5/1.0
+w034_OUT: 2991 grid points have no normal and were not sampled
+w034_OUT: 1 interior holes in the grid (96 points)
+w034_OUT: valid 4776/5000 offset median -0.50 IQR [-2.00, +1.00] |off|>2 0.34 off-sheet 0.28 no-peak 0.04 snap-sd 0.36 tangent|diff| 2/4/8 0.5/0.5/1.0
+w034_GAP: 4671 grid points have no normal and were not sampled
+w034_GAP: valid 4627/5000 offset median -0.50 IQR [-2.00, +1.00] |off|>2 0.37 off-sheet 0.30 no-peak 0.07 snap-sd 0.42 tangent|diff| 2/4/8 0.5/0.5/1.0
+w036_OUT: 3011 grid points have no normal and were not sampled
+w036_OUT: valid 4747/5000 offset median -0.50 IQR [-2.00, +1.00] |off|>2 0.33 off-sheet 0.21 no-peak 0.05 snap-sd 0.44 tangent|diff| 2/4/8 0.5/0.5/1.0
+w036_GAP: 2495 grid points have no normal and were not sampled
+w036_GAP: valid 4695/5000 offset median +0.00 IQR [-2.00, +1.50] |off|>2 0.39 off-sheet 0.33 no-peak 0.06 snap-sd 0.41 tangent|diff| 2/4/8 0.5/0.5/1.5
+w037_OUT: 3044 grid points have no normal and were not sampled
+w037_OUT: valid 4749/5000 offset median +0.00 IQR [-1.50, +1.50] |off|>2 0.31 off-sheet 0.23 no-peak 0.05 snap-sd 0.39 tangent|diff| 2/4/8 0.5/0.5/1.0
+w037_GAP: 2412 grid points have no normal and were not sampled
+w037_GAP: valid 4730/5000 offset median +0.00 IQR [-2.00, +1.50] |off|>2 0.38 off-sheet 0.31 no-peak 0.05 snap-sd 0.41 tangent|diff| 2/4/8 0.5/0.5/1.0
+w034_GAP_end: 2511 grid points have no normal and were not sampled
+w034_GAP_end: valid 4509/5000 offset median -0.50 IQR [-2.00, +1.50] |off|>2 0.40 off-sheet 0.34 no-peak 0.10 snap-sd 0.35 tangent|diff| 2/4/8 0.5/0.5/1.0
+w033_OUT_s6: 2925 grid points have no normal and were not sampled
+w033_OUT_s6: valid 4214/5000 offset median +1.00 IQR [-1.50, +3.50] |off|>2 0.57 off-sheet 0.49 no-peak 0.16 snap-sd 0.55 tangent|diff| 2/4/8 0.5/1.0/1.5
+w033_GAP_s6: 3968 grid points have no normal and were not sampled
+w033_GAP_s6: valid 4387/5000 offset median +0.00 IQR [-2.00, +2.50] |off|>2 0.53 off-sheet 0.42 no-peak 0.12 snap-sd 0.40 tangent|diff| 2/4/8 0.5/1.0/1.5
+w033_OUT_s12: 2925 grid points have no normal and were not sampled
+w033_OUT_s12: valid 3709/5000 offset median -0.50 IQR [-2.50, +2.00] |off|>2 0.50 off-sheet 0.46 no-peak 0.26 snap-sd 0.47 tangent|diff| 2/4/8 0.5/0.5/1.5
+w033_GAP_s12: 3968 grid points have no normal and were not sampled
+w033_GAP_s12: valid 4250/5000 offset median +0.00 IQR [-2.00, +2.00] |off|>2 0.46 off-sheet 0.41 no-peak 0.15 snap-sd 0.47 tangent|diff| 2/4/8 0.5/0.5/1.5
+rc=0

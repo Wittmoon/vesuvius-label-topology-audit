@@ -293,7 +293,11 @@ at full scale), binarised at > 127, read over HTTPS. Rows:
    Problems list) and the one neither audit does. A peak index is not a
    winding identity, so this needs a segment with a known switch before it is
    worth building; #1641's planted-winding example has not been run against
-   our output.
+   our output. Measured on PHerc0139 for issue #2167 (w034/w036 gap sector,
+   [validation/pherc0139_2167_placement.md](validation/pherc0139_2167_placement.md)):
+   w033 pushed 115 um off its sheet still reads as placed one time in three at
+   9.6 um, so the pre-registered check failed its own instrument gate and the
+   gap question stays open.
 4. **Catalog sweep.** The placement audit has been run on every public
    Scroll 1 segment, the topology audit on both PHerc0139 generations. Running it on a schedule
    with `aggregate.csv` published would turn single findings into a trend; the
@@ -359,6 +363,7 @@ by others unless marked):
 | #1522, #1727, #1977 | declared scale does not match the grid on hundreds of segments | preflight's gate; not repeated |
 | #1660 | a frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings |
 | #1547 | two surfaces trace the same sheet | not covered |
+| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a one-sheet shift reads as placed 1 in 3 at level 2), no answer; `data/pherc0139_2167_placement.csv` |
 
 ### Surface placement on the public Scroll 1 segments
 
@@ -574,6 +579,10 @@ Inputs this packet does not ship:
 - `data/spot_check_tiles.csv`: the 39 tiles of the provisional AI spot check.
 - `validation/prediction_agreement_preregistration.md`: the agreement test's
   design, amendments and results as written before and during the run.
+- `data/pherc0139_2167_placement.csv`, `validation/pherc0139_2167_placement.md`,
+  `validation/pherc0139_2167_placement_preregistration.md`, `validation/pherc0139_2167/`:
+  the issue #2167 gap-sector run (13 sector inputs, bootstrap CIs, positive
+  controls, blind sheets, frozen code and ids).
 - `validation/open_data_surface_predictions_listing_2026-10-20.txt`,
   `validation/issue1912_comment_2026-10-20.md`: dated snapshots of the S3
   listing and the #1912 comment cited above.
@@ -628,7 +637,8 @@ released, their raw outputs are in `validation/negative_results/`.
   not cover a vertex wrong by less than 4x the grid step; `n_grid_holes` has
   no baseline, since the 255 Scroll 1 segments were audited as obj.
 - **Sheet switch:** neither audit detects a trace that jumps cleanly to the
-  neighbouring sheet.
+  neighbouring sheet; on PHerc0139 at 9.6 um a 115 um shift reads as placed
+  one time in three (the #2167 run).
 - **Inspection only:** the audit flags findings and measures changes; it does
   not separate merged sheets.
 
