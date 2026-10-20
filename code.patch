@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/21] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/22] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -529,7 +529,7 @@ index 000000000..9321fc64e
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/21] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/22] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -643,7 +643,7 @@ index 9321fc64e..befc51f26 100644
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/21] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/22] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -1035,7 +1035,7 @@ index befc51f26..b15e79b9c 100644
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/21] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/22] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1444,7 +1444,7 @@ index b15e79b9c..ba977e4b5 100644
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/21] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/22] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1485,7 +1485,7 @@ index 2b5503795..14624a5a1 100644
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/21] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/22] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1812,7 +1812,7 @@ index ba977e4b5..750dc51aa 100644
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/21] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/22] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -2202,7 +2202,7 @@ index 750dc51aa..113996fad 100644
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/21] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/22] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2410,7 +2410,7 @@ index 113996fad..deb220f49 100644
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/21] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/22] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -3185,7 +3185,7 @@ index 000000000..9e7dc1d24
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/21] feat: update 4 Python files
+Subject: [PATCH 10/22] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3584,7 +3584,7 @@ index 9e7dc1d24..2b8014743 100644
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/21] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/22] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3639,7 +3639,7 @@ index 048f619e2..488ff418e 100644
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/21] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/22] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3707,7 +3707,7 @@ index 488ff418e..b064abb97 100644
 From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 14:02:10 -0400
-Subject: [PATCH 13/21] feat(surface-placement-audit): --cache DIR keeps CT
+Subject: [PATCH 13/22] feat(surface-placement-audit): --cache DIR keeps CT
  chunks on disk
 
 ChunkCache wraps the volume and stores each native chunk it reads as a .npy
@@ -3874,7 +3874,7 @@ index 2b8014743..916c8bb3b 100644
 From 9ae3812997806a4e0e86344bd09f2705abbb1117 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:08:00 -0400
-Subject: [PATCH 14/21] fix(label-topology-audit): islands are not repairs;
+Subject: [PATCH 14/22] fix(label-topology-audit): islands are not repairs;
  corner contact with ignore voxels opens a component
 
 A closing fill cut off from the sheet by blocked voxels raised the Euler
@@ -3951,7 +3951,7 @@ index deb220f49..90ac6e1c6 100644
 From 4272804e4773f8bce7115d208eaa254055eb11cd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:48:25 -0400
-Subject: [PATCH 15/21] fix(audit): cache identity, non-default spacing,
+Subject: [PATCH 15/22] fix(audit): cache identity, non-default spacing,
  censored peaks, streaming tiles
 
 - surface_placement_audit: ChunkCache keyed on source path/URL, level (and size/mtime for local files); two volumes with equal geometry no longer share chunks
@@ -4319,7 +4319,7 @@ index 916c8bb3b..7f31bfc85 100644
 From 5d6b5781841fe69c27ee1cdbe589cfd28a477abf Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:01:53 -0400
-Subject: [PATCH 16/21] fix(audit): URL inputs ending in .tif read as TIFF;
+Subject: [PATCH 16/22] fix(audit): URL inputs ending in .tif read as TIFF;
  docs name fused_voxel_frac, b1_face and censored profiles
 
 ---
@@ -4405,7 +4405,7 @@ index 007d6fdf3..879a5db18 100644
 From c17d239558883c16632cd0aad810d25a09060650 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:06:47 -0400
-Subject: [PATCH 17/21] fix(audit): second review round: tif URLs fetched,
+Subject: [PATCH 17/22] fix(audit): second review round: tif URLs fetched,
  small obj vertex block, threshold name collisions refused, bounded symmetric
  profile grid
 
@@ -4586,7 +4586,7 @@ index 7f31bfc85..85ea3ac4f 100644
 From 582a625da2e64708863574113f63e784618f537a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 04:52:33 -0400
-Subject: [PATCH 18/21] docs(vesuvius): state what bridge_voxels locates and
+Subject: [PATCH 18/22] docs(vesuvius): state what bridge_voxels locates and
  what the placement controls show
 
 bridge_voxels counts foreground voxels within one voxel of two different
@@ -4721,7 +4721,7 @@ index e75ec400c..e45c9b5ee 100644
 From fa2b1046d50457be33f420dde86c58038f2a33c7 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 05:47:40 -0400
-Subject: [PATCH 19/21] surface_placement_audit: report tifxyz grid points that
+Subject: [PATCH 19/22] surface_placement_audit: report tifxyz grid points that
  have no normal and are not sampled
 
 Points at hole edges and the grid border have no computable normal, so the
@@ -4835,7 +4835,7 @@ index 85ea3ac4f..d67e94f19 100644
 From e34fec95c1076e86febde15886762a216bbaf827 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:07:20 -0400
-Subject: [PATCH 20/21] surface_placement_audit: grid spike check on tifxyz
+Subject: [PATCH 20/22] surface_placement_audit: grid spike check on tifxyz
  input
 
 Adjacent valid grid points are joined when their distance is at most 4x
@@ -5030,7 +5030,7 @@ index d67e94f19..2328b863f 100644
 From 3837369939ae5a0a163f1f841c2374a7b7a64aa4 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:14:40 -0400
-Subject: [PATCH 21/21] surface_placement_audit: grid interior holes and
+Subject: [PATCH 21/22] surface_placement_audit: grid interior holes and
  outside-volume warning
 
 n_grid_holes / grid_hole_points count 4-connected invalid groups that do
@@ -5168,6 +5168,81 @@ index 2328b863f..17a5dbe84 100644
 +    j = json.load(open(out / "far.json"))
 +    assert j["outside_volume_frac"] > 0.9
 +    assert "outside the volume" in capsys.readouterr().err
++
++
+ def test_bad_arguments(tmp_path, ct):
+     with pytest.raises(SystemExit):
+         spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+-- 
+2.56.0
+
+
+From 30db2ad5aa5ce48f46882cfca1b9a28c995303f9 Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Tue, 20 Oct 2026 06:24:26 -0400
+Subject: [PATCH 22/22] surface_placement_audit: warn when almost no inside
+ point finds a sheet peak
+
+A surface with a missing downscale factor (PR #2112) can land inside the
+volume bounds but in empty space, so the outside-volume warning never fires.
+Warn to stderr when fewer than 5% of inside points find a peak, with a test.
+---
+ vesuvius/docs/surface-placement-audit.md           |  2 +-
+ .../image_proc/run/surface_placement_audit.py      |  7 +++++++
+ vesuvius/tests/test_surface_placement_audit.py     | 14 ++++++++++++++
+ 3 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
+index 1abc47e59..650968f4e 100644
+--- a/vesuvius/docs/surface-placement-audit.md
++++ b/vesuvius/docs/surface-placement-audit.md
+@@ -67,7 +67,7 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
+ | `n_grid_spikes`, `grid_step_median`, `grid_step_max` | tifxyz input only, no CT read: adjacent valid grid points are joined when their distance is at most 4x the median step; the largest connected group is the surface, and any other group still tied to it by a long step is a spike (vertices thrown off the surface singly or as a run, the resampling defect of villa PR #2067, whose check inspired this one). Islands with no tie are left alone. Spike row/col pairs go to `<name>.grid_spikes.csv`. On segment 20231007101619 resampled on main it finds exactly the PR's 23 vertices and nothing on the fixed output |
+ | `n_grid_holes`, `grid_hole_points` | tifxyz input only, no CT read: interior holes of the grid (4-connected groups of invalid points that do not touch the grid border) and the points they cover. A flattening whose quality filter punched holes through the surface (villa PR #2128) passes a step check and exits 0; this counts it |
+ | `outside_volume_frac` | fraction of sampled points whose profile does not fit inside the volume. Above 0.1 the audit warns: a surface mostly outside the volume is in the wrong coordinate frame (missing downscale or physical scale, villa PRs #2112 and #2137), and its offsets mean nothing until the metadata is fixed |
+-| `no_peak_frac` | share of inside points with no qualifying peak (low contrast, air, or a shoulder) |
++| `no_peak_frac` | share of inside points with no qualifying peak (low contrast, air, or a shoulder). When fewer than 5% of inside points find a peak the audit warns: the surface sits inside the volume bounds but in empty space, which is what a missing downscale factor looks like (villa PR #2112), or it is paired with the wrong volume or level |
+ | `offset_median`, `offset_q25`, `offset_q75`, `offset_mean_abs` | signed offset from the surface point to the sheet peak, in voxels along the stored normal; positive means the peak lies in the normal direction |
+ | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
+ | `n_censored`, `censored_frac` | inside points with enough contrast whose profile rises to an end sample and has no accepted peak: the sheet may lie at or beyond the search limit (`half`) |
+diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+index a604159d4..ed6294c5e 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
+@@ -661,6 +661,13 @@ def main(argv: Sequence[str] | None = None) -> int:
+         off, contrast, valid = nearest_peak(prof, t, a.min_contrast, a.min_prominence)
+         valid &= inside
+         m = summarize(off, contrast, valid, inside, patch, prof, t, a.half, a.min_contrast)
++        if inside.sum() and valid.sum() < 0.05 * inside.sum():
++            # inside the volume bounds but no sheet anywhere along the profiles: the surface is
++            # in the wrong place (a missing downscale factor leaves it inside the bounds but in
++            # empty space, villa PR #2112) or paired with the wrong volume or level
++            print(f"{name}: a sheet peak was found at only {int(valid.sum())} of {int(inside.sum())} points "
++                  f"inside the volume; the surface is probably in the wrong coordinate frame "
++                  f"or paired with the wrong volume", file=sys.stderr)
+         m.update(controls(vol, P, N, off, valid, a, rng))
+         m.update({"surface": name, "source": src, "volume": a.volume, "n_vertices": int(n_vert),
+                   "n_no_normal": n_no_normal, **grid, "half": a.half, "step": a.step, "sigma": a.sigma,
+diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
+index 17a5dbe84..ee6a7abc2 100644
+--- a/vesuvius/tests/test_surface_placement_audit.py
++++ b/vesuvius/tests/test_surface_placement_audit.py
+@@ -261,6 +261,20 @@ def test_surface_outside_the_volume_warns_and_is_reported(tmp_path, ct, capsys):
+     assert "outside the volume" in capsys.readouterr().err
+ 
+ 
++def test_surface_in_empty_space_warns(tmp_path, ct, capsys):
++    """A missing downscale factor (villa PR #2112) can leave a surface inside the volume
++    bounds but away from any sheet; every profile is then empty and the audit must say so."""
++    pts = grid_points(14.0)  # 16 voxels below the sheet, further than --half reaches
++    nrm = np.tile([0.0, 0.0, 1.0], (len(pts), 1))
++    obj = tmp_path / "empty.obj"
++    write_obj(obj, pts, nrm)
++    rc, out, rows = run(tmp_path, ct, [str(obj)])
++    assert rc == 0
++    j = json.load(open(out / "empty.json"))
++    assert j["outside_volume_frac"] == 0.0 and j["no_peak_frac"] == 1.0
++    assert "wrong coordinate frame" in capsys.readouterr().err
 +
 +
  def test_bad_arguments(tmp_path, ct):

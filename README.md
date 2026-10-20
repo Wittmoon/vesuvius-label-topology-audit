@@ -60,7 +60,7 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `383736993` (code.patch = `git format-patch 3d56d06ec..383736993`, 21 commits).
+- Code revision: `30db2ad5a` (code.patch = `git format-patch 3d56d06ec..30db2ad5a`, 22 commits).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
   `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
@@ -80,8 +80,8 @@ passed on the branch and on a fresh export of current upstream with the patch
 applied ([test record](validation/upstream-source-tests.json)); with the zarr
 input commit the branch has 35 tests, all passing
 ([record](validation/branch-tests-a620aca9e.json)); at the release revision
-`383736993` the two test files hold 41 + 27 test functions, 76 cases, all passing
-([record](validation/pytest_383736993.junit.xml)). The full
+`30db2ad5a` the two test files hold 41 + 28 test functions, 77 cases, all passing
+([record](validation/pytest_30db2ad5a.junit.xml)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
 thickness included. It was rerun again at `9ae381299`, after two review fixes
 (a fill the sheet never touches is no longer counted as a repair; contact with
@@ -382,7 +382,13 @@ whose quality filter punched through the surface, villa PR #2128, exits 0 and
 passes a step check), and `outside_volume_frac` with a warning above 0.1, since
 a surface mostly outside the volume is in the wrong coordinate frame (missing
 downscale or physical scale, villa PRs #2112 and #2137) and its offsets mean
-nothing. Neither has been shown on a real affected segment yet. The same segment audited through
+nothing. Tried on a real PR #2112 case (PHerc0139 segment 20260422000000, the
+normalized mesh without its factor-4 downscale): the volume is so large that the
+quarter-scale mesh stays inside its bounds, in empty space, so the outside-volume
+warning does not fire. The profiles do: no peak at any of 3,000 samples, contrast
+0, against no-peak 0.45 and contrast 84 for the published mesh. The audit now
+also warns when fewer than 5% of inside points find a peak
+(`notes/placement-outside-volume-pr2112.md`). The same segment audited through
 its tifxyz grid also reads worse than through its obj (no-peak 0.40 vs 0.31),
 so grid and mesh rows are not directly comparable.
 
@@ -570,6 +576,9 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   +0.13 and +0.08, intervals spanning zero). The pre-registration, script and
   per-tile rows are in `validation/course4/`. No claim about the ink model is
   made from the placement audit.
+- [notes/placement-outside-volume-pr2112.md](notes/placement-outside-volume-pr2112.md):
+  a surface missing its downscale factor (villa PR #2112) stays inside a
+  large volume; the profiles, not the bounds check, catch it.
 - [notes/placement-vertex-spike-negative-result.md](notes/placement-vertex-spike-negative-result.md):
   the placement audit does not detect the vertex spikes of villa PR #2067
   (23 of 8,113 vertices, median 1,065 voxels off): they sit at hole edges with
@@ -592,8 +601,9 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   see defects there. The grid spike check covers vertices thrown off the
   surface; it does not cover a vertex that is wrong by less than 4x the grid
   step. A whole grid in the wrong frame shows up as `outside_volume_frac`
-  only when it leaves the volume; a consistent shift that stays inside is
-  measured as offset like any other.
+  when it leaves the volume, or as an all-empty profile set when it stays
+  inside; a consistent shift within reach of the profile is measured as
+  offset like any other.
 - **Inspection only:** the audit flags topology findings and measures changes. It does not repair
   merged sheets.
 

@@ -1,0 +1,3 @@
+mesh,n_samples,n_inside_volume,outside_volume_frac,n_no_normal,n_valid,no_peak_frac,contrast_median,offset_median,offset_abs_gt_2_frac,off_sheet_frac,snap_remeasure_sd,tangent_corr_4,n_grid_spikes,n_grid_holes
+normalized_no_downscale,3000,3000,0.0,672,0,1.0,0.0,nan,nan,nan,nan,nan,0,0
+published_x4,3000,3000,0.0,2816,1645,0.45166666666666666,83.7928581237793,-0.5,0.5483282674772036,0.28024316109422487,0.44111540672757094,0.6734811780606001,0,0
