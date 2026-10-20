@@ -63,6 +63,7 @@
  "validation/cpu-parity.json": "a51307fa3597d8deae359160a3fd683db0fa4e376f7bd61742db438287797640",
  "validation/errata_cutfill_ct_density.py": "ba0cd0aaeb8be920f9119a18688959d05a27c09c252a7ce29aef32b757374a67",
  "validation/errata_cutfill_dev.csv": "1875268f8f7a421aa09b4e2a9b18c6f3125a6cda717d27221d0f109c51f0ac58",
+ "validation/errata_cutfill_holdout_calls.csv": "45f9873bbfed3ee006f13183ba482cda727d4aa0dd9a0a4d515019772b7c6557",
  "validation/errata_cutfill_preregistration.md": "417d7406317b5622ea6ba56b9f64c50d6a4fdf3a2695368c59ccedd2a168bb39",
  "validation/errata_hole_geometry.py": "69d4d261ce485cb92fa1913e360fb294b07b9a4f0299730c8f6477e5d483874a",
  "validation/ink_0814-46527_peak_window.json": "c21b230de8662d99974b483170ce236da5281d5717caee398dc0613e3dc564f6",
