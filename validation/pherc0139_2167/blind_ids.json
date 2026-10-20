@@ -1,0 +1,33 @@
+{
+ "rule": "row index (0-based) in <input>.samples.csv of the full run (seed 2167, 5000 samples); drawn with numpy default_rng(2167).choice(5000,5,replace=False) in this key order",
+ "ids": {
+  "w034_GAP": [
+   1868,
+   2674,
+   3567,
+   4242,
+   4629
+  ],
+  "w034_OUT": [
+   799,
+   1194,
+   1494,
+   2052,
+   2889
+  ],
+  "w036_GAP": [
+   1381,
+   2303,
+   3079,
+   4124,
+   4695
+  ],
+  "w036_OUT": [
+   556,
+   1515,
+   1978,
+   2118,
+   3248
+  ]
+ }
+}
