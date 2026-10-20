@@ -40,7 +40,7 @@ leave the bounds.
 The published mesh shows the usual signature seen on Scroll 1: half the
 samples more than 2 voxels off the sheet, snap sd 0.44.
 
-villa's `surface_preflight --volume` (PR #2077) was run on the same two meshes
+villa's `surface_preflight --volume` (PRs #1463, #1840) was run on the same two meshes
 after this note was first written: the wrong-frame mesh FAILs on
 `sampled_volume_signal_support` (rc 2) and the published mesh PASSes. So for
 tifxyz input this case is caught twice; the audit's warning adds coverage only

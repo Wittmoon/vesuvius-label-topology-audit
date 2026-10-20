@@ -1,0 +1,4 @@
+run,grid,valid,n_grid_spikes,grid_step_median,grid_step_max,n_grid_holes,grid_hole_points,code_revision
+in,137x285,34452,0,19.845,22.6,0,0,1dc04b189
+out_main,68x141,8113,23,39.665,2135.5,0,0,1dc04b189
+out_fix,68x141,7877,0,39.669,43.6,0,0,1dc04b189
