@@ -4,14 +4,16 @@
 256-px tiles: 0814-46527 5 eligible tiles, 1667-w029 and w016 fewer than 30. The ink_9um
 validation masks are 161k-382k px, too small for the registered tile-level test.
 
-## Exploratory (amendment 1, 64-px tiles, same tests): no signal, direction opposite to prediction
+## Exploratory (amendment 1, 64-px tiles, same tests): no signal; AUC correlation opposite to prediction, AP correlation in the predicted direction but short of it
 | segment | eligible tiles | rho(|offset|, AUC) | 95% CI (4x4 blocks) | toroidal p | partial rho (4 covariates) |
 | --- | --- | --- | --- | --- | --- |
 | 0814-46527 | 30 of 53 | +0.13 | [-0.46, +0.59] | 0.67 | +0.18 [-0.80, +0.67] |
 | 1667-w029 | 47 of 127 | +0.08 | [-0.30, +0.43] | 0.75 | +0.02 [-0.34, +0.47] |
 | w016 | 28 (below 30) | not computed | | | |
 
-- Predicted rho <= -0.20. Observed positive, intervals span zero, null p > 0.6. Not a negative
+- Predicted rho <= -0.20. Observed positive on AUC, intervals span zero, null p > 0.6. On AP the
+  correlation is -0.10 (0814-46527) and -0.15 (1667-w029), the predicted sign but short of the
+  predicted size, with the same wide intervals (`rho_offset_ap` in `results_*_t64_s0.json`). Not a negative
   with power: 6-8 bootstrap blocks per segment.
 - Every eligible tile has median |offset| >= 2 (quartiles 3-6 voxels), so the <=1 and 1-2 bins
   are empty; the comparison the FINETUNE-DESIGN.md split made on w016 (<=1 vs >=2) cannot be

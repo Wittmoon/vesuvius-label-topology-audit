@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/17] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/18] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -529,7 +529,7 @@ index 000000000..9321fc64e
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/17] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/18] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -643,7 +643,7 @@ index 9321fc64e..befc51f26 100644
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/17] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/18] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -1035,7 +1035,7 @@ index befc51f26..b15e79b9c 100644
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/17] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/18] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1444,7 +1444,7 @@ index b15e79b9c..ba977e4b5 100644
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/17] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/18] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1485,7 +1485,7 @@ index 2b5503795..14624a5a1 100644
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/17] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/18] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1812,7 +1812,7 @@ index ba977e4b5..750dc51aa 100644
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/17] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/18] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -2202,7 +2202,7 @@ index 750dc51aa..113996fad 100644
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/17] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/18] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2410,7 +2410,7 @@ index 113996fad..deb220f49 100644
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/17] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/18] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -3185,7 +3185,7 @@ index 000000000..9e7dc1d24
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/17] feat: update 4 Python files
+Subject: [PATCH 10/18] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3584,7 +3584,7 @@ index 9e7dc1d24..2b8014743 100644
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/17] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/18] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3639,7 +3639,7 @@ index 048f619e2..488ff418e 100644
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/17] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/18] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3707,7 +3707,7 @@ index 488ff418e..b064abb97 100644
 From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 14:02:10 -0400
-Subject: [PATCH 13/17] feat(surface-placement-audit): --cache DIR keeps CT
+Subject: [PATCH 13/18] feat(surface-placement-audit): --cache DIR keeps CT
  chunks on disk
 
 ChunkCache wraps the volume and stores each native chunk it reads as a .npy
@@ -3874,7 +3874,7 @@ index 2b8014743..916c8bb3b 100644
 From 9ae3812997806a4e0e86344bd09f2705abbb1117 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:08:00 -0400
-Subject: [PATCH 14/17] fix(label-topology-audit): islands are not repairs;
+Subject: [PATCH 14/18] fix(label-topology-audit): islands are not repairs;
  corner contact with ignore voxels opens a component
 
 A closing fill cut off from the sheet by blocked voxels raised the Euler
@@ -3951,7 +3951,7 @@ index deb220f49..90ac6e1c6 100644
 From 4272804e4773f8bce7115d208eaa254055eb11cd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:48:25 -0400
-Subject: [PATCH 15/17] fix(audit): cache identity, non-default spacing,
+Subject: [PATCH 15/18] fix(audit): cache identity, non-default spacing,
  censored peaks, streaming tiles
 
 - surface_placement_audit: ChunkCache keyed on source path/URL, level (and size/mtime for local files); two volumes with equal geometry no longer share chunks
@@ -4319,7 +4319,7 @@ index 916c8bb3b..7f31bfc85 100644
 From 5d6b5781841fe69c27ee1cdbe589cfd28a477abf Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:01:53 -0400
-Subject: [PATCH 16/17] fix(audit): URL inputs ending in .tif read as TIFF;
+Subject: [PATCH 16/18] fix(audit): URL inputs ending in .tif read as TIFF;
  docs name fused_voxel_frac, b1_face and censored profiles
 
 ---
@@ -4405,7 +4405,7 @@ index 007d6fdf3..879a5db18 100644
 From c17d239558883c16632cd0aad810d25a09060650 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:06:47 -0400
-Subject: [PATCH 17/17] fix(audit): second review round: tif URLs fetched,
+Subject: [PATCH 17/18] fix(audit): second review round: tif URLs fetched,
  small obj vertex block, threshold name collisions refused, bounded symmetric
  profile grid
 
@@ -4579,6 +4579,141 @@ index 7f31bfc85..85ea3ac4f 100644
 +    _, t, _ = spa.read_profiles(vol, P, N, half=8, step=1.5, sigma=1.0, workers=1)
 +    assert t.min() >= -8 and t.max() <= 8 and 0.0 in t
 +    assert np.allclose(t, -t[::-1])
+-- 
+2.56.0
+
+
+From 582a625da2e64708863574113f63e784618f537a Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Tue, 20 Oct 2026 04:52:33 -0400
+Subject: [PATCH 18/18] docs(vesuvius): state what bridge_voxels locates and
+ what the placement controls show
+
+bridge_voxels counts foreground voxels within one voxel of two different
+eroded pieces, so it locates one-voxel necks and line contacts only; a longer
+bridge is counted as fused but not located. The fusion test now pins both
+cases (14-voxel bridge: fused, 0 bridge voxels; one-voxel neck: 4 bridge
+voxels at the neck). An empty crop audits end to end; thickness is undefined
+there and is not a gateable metric, pinned by a test.
+
+The placement docs separate what the controls show (repeatable peak, offset
+varying over a few voxels) from what they do not (that the peak is the
+papyrus, or the cause), and state the mesh-resolution explanation as an
+untested hypothesis, matching the evidence repository.
+---
+ vesuvius/docs/label-topology-audit.md         |  2 +-
+ vesuvius/docs/surface-placement-audit.md      | 23 +++++++------
+ .../image_proc/run/label_topology_audit.py    |  4 ++-
+ vesuvius/tests/test_label_topology_audit.py   | 32 ++++++++++++++++++-
+ 4 files changed, 48 insertions(+), 13 deletions(-)
+
+diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
+index 94db26bdf..9166e96c4 100644
+--- a/vesuvius/docs/label-topology-audit.md
++++ b/vesuvius/docs/label-topology-audit.md
+@@ -116,7 +116,7 @@ vesuvius.label_topology_audit --label DATA_DIR/labels/sample_00340.tif \
+ | `b2_total_big` | Betti-2: enclosed cavities (a hollow shell is 1) |
+ | `n_closed_big`, `n_closed_with_b1` | big components not touching the crop border or ignore voxels; this does not establish physical correctness |
+ | `thick_*` | thickness proxy in voxel units (`2*EDT-1` at medial ridge voxels, with background padding); truncated at crop faces and not calibrated physical thickness; `frac_ge_7` is the share at 7 voxels or more |
+-| `n_fused_components`, `bridge_voxels` | components that split into several large pieces after `--erode` erosion; blind on 1-3 voxel sheets |
++| `n_fused_components`, `bridge_voxels` | components that split into several large pieces after `--erode` erosion; blind on 1-3 voxel sheets. `bridge_voxels` counts foreground voxels within one voxel of two different pieces, so it locates one-voxel necks and line contacts only; a longer bridge is counted as fused but not located (on the 892 Kaggle crops it is nonzero on 1 of 22 fused crops) |
+ | `n_junction_clusters` | clusters (20+ voxels) where the structure tensor is not planar: merged sheets or bridges |
+ | `largest_component_frac` | share of foreground in the biggest component |
+ 
+diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
+index fef405317..c6fab86ce 100644
+--- a/vesuvius/docs/surface-placement-audit.md
++++ b/vesuvius/docs/surface-placement-audit.md
+@@ -112,16 +112,19 @@ segments (10th / median / 90th):
+ | `tangent_corr_2` / `_4` / `_8` | 0.79 / 0.62 / 0.41 | 0.85 / 0.72 / 0.54 | 0.89 / 0.79 / 0.66 |
+ 
+ The segments give the same picture, and the offset histogram is nearly
+-flat from −6 to +6, so this is not segments drifting the same way. The
+-controls say what it is: the snap control remeasures at a spread of 0.3
+-voxels, so the peak location is precise; the offsets of two points 2 and 4
+-voxels apart agree (median difference 0.5, correlation 0.85 and 0.7), at 8
+-voxels they differ by 1 (correlation 0.5), and in a dense resample of one crop
+-they are uncorrelated by 16 voxels. The public meshes are triangles of roughly
+-18 voxels, and the sheet moves by several voxels inside one triangle. On half
+-the surface area the mesh is more than 2 voxels (16 µm) from the sheet, and
+-that is a resolution limit of the mesh, not a tracing error that a global
+-shift would fix. Per-segment rows are in the evidence repository
++flat from −6 to +6, so this is not segments drifting the same way. What the
++controls show: the snap control remeasures at a spread of 0.3 voxels, so the
++peak location is repeatable once a peak is found; the offsets of two points 2
++and 4 voxels apart agree (median difference 0.5, correlation 0.85 and 0.7), at
++8 voxels they differ by 1 (correlation 0.5), and in a dense resample of one
++crop they are uncorrelated by 16 voxels, so the offset varies along the
++surface on a scale of a few voxels. On half the surface area the mesh is more
++than 2 voxels (16 µm) from the sheet. What the controls do not show: that the
++detected peak is the papyrus surface rather than another layer or an edge, or
++what causes the offsets. One hypothesis is that the public meshes, with
++roughly 18 voxels between vertices, cannot follow a sheet that wanders a few
++voxels inside one triangle; this was not tested (for instance against a finer
++mesh). Per-segment rows are in the evidence repository
+ (`data/scroll1_segment_placement.csv`). At 20000 samples over a segment of hundreds of cm² no 32-voxel
+ cell collects 30 points, so the `patch_*` metrics are NaN; they need a dense
+ sample (a small tifxyz patch, or `--samples` in the millions).
+diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+index 87dd12073..279528a8f 100644
+--- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
++++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
+@@ -14,7 +14,9 @@ Per crop it measures:
+   * sheet thickness: 2*EDT-1 sampled at medial-ridge voxels (local EDT maxima)
+   * fused sheets: after eroding by ``--erode`` voxels, a component that splits
+     into >= 2 pieces of >= ``--min-piece`` voxels is "fused" (blind on 1-3
+-    voxel sheets, which erosion deletes)
++    voxel sheets, which erosion deletes); ``bridge_voxels`` are foreground voxels
++    within one voxel of two different pieces, so it locates one-voxel necks and
++    line contacts only; a longer bridge is counted as fused but not located
+   * hole locations: closing-filled background blobs whose filling lowers b1
+     (centre, size, interior/crop face); ``--hole-masks`` writes them for fix_holes.py
+   * non-planar junction clusters (structure tensor): a clean sheet is rank-1;
+diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
+index e75ec400c..e45c9b5ee 100644
+--- a/vesuvius/tests/test_label_topology_audit.py
++++ b/vesuvius/tests/test_label_topology_audit.py
+@@ -285,9 +285,39 @@ def test_fusion_heuristic_flags_thick_lobes_joined_by_a_thin_bridge():
+     label[8:22, 8:22, 4:18] = 1
+     label[8:22, 8:22, 32:46] = 1
+     label[14:16, 14:16, 18:32] = 1
+-    metrics, _ = lta.audit(label)
++    metrics, flags = lta.audit(label)
+     assert metrics["n_components"] == metrics["n_fused_components"] == 1
+     assert metrics["fused_voxel_frac"] == 1
++    # a 14-voxel bridge is detected as fusion but not located: after erosion the
++    # two pieces are far apart, and bridge voxels are only those within one
++    # voxel of both pieces (documented limitation)
++    assert metrics["bridge_voxels"] == 0 and not flags["bridge"].any()
++
++
++def test_bridge_voxels_locate_a_one_voxel_neck():
++    label = np.zeros((30, 30, 50), np.uint8)
++    label[8:22, 8:22, 4:18] = 1
++    label[8:22, 8:22, 19:33] = 1
++    label[14:16, 14:16, 18] = 1  # one-voxel neck joining the lobes
++    metrics, flags = lta.audit(label)
++    assert metrics["n_fused_components"] == 1
++    assert metrics["bridge_voxels"] == 4
++    assert flags["bridge"][14:16, 14:16, 18].all() and flags["bridge"].sum() == 4
++
++
++def test_empty_crop_audits_end_to_end_and_gates(tmp_path):
++    # thickness is undefined on an empty crop (None in the flat row); the gate
++    # only accepts the integer/fraction metrics, so None never reaches a comparison
++    tifffile.imwrite(tmp_path / "empty.tif", np.zeros((16, 16, 16), np.uint8))
++    out = tmp_path / "out"
++    rc = lta.main(["--label", str(tmp_path / "empty.tif"), "--out", str(out)])
++    assert rc == 0
++    row = json.loads((out / "empty.json").read_text())
++    assert row["thickness"] == {} and "thick_p95" not in lta.flat_keys()
++    with pytest.raises(SystemExit):
++        lta._parse_fail_on(["thick_p95=12"])
++    rc = lta.main(["--label", str(tmp_path / "empty.tif"), "--out", str(out), "--fail-on", "fg_frac=-1"])
++    assert rc == 2
+ 
+ 
+ def test_parse_roi_clips_and_rejects_empty():
 -- 
 2.56.0
 

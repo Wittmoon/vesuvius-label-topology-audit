@@ -10,6 +10,10 @@ adds voxels into all 6 of those pockets (`data/repair_tiles.csv`), which is the
 wrong direction; whether it fills the 8 was measured for only one of them, where
 it added nothing.
 
+Individual submission. Implementation, experiments and write-up were produced
+with AI assistance (Claude) under the submitter's direction; the 14-hole hand
+check in CT is the submitter's own.
+
 **Tool:** `vesuvius.label_topology_audit`, a dataset-level topology audit for
 3D surface labels: it ranks a folder of crops worst first, locates the small
 holes, writes the input `fix_holes.py` expects, and measures whether a repair
@@ -56,7 +60,7 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `c17d23955` (code.patch = `git format-patch 3d56d06ec..c17d23955`, 17 commits).
+- Code revision: `582a625da` (code.patch = `git format-patch 3d56d06ec..582a625da`, 18 commits).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
   `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
@@ -75,7 +79,9 @@ faces, support for singleton axes and clearer ranking text. All 31 audit tests
 passed on the branch and on a fresh export of current upstream with the patch
 applied ([test record](validation/upstream-source-tests.json)); with the zarr
 input commit the branch has 35 tests, all passing
-([record](validation/branch-tests-a620aca9e.json)). The full
+([record](validation/branch-tests-a620aca9e.json)); at the release revision
+`582a625da` the two test files hold 41 + 23 test functions, 72 cases, all passing
+([record](validation/pytest_582a625da.junit.xml)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
 thickness included. It was rerun again at `9ae381299`, after two review fixes
 (a fill the sheet never touches is no longer counted as a repair; contact with
@@ -126,8 +132,8 @@ script. The recorded runs used local paths that are not in the packet.
 | junction clusters | 281 (32%) | 651 |
 | fused components | 22 (2%) | |
 
-- Holes concentrate in the later crops: 1% of crops 0-99 have one, compared with
-  82% of crops 900+.
+- Holes concentrate in the later crops: 1% of crops 0-99 have one (1 of 98),
+  compared with 82% of crops 900+ (14 of 17).
 - None are explained by ignore voxels.
 - Provisional AI spot check of 29 located holes: 12 judged apparent label defects,
   0 judged real tears, 17 unclear (mostly at crop faces); 10 clean controls were
@@ -138,7 +144,7 @@ script. The recorded runs used local paths that are not in the packet.
 
 | method | b1 | b2 | voxels added | CT check (20 tiles): on papyrus / false add / no change / unclear |
 | --- | --- | --- | --- | --- |
-| `2d_hole_fill` | 111 → 49 | 19 → 12 | 3,731 | 5 / 3 / 5 / 7 |
+| `2d_hole_fill` | 111 → 49 | 19 → 12 | 3,731 | 5 / 3 / 5 / 7 (one of the 5, tile 2D15 = E14, is a hole the human check calls a pocket to cut) |
 | `close` k2 | 111 → 73 | 19 → 12 | 1,997 | 1 / 4 / 8 / 7 |
 | `close` k3 | 111 → 67 | 19 → 12 | 4,689 | 1 / 6 / 8 / 5 |
 
@@ -307,7 +313,7 @@ and `validation/public_surfaces_run.sh` produce them.
 - The newer volume is thinner with fewer holes and cavities on most crops, and
   more fragmented: twice the components, a smaller largest component, more
   closed pieces and more junction clusters. Its fused voxel fraction is higher
-  on 24 of 40 crops.
+  on 20 of 40 crops (lower on 16, equal on 4).
 - A thinner surface has fewer holes partly by construction, so the hole and
   cavity rows do not rank the models; the fragmentation and fusion rows are the
   comparable part. The audit separates the two generations on every row, which
@@ -334,7 +340,7 @@ segments have 1000 or more valid samples. Quantiles across segments
 | share of points > 2 vox from the sheet peak | 0.31 | 0.48 | 0.58 |
 | off-sheet fraction | 0.12 | 0.25 | 0.37 |
 | snap remeasure sd (vox) | 0.25 | 0.34 | 0.42 |
-| tangent median |diff| at 2 / 4 / 8 vox | 0.5 / 0.5 / 0.5 | 0.5 / 0.5 / 1.0 | 0.5 / 0.5 / 1.0 |
+| tangent median abs. diff. at 2 / 4 / 8 vox | 0.5 / 0.5 / 0.5 | 0.5 / 0.5 / 1.0 | 0.5 / 0.5 / 1.0 |
 | tangent correlation at 2 / 4 / 8 vox | 0.79 / 0.62 / 0.41 | 0.85 / 0.72 / 0.54 | 0.89 / 0.79 / 0.66 |
 
 What was measured. The median offset is small. The 0.48 in the second row is
@@ -375,7 +381,7 @@ below it:
 | -3 | 4 (PHerc1667 w018, PHercParis4 w02, w07, w09) | 0 |
 | -4 | 2 (PHercParis4 w00, w03) | 0 |
 
-The 2-layer-and-worse cases concentrate in PHercParis4 (6 of 8) and
+The 2-layer-and-worse cases concentrate in PHercParis4 (7 of 8) and
 PHerc1667 (2 of 6); PHerc0139 sits within one layer.
 
 `validation/ink_peak_window.py` tests whether this is actionable without
@@ -384,14 +390,16 @@ retraining: it measures the peak of the render it is given, shifts the model's
 `infer`. Scored with `validation/ink_score.py` on the dataset's own
 validation-mask pixels only (released hybrid_3d2d seed42 step-075000), on the
 three `ink_9um` segments that ship a validation mask. Every AUC/AP in this
-section is in [data/ink_validation_scores.csv](data/ink_validation_scores.csv),
+section is in [data/ink_validation_scores.csv](data/ink_validation_scores.csv)
+or, for the five-window sweeps and the checkpoint comparison, in
+[data/ink_supervision_and_validation_scores_overnight.csv](data/ink_supervision_and_validation_scores_overnight.csv),
 regenerated with `validation/ink_score_table.sh` from the local prediction
 files (layer start `L<k>`; `default` = layers 2-18, `peakwin` = peak-chosen).
 Checkpoint hashes: `validation/ink_checkpoints.sha256`.
 
 | segment (labels) | profile peak | default window (layers 2-18) AUC / AP | peak-chosen window AUC / AP | best window in a 5-window sweep |
 | --- | --- | --- | --- | --- |
-| public PHerc0139 segment w029 at 2.4 µm pooled to 9 µm (`pherc0139-w016`) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
+| `pherc0139-w016` (the public PHerc0139 segment w029 at 2.4 µm, pooled to 9 µm; not the `pherc0139-w029` render of the depth table) | 9 | 0.775 / 0.622 | 0.823 / 0.676 (layers 1-17) | 0.828 / 0.689 (layers 0-16) |
 | `pherc0814-46527` | 9 | 0.874 / 0.839 | 0.817 / 0.785 (layers 1-17) | 0.896 / 0.872 (layers 4-20) |
 | `pherc1667-w029` | 9 | 0.870 / 0.735 | 0.881 / 0.753 (layers 1-17) | 0.887 / 0.756 (layers 0-16) |
 
@@ -403,37 +411,38 @@ supervised labels are disjoint. Until spatial isolation is shown for this
 checkpoint, read them as within-segment scores.
 
 With that caveat, the window changes the score: AUC ranges 0.73 to 0.83 across
-five windows on w029 and 0.81 to 0.90 across five on 0814-46527. The mean density
-peak does not reliably pick the window. It raises AUC on w029 (0.775 to 0.823)
+five windows on w016 and 0.81 to 0.90 across five on 0814-46527. The mean density
+peak does not reliably pick the window. It raises AUC on w016 (0.775 to 0.823)
 and on 1667-w029 (0.870 to 0.881), and lowers it on 0814-46527 (0.874 to
 0.817), where the best scored window (layers 4-20) lies in the opposite
 direction from the one the peak chooses. There are no intervals, so whether the
 1667-w029 change (0.011 AUC) is distinguishable from zero is unknown. Other
-variables moved the score more: the seed43 checkpoint scores 0.936 on w029
+variables moved the score more: the seed43 checkpoint scores 0.936 on w016
 (seed42 0.775) and 0.931 on 1667-w029 (0.870), and a mirror-TTA run scores 0.891
-on w029, in [data/ink_validation_scores.csv](data/ink_validation_scores.csv).
+on w016, in [data/ink_validation_scores.csv](data/ink_validation_scores.csv).
 On the training segment PHercParis4 w02 (supervision pixels only, peak at
-layer 7) the peak window gives 0.988 against 0.992 for the default; this figure
-is not in the packet's score files. So this is a measured negative result for
+layer 7) the peak window gives 0.988 against 0.992 for the default (step 1 rows
+of the overnight CSV). So this is a measured negative result for
 the one-read window rule, and a measured sensitivity of the released model's
-validation score to window choice (0.05 to 0.10 AUC on w029 and 0814-46527; 0.017 on 1667-w029). The same
+validation score to window choice (0.05 to 0.10 AUC on w016 and 0814-46527; 0.017 on 1667-w029). The same
 five windows scored with two other checkpoints (seed43 step-075000 and seed42
 step-050000, all three segments, step 3 rows of the overnight CSV) show that
 the best window depends on the checkpoint as well as the segment: on
-0814-46527 both prefer the deepest window (seed42-050000 0.816 at layers 0-16
-to 0.923 at 3-19), on w029 and 1667-w029 seed42-050000 is best at layers 0-16
-while seed43 is best at layers 1-17 or 2-18. A fixed window rule would need
+0814-46527 seed43 is best at the deepest window (layers 4-20) and seed42-050000
+rises from 0.816 at layers 0-16 to 0.923 at both 3-19 and 4-20 (a tie on AUC;
+AP 0.886 against 0.889), on w016 and 1667-w029 seed42-050000 is best at layers
+0-16 while seed43 is best at layers 1-17 or 2-18. A fixed window rule would need
 re-deriving per checkpoint. Picking the window per segment needs something other than the
-mean profile. Training-pixel scores are unchanged by the window (supervision
-AUC 0.994 on w029, 0.999 on w035 and w039; the per-segment default and
+mean profile. Training-pixel scores change by at most 0.007 with the window (lower on all
+eight PHercParis4 renders, 0.992 to 0.988 on w02 and 0.967 to 0.960 on w07, and by
+0.001 on 1667-w018 and w031; unchanged elsewhere, supervision
+AUC 0.994 on w016, 0.999 on w035 and w039; the per-segment default and
 peak-window rows are in
 [data/ink_supervision_and_validation_scores_overnight.csv](data/ink_supervision_and_validation_scores_overnight.csv),
-which covers 11 segments, most on training pixels only). The released recipe already jitters the training window
+whose step 1 covers 24 segments, most on training pixels only). The released recipe already jitters the training window
 by +-2 layers. Per-column re-centring of the render at inference (shifting each
-column so its peak sits at the centre) is also negative: on w029 (PHerc0139
-w016 labels) validation AUC drops from 0.775 to 0.498 (`recentered` row in the
-scores CSV); the drop from 0.999 to 0.677 on w035 has no result file in the
-packet. Mechanism: see `notes/ink-recentring-negative-result.md`, where it is
+column so its peak sits at the centre) is also negative: on w016 validation AUC drops from 0.775 to 0.498 (`recentered` row in the
+scores CSV). Mechanism: see `notes/ink-recentring-negative-result.md`, where it is
 a hypothesis.
 Whether the per-column offset predicts where this model scores worse was
 tested under a pre-registration and is uninformative at the mask sizes
@@ -448,8 +457,6 @@ available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
   tables are recorded, not recomputed from published predictions: the
   prediction tifs are not in the packet. Predictions are not guaranteed bitwise
   reproducible across machines.
-- The PHercParis4 w02 training-pixel figures (0.988 / 0.992), the w035
-  re-centring figure (0.677) have no result file in the packet.
 - The placement tables need the public Scroll 1 meshes and volume over HTTP
   (`validation/placement_run_all.sh`, list in `validation/scroll1_segments.txt`);
   the per-segment CSV is the recorded output. The rerun was not repeated for
@@ -457,9 +464,13 @@ available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
 - The render-depth table (`validation/ink_render_depth.py`) reads 29 surface
   volumes over HTTP plus two local native-9 um copies (`INK_DATA`); only its
   output CSV is included. Run and error logs of the original runs are not.
-- Spot-check and repair judgments (AI and the submitter's) are in the CSVs;
-  the tile images they were made from are withheld (CC BY-NC) and cannot be
-  re-judged.
+- Repair judgments (AI and the submitter's) and the errata verdicts are in the
+  CSVs; the provisional 29-hole AI spot check (12 / 0 / 17, 10 controls) has only
+  its tile list (`data/spot_check_tiles.csv`), not per-hole verdicts. The tile
+  images they were made from are withheld (CC BY-NC) and cannot be re-judged.
+- The two-crop prediction audit (955 / 2,754 holes) ran on a local checkpoint
+  that is not released; its two aggregate rows are
+  `data/prediction_audit_scroll1_crops.csv`.
 - The numbers in `notes/`: see the notes section below.
 
 ## Files
@@ -483,15 +494,19 @@ available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
   `validation/placement_run_all.sh` and `validation/summarise_placement.py`
   produce it.
 - `data/ink_validation_scores.csv`: validation-mask AUC/AP of every ink
-  prediction variant cited above (33 rows), from `validation/ink_score_table.sh`;
+  prediction variant cited above (31 rows), from `validation/ink_score_table.sh`;
   `data/ink_supervision_and_validation_scores_overnight.csv`: the overnight
-  queue (144 rows, steps 1-3): default-vs-peak-window on 11 segments, five-window
+  queue (144 rows, steps 1-3): default-vs-peak-window on 24 segments, five-window
   sweeps on the three validation segments with three checkpoints. Checkpoint hashes in
   `validation/ink_checkpoints.sha256`.
 - `validation/negative_results/`: raw JSON outputs of the label-snapping and
   trace-refinement experiments (see Notes below).
 - `validation/scroll1_segments.txt`: the 255 segment IDs `placement_run_all.sh`
   reads.
+- `data/prediction_audit_scroll1_crops.csv`: the two aggregate rows of the
+  two-crop prediction audit (local checkpoint, not released).
+- `data/spot_check_tiles.csv`: the 39 tiles (29 located holes, 10 controls) of
+  the provisional AI spot check; verdicts were not recorded per tile.
 - `data/community_predictions_audit.csv`: one row per community prediction
   volume and threshold (18 rows), 27 tiles each.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:
@@ -534,7 +549,6 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
 
 ## Limitations
 
-- The placement sampling grid `np.arange(-half, half + step/2, step)` can run past `half` when `step` does not divide it (t reaches 8.5 for half=8, step=1.5). The defaults are unaffected.
 - **Judging:** the spot check and the repair check were judged by an AI
   reviewer at thumbnail resolution, not by an expert annotator. The counts
   are indicative.
@@ -552,4 +566,5 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
 The code patch carries the villa repository's license. Everything else in this
 packet (tables, figures, scripts, text) is MIT, see [LICENSE](LICENSE). The
 numbers in `data/` were computed from the CC BY-NC 4.0 surface labels; the
-labels themselves are not redistributed.
+labels themselves are not redistributed; the per-crop metrics and hole
+coordinates derived from them are.
