@@ -60,7 +60,7 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `e34fec95c` (code.patch = `git format-patch 3d56d06ec..e34fec95c`, 20 commits).
+- Code revision: `383736993` (code.patch = `git format-patch 3d56d06ec..383736993`, 21 commits).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
   `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
@@ -80,8 +80,8 @@ passed on the branch and on a fresh export of current upstream with the patch
 applied ([test record](validation/upstream-source-tests.json)); with the zarr
 input commit the branch has 35 tests, all passing
 ([record](validation/branch-tests-a620aca9e.json)); at the release revision
-`e34fec95c` the two test files hold 41 + 25 test functions, 74 cases, all passing
-([record](validation/pytest_e34fec95c.junit.xml)). The full
+`383736993` the two test files hold 41 + 27 test functions, 76 cases, all passing
+([record](validation/pytest_383736993.junit.xml)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
 thickness included. It was rerun again at `9ae381299`, after two review fixes
 (a fill the sheet never touches is no longer counted as a repair; contact with
@@ -376,7 +376,13 @@ step is a spike (`n_grid_spikes`, rows in `<name>.grid_spikes.csv`). On the
 resampled grid it flags exactly the PR's 23 vertices and nothing on the fixed
 output. The idea is the PR's own footprint test, generalised to any cause.
 villa's `surface_preflight` already checks the stated scale against the measured
-step, so that class is not repeated here. The same segment audited through
+step, so that class is not repeated here. Two more grid-side reports from the
+same PR survey: `n_grid_holes` counts interior holes of the grid (a flattening
+whose quality filter punched through the surface, villa PR #2128, exits 0 and
+passes a step check), and `outside_volume_frac` with a warning above 0.1, since
+a surface mostly outside the volume is in the wrong coordinate frame (missing
+downscale or physical scale, villa PRs #2112 and #2137) and its offsets mean
+nothing. Neither has been shown on a real affected segment yet. The same segment audited through
 its tifxyz grid also reads worse than through its obj (no-peak 0.40 vs 0.31),
 so grid and mesh rows are not directly comparable.
 
@@ -585,7 +591,9 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   and the grid border are not sampled (`n_no_normal`); the CT metrics do not
   see defects there. The grid spike check covers vertices thrown off the
   surface; it does not cover a vertex that is wrong by less than 4x the grid
-  step, nor a whole grid that is consistently misplaced.
+  step. A whole grid in the wrong frame shows up as `outside_volume_frac`
+  only when it leaves the volume; a consistent shift that stays inside is
+  measured as offset like any other.
 - **Inspection only:** the audit flags topology findings and measures changes. It does not repair
   merged sheets.
 
