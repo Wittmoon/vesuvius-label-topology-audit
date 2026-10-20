@@ -60,7 +60,7 @@ Compared with what the repo already has:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on `3d56d06ec`.
-- Code revision: `582a625da` (code.patch = `git format-patch 3d56d06ec..582a625da`, 18 commits).
+- Code revision: `fa2b1046d` (code.patch = `git format-patch 3d56d06ec..fa2b1046d`, 19 commits).
 - Earlier commits, kept for history only and not the release revision: `6e4a88154`,
   `941cd5c89`, `392a29117`, `b8bb45319`, `ace26f2fc`, `605e9d222`, `a620aca9e`, `4272804e4` (zarr
   input: `--roi`, `--tile`, `--threshold`, `--level`; local path or URL). The test
@@ -80,8 +80,8 @@ passed on the branch and on a fresh export of current upstream with the patch
 applied ([test record](validation/upstream-source-tests.json)); with the zarr
 input commit the branch has 35 tests, all passing
 ([record](validation/branch-tests-a620aca9e.json)); at the release revision
-`582a625da` the two test files hold 41 + 23 test functions, 72 cases, all passing
-([record](validation/pytest_582a625da.junit.xml)). The full
+`fa2b1046d` the two test files hold 41 + 24 test functions, 73 cases, all passing
+([record](validation/pytest_fa2b1046d.junit.xml)). The full
 892-crop audit was rerun at `605e9d222`: every metric matches the earlier run,
 thickness included. It was rerun again at `9ae381299`, after two review fixes
 (a fill the sheet never touches is no longer counted as a repair; contact with
@@ -363,6 +363,16 @@ depth, ink model inputs). The method assumes isotropic voxels: distances,
 smoothing and tangent geometry use voxel coordinates without spacing. Per-segment
 rows: `data/scroll1_segment_placement.csv`.
 
+What it does not catch. Tested against villa PR #2067, which found 23 vertices
+of segment 20231007101619 interpolated from a missing neighbour (a median
+1,065 voxels off) after grid resampling on main: the audit's metrics are the
+same with and without those vertices, because all 23 sit at hole edges where
+the grid has no computable normal and the sampler skips such points. Recorded
+as a negative in `notes/placement-vertex-spike-negative-result.md`; the JSON now
+reports the skipped count as `n_no_normal`. The same segment audited through
+its tifxyz grid also reads worse than through its obj (no-peak 0.40 vs 0.31),
+so grid and mesh rows are not directly comparable.
+
 ### Where the placement goes next: render depth and the ink model's window
 
 If the mesh is off the sheet, the surface volume rendered from it puts the
@@ -449,7 +459,7 @@ tested under a pre-registration and is uninformative at the mask sizes
 available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
 `validation/ink_0814-46527_peak_window.json`, `validation/ink_1667-w029_peak_window.json`.
 
-### Numbers a judge cannot rerun from this packet
+### Reproducing the numbers: inputs this packet does not ship
 
 - Every ink result needs the `ink_9um` labels, the surface volumes and the
   released `hybrid_3d2d` checkpoints (hashes in `validation/ink_checkpoints.sha256`;
@@ -505,6 +515,7 @@ available (see Notes). Run records: `validation/ink_w016_peak_window.json`,
   reads.
 - `data/prediction_audit_scroll1_crops.csv`: the two aggregate rows of the
   two-crop prediction audit (local checkpoint, not released).
+- `data/placement_pr2067_spike_check.csv`: placement metrics of segment 20231007101619's tifxyz grid before and after the PR #2067 resampling, main and fixed, with the number of spike vertices the audit sampled (0).
 - `data/spot_check_tiles.csv`: the 39 tiles (29 located holes, 10 controls) of
   the provisional AI spot check; verdicts were not recorded per tile.
 - `data/community_predictions_audit.csv`: one row per community prediction
@@ -546,6 +557,10 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   +0.13 and +0.08, intervals spanning zero). The pre-registration, script and
   per-tile rows are in `validation/course4/`. No claim about the ink model is
   made from the placement audit.
+- [notes/placement-vertex-spike-negative-result.md](notes/placement-vertex-spike-negative-result.md):
+  the placement audit does not detect the vertex spikes of villa PR #2067
+  (23 of 8,113 vertices, median 1,065 voxels off): they sit at hole edges with
+  no normal and are never sampled. Rows: `data/placement_pr2067_spike_check.csv`.
 
 ## Limitations
 
@@ -558,6 +573,9 @@ has result rows in `data/ink_validation_scores.csv` for one of its two figures.
   heuristics, not tuned on reviewed data.
 - **Isotropic grids:** both audits use voxel coordinates for distances,
   smoothing and tangent geometry and assume isotropic voxels.
+- **Grid points without a normal:** on tifxyz input, points at hole edges
+  and the grid border are not sampled (`n_no_normal`); defects that live
+  there are invisible to the placement audit.
 - **Inspection only:** the audit flags topology findings and measures changes. It does not repair
   merged sheets.
 

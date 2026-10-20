@@ -1,0 +1,4 @@
+run,n_samples,unmatched,n_inside,n_valid,no_peak_frac,off_sheet_frac,abs_gt_2,offset_median,contrast_median,snap_sd,tangent_corr_4,blended_sampled,blended_valid,blended_contrast_median,blended_offset_abs_median
+in,20000,0,20000,12065,0.3968,0.2962,0.5605,0.0,73.9,0.445,0.324,0,0,,
+out_main,7725,0,7725,4595,0.4052,0.2903,0.5539,0.0,74.3,0.407,0.335,0,0,,
+out_fix,7496,0,7496,4432,0.4088,0.2902,0.5551,0.0,74.4,0.392,0.309,0,0,,
