@@ -49,3 +49,7 @@ unchanged, reads the gap sector as worse-placed than the rest of the same windin
     8a2eb1c8c0f76f8d7b18c7ac627920777224433fa8a292d193f1ddb39b242c85  blind_ids.json
 
 Raw inputs: validation/pherc0139_2167/SHA256SUMS (five tifxyz grids + umbilicus from the open-data bucket).
+
+## Clarification 2026-10-20, after the run (frozen text above unchanged)
+3 x 0.017 = 0.051 (smoke_analysis.csv: 0.0511), so the formula gives 0.051, not 0.05 as written. The
+threshold applied is the explicitly frozen 0.05; the difference changes no outcome (no D reached either).

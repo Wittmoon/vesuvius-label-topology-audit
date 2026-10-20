@@ -1,0 +1,2 @@
+GAP pairs 1459 peak sep along normal: median 4.16 |d|<=2 frac 0.344 |d|<=4 0.485 | raw point sep along normal median 4.16 q25/q75 [1.81, 8.03]
+OUT pairs 28 peak sep along normal: median 8.73 |d|<=2 frac 0.107 |d|<=4 0.214 | raw point sep along normal median 9.13 q25/q75 [7.03, 10.65]
