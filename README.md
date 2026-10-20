@@ -160,19 +160,24 @@ a prediction check, not a benchmark of the model.
 
 **Do flagged labels disagree more with an independent prediction? Not
 detectably with this checkpoint (pre-registered, null).** The same checkpoint
-was run on 53 Kaggle crops (one centred 256³ tile per crop): 27 the audit
+(local, patch 256, epoch 3504; not shipped) was run on 53 Kaggle crops (one centred 256³ tile per crop): 27 the audit
 flags with an interior hole, 23 it finds clean, 3 flagged only by a cavity or
 fusion (excluded). Dice at 0.5 against the label is 0.226 median on flagged
 crops and 0.211 on clean ones; the one-sided Mann-Whitney test fixed in
 advance (flagged < clean) gives p = 0.74, the secondary metrics agree, and
 foreground fraction does not explain it (Spearman -0.05). Per-crop rows:
-[data/prediction_agreement_flagged_vs_clean.csv](data/prediction_agreement_flagged_vs_clean.csv).
+[data/prediction_agreement_flagged_vs_clean.csv](data/prediction_agreement_flagged_vs_clean.csv);
+pre-registration, amendments and run notes:
+[validation/prediction_agreement_preregistration.md](validation/prediction_agreement_preregistration.md).
 This is the low-power case the design named: the checkpoint reaches Dice 0.35
 at best on any Scroll 1 crop, so crop-level agreement is set by the model's
 transfer failure, not by defects that touch under 1% of label voxels. The null
-does not show the flags are useless; it shows this model cannot detect them.
+does not show the flags are useless; it shows no association was detectable in
+this experiment, and without the checkpoint the test can only be repeated with
+another surface model.
 Probability inside the 10 errata holes that fall in the predicted tiles tracks
-the rim (ratio 0.8-0.9) for FILL, CUT and UNCLEAR alike, so the map is not a
+the rim (ratio 0.8-0.9) for FILL, CUT and UNCLEAR alike
+([data/prediction_agreement_hole_local.csv](data/prediction_agreement_hole_local.csv)), so the map is not a
 cut/fill oracle either. A model trained on Scroll 1 labels is the test that
 could carry a signal.
 
@@ -204,9 +209,13 @@ commands: [validation/community_predictions_run.sh](validation/community_predict
   Socratic. A nine-threshold sweep of the probability volumes
   ([data/threshold_sweep.csv](data/threshold_sweep.csv), 54 rows,
   [validation/threshold_sweep_run.sh](validation/threshold_sweep_run.sh))
-  puts the hole minimum and the cavity collapse on the same cut, 0.3-0.4, for
-  m7 and Socratic on both scrolls, so the sweep picks a threshold without a
-  labelled reference. Cuts above 0.5 fragment: at 0.7 hole density is 16-19x
+  puts the hole-density minimum at 0.3-0.4 for m7 and Socratic on both
+  scrolls; cavities have already fallen to a few hundred or fewer there and
+  keep falling above it. So the sweep suggests a threshold without a labelled
+  reference, as a heuristic, not a validated rule. The sweep cuts the
+  probability volumes itself (uint8 cut = ceil(t x 255)), so its rows differ a
+  little from the published masks (Socratic on PHerc1447 at 0.2: fused
+  fraction 0.43 published, 0.49 sweep). Cuts above 0.5 fragment: at 0.7 hole density is 16-19x
   its minimum for Socratic and 2.6-3.4x for m7.
 - HercUNet's output is thicker (median 3.5-5 voxels) and carries tens to
   hundreds of thousands of cavities per window, so it behaves like a volume
@@ -216,17 +225,22 @@ commands: [validation/community_predictions_run.sh](validation/community_predict
 - PHerc0814 has a higher fused fraction than PHerc1447 for every model at
   every threshold.
 - Caveats: one window per scroll, not chosen by any label; tile faces count
-  as crop faces (1-4% of b1); no ground truth, so this ranks prediction
+  as crop faces (1-5% of b1 on the published masks, up to 8% in the sweep); no ground truth, so this ranks prediction
   topology, it does not score accuracy.
 
-#### A reading-grade reference: two generations of the public PHerc0139 prediction
+#### A scroll with recovered text: two generations of the public PHerc0139 prediction
 
-PHerc0139 is a scroll the Challenge has extracted text from (title and author
-evidence, Angelotti et al. 2026, arXiv 2606.29085; the scroll that paper reads
-in full, PHerc1667, has no surface-prediction volume in the open-data bucket
-as of 2026-10-20). The bucket publishes two surface predictions for PHerc0139
-(`PHerc0139/representations/predictions/surfaces/`): `recto-090` from 2025-07
-and `m7-L0-th0.2` from 2026-04, uint8 probabilities on the same grid. The
+PHerc0139 is a scroll the Challenge has recovered text from (title and author
+evidence, Angelotti et al. 2026, arXiv 2606.29085). Which prediction that
+reading used is not stated, so nothing here rates either generation as
+readable. The scroll that paper reads in full, PHerc1667, has no
+surface-prediction folder in the open-data bucket (listing of 2026-10-20:
+`validation/open_data_surface_predictions_listing_2026-10-20.txt`). The bucket
+holds three surface predictions for PHerc0139
+(`PHerc0139/representations/predictions/surfaces/`); the audit compares the
+oldest and the newest, `recto-090` from 2025-07 and `m7-L0-th0.2` from
+2026-04, uint8 probabilities on the same grid (the third,
+`recto-2um-ps192-L0-th0.5` from 2026-02, was not run). The
 audit was run on 40 matched 256³ crops (random, seed 0, where the older volume
 has at least 3% foreground), binarised at > 127, read over HTTPS. Rows:
 [data/public_surfaces_pherc0139_generations.csv](data/public_surfaces_pherc0139_generations.csv);
@@ -250,8 +264,8 @@ has at least 3% foreground), binarised at > 127, read over HTTPS. Rows:
   more closed pieces and more junction clusters. A thinner surface has fewer
   holes partly by construction, so the fragmentation and fusion rows are the
   comparable part.
-- As a yardstick: a prediction good enough to extract text from still carries
-  a median of 232 holes per 256³ crop at this cut, against a maximum of 34 in
+- As a yardstick: the newest public prediction for a scroll with recovered
+  text still carries a median of 232 holes per 256³ crop at this cut, against a maximum of 34 in
   any 320³ Kaggle label crop. The audit separates the two generations on every
   row, which is what it is for; which generation traces better is not decided
   here. One scroll, 40 crops, one threshold, no labelled reference.
@@ -267,7 +281,8 @@ has at least 3% foreground), binarised at > 127, read over HTTPS. Rows:
    the same segment with a measured ink difference. Running the placement
    audit on both members of each pair and checking whether its offset row
    orders them as the ink score does is the cheapest downstream test. The
-   2026-10-20 comment on #1912 published 207 mesh pairs with a fine-to-coarse
+   2026-10-20 comment on #1912 published 206 mesh pairs (52 held out, 154
+   applied; snapshot `validation/issue1912_comment_2026-10-20.md`) with a fine-to-coarse
    pixel map (github.com/slchicoineau-creator/tifxyz-canvas-map); that is the
    natural source.
 3. **Sheet switch.** The most asked-for check (#1641, #1621, the Open
@@ -276,7 +291,7 @@ has at least 3% foreground), binarised at > 127, read over HTTPS. Rows:
    worth building; #1641's planted-winding example has not been run against
    our output.
 4. **Catalog sweep.** The placement audit has been run on every public
-   Scroll 1 segment and both PHerc0139 generations. Running it on a schedule
+   Scroll 1 segment, the topology audit on both PHerc0139 generations. Running it on a schedule
    with `aggregate.csv` published would turn single findings into a trend; the
    question is whether maintainers want the rows.
 
@@ -479,10 +494,19 @@ vesuvius.label_topology_audit --batch FLAGGED --plot --hole-masks --out flag_out
 # repair + check (see the docs' Workflow section for the folder layout fix_holes expects)
 python src/vesuvius/scripts/fix_holes.py --in-dir fix_in --ignore-value 2 --method 2d_hole_fill
 vesuvius.label_topology_audit --batch BEFORE --after AFTER --out fix_out
+
+# synthetic example, no scroll data: reproduces figures/out exactly
+python figures/make_synthetic.py
+vesuvius.label_topology_audit --label figures/synthetic_label.tif --image figures/synthetic_image.tif --plot --hole-masks --out figures/out
 ```
 
-`figures/make_synthetic.py` builds the synthetic example; no scroll data is
-needed. The scripts in `validation/` take their paths from environment
+Install: a fresh venv (Python 3.14) with `pip install -e vesuvius` from the
+patched villa checkout plus `tifffile zarr scipy scikit-image
+connected-components-3d opencv-python-headless numba imagecodecs matplotlib
+tqdm` runs both CLIs and passes all 80 tests (2026-10-20). The `models` extra
+also covers these but pulls in a C++ build (`volume-cartographer`).
+
+The scripts in `validation/` take their paths from environment
 variables (`W`, `PY`, `R`; `INK_ROOT`, `INK_DATA`, `VESUVIUS_PYTHON`,
 `VESUVIUS_SRC` for the ink scripts), documented at the top of each script.
 
@@ -517,6 +541,9 @@ Inputs this packet does not ship:
   consensus, human verdict (14 rows) and a suggested action.
 - `data/errata_hole_geometry.csv`: per errata hole, rim and shell thickness,
   density and principal-axis extents (`validation/errata_hole_geometry.py`).
+- `data/prediction_agreement_hole_local.csv`: the 10 errata holes inside the
+  predicted tiles, mean probability in the hole, on its rim and 20-40 voxels
+  away.
 - `data/prediction_agreement_flagged_vs_clean.csv`: one row per crop (53) of
   the flagged-vs-clean test: group, `b1_interior`, foreground fraction, Dice
   and tolerant recall/precision at 0.3, 0.5 and on the skeleton.
@@ -541,6 +568,11 @@ Inputs this packet does not ship:
   `data/ink_supervision_and_validation_scores_overnight.csv` (144 rows): the
   ink tables above, from `validation/ink_score_table.sh`.
 - `data/spot_check_tiles.csv`: the 39 tiles of the provisional AI spot check.
+- `validation/prediction_agreement_preregistration.md`: the agreement test's
+  design, amendments and results as written before and during the run.
+- `validation/open_data_surface_predictions_listing_2026-10-20.txt`,
+  `validation/issue1912_comment_2026-10-20.md`: dated snapshots of the S3
+  listing and the #1912 comment cited above.
 - `validation/negative_results/`: raw JSON of the label-snapping and
   trace-refinement experiments.
 - `figures/out/synthetic_label.holes.png`, `figures/out/synthetic_label.png`:

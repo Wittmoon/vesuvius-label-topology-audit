@@ -8,6 +8,7 @@ export W=${W:-$PWD/villa/vesuvius}
 export PY=${PY:-python3}
 export B=https://dl.ash2txt.org/community-uploads/yupeng
 export R=${R:-$PWD/out/pred_audit}
+mkdir -p "$R"
 {
 for model in m7 soc herc; do for th in 0.2 0.3 0.5; do
   echo "$model PHerc1447 $th 12288:13056,3840:4608,3584:4352"
