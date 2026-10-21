@@ -32,7 +32,7 @@ Fraction of each hole's voxels the method filled, grouped by the human verdict f
 | closing, kernel 3 | 0.24 | 4 of 19 | 0.60 | 6 of 11 |
 
 2D hole fill cannot tell the two apart: it fills real gaps as readily as labelling misses,
-and six CUT holes (E07, E10, E14, E15, E17, E18, E24, E25) are filled almost completely.
+and eight CUT holes (E07, E10, E14, E15, E17, E18, E24, E25) are filled almost completely.
 Closing with a kernel of 2 fills the labelling misses at about the same rate while leaving
 every real gap mostly open. That is the expected behaviour of a small closing (it bridges
 gaps up to a few voxels wide and leaves wider ones), and the human verdicts happen to
@@ -48,7 +48,7 @@ a pre-registered test.
   The `--after` numbers must not be read as "the repair was safe".
 - The per-hole fill fractions are a voxel count inside the audit's located hole component,
   not a judgement of whether the hole closed topologically.
-- Three crops per earlier runs (`sample_00683`, `sample_00409`, `sample_00559`) gain holes
+- Three crops (`sample_00683`, `sample_00409`, `sample_00559`) gain holes
   under closing; they are worth a look before any closing is applied blind.
 
 Reproduce: `scratch/label_quality/kaggle_full/fix/overnight/run.sh` and `crosstab.py`
