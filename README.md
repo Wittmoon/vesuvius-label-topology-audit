@@ -98,7 +98,7 @@ an inter-sheet wedge and join sheets, and some unchanged holes are pockets
 between merged sheets, which need separating rather than filling. That
 operation is outside the repair methods evaluated here.
 
-#### Errata list: 33 holes in the 20 worst crops (AI-reviewed, 14 human-checked)
+#### Errata list: 33 holes in the 20 worst crops (AI-reviewed, all 33 human-checked)
 
 `data/errata.csv` lists the up-to-3 largest located interior holes in each of
 the 20 top-ranked crops that have one, with crop ID and hole centre (zyx). Two
@@ -107,35 +107,40 @@ overlaid: FILL (the hole sits on continuous papyrus), CUT (a pocket between
 two sheets the label merged) or UNCLEAR. They agree on 21 of 33: 7 consensus
 FILL (3 crops), 7 consensus CUT (5 crops), 19 disagreement or both UNCLEAR.
 
-The submitter then checked 14 holes in a local slice viewer, scrolling
-through the CT in three planes with the overlay on and off, with the AI
-verdicts hidden until after each judgment: 13 of the 14 consensus holes
-(E24, crop 687, consensus CUT, was skipped by oversight) plus E01, where both
-reviewers were unsure. The human agreed with all 13 consensus verdicts (6
-CUT, 7 FILL) and judged E01 FILL (`human_verdict` column). The reviewer is not
-an expert annotator and the 13 were chosen because the AI reviewers agreed,
-so 13 of 13 is not an independent precision estimate. The 19 rows without a
-verdict remain unchecked; one of them, E22 (118,530 voxels), is a surface
-concavity the locator reports as a hole (`locate_holes` has no upper volume
-cap).
+The submitter then checked all 33 in two sittings (`human_verdict` column).
+First, 14 holes in a local slice viewer with the AI verdicts hidden until
+after each judgment: the 13 consensus holes except E24 (skipped by oversight)
+plus E01, where both reviewers were unsure; the human agreed with all 13
+consensus verdicts and judged E01 FILL. Second, the remaining 19 holes blind,
+in random order under codes B01-B19, from three orthogonal CT slices through
+the hole centre with nothing but the label outline shown
+(`validation/errata_cutfill_preregistration.md`, `errata_cutfill_human_calls.csv`):
+13 CUT, 3 FILL, 3 UNCLEAR. Over all 33 the human verdict is 19 CUT, 11 FILL,
+3 UNCLEAR. The reviewer is not an expert annotator, found the second sitting
+hard, and the first 13 were chosen because the AI reviewers agreed, so these
+counts are one careful reader's calls, not an annotation standard. E22
+(118,530 voxels, human UNCLEAR) is a surface concavity the locator reports as
+a hole (`locate_holes` has no upper volume cap).
 
-The CUT rows matter most: `fix_holes` would fill them with the wrong answer.
-The list is a starting point for an annotator, not a correction.
+The CUT rows matter most: `fix_holes` would fill them with the wrong answer,
+and on these top-ranked holes that is the majority case. The list is a
+starting point for an annotator, not a correction.
 
-**Automatic cut/fill signal (labels only, no CT): thickness is negative, size
-is suggestive.** `validation/errata_hole_geometry.py` measures rim and shell
-thickness, local label density and principal-axis extents for each of the 33
-holes (`data/errata_hole_geometry.csv`). Rim thickness is 1.0 on 30 of 33
-holes: the Kaggle labels are one voxel thin, so a pocket between merged sheets
-is two thin sheets joined at their edges, and neither thickness nor density
-(CUT 0.17-0.35, FILL 0.22-0.32) separates the classes. Size does, on the
-reviewed holes: the 7 consensus CUT holes are 133-5,167 voxels, the 7
-consensus FILL holes 14-120, E01 (human FILL) 164; a cut at about 125 voxels
-puts 14 of these 15 on the right side. This is an observation on 15 holes
-from the top of the ranking, not a validated classifier; 13 of the 18 UNCLEAR
-holes are above 125 voxels. The script's nearest-component match recounts
-E01, E21 and E28 differently from `errata.csv`; the ranges above use the
-errata counts.
+**Automatic cut/fill call: negative, pre-registered.** Three rules were
+frozen and their calls on the 19 then-unchecked holes committed before the
+blind sitting (`validation/errata_cutfill_preregistration.md`,
+`errata_cutfill_holdout_calls.csv`; result in `errata_cutfill.md`). Hole
+extent along the local sheet normal (labels only, threshold 4.2) agreed with
+the human on 11 of the 16 decided holes, size (>= 125 voxels -> CUT) on 12,
+and a CT density score (hole brightness between local papyrus and background)
+on 5 with 2 abstentions. The bar was 15 of 19; "call everything CUT" gets 13
+of 16. The label-only rules had looked good on the 14 consensus-selected
+holes (13 of 14 each) because those sizes were known when the thresholds were
+set. The CT score fails for a physical reason: pockets between merged sheets
+are dense in the CT because the sheets touch there, so it reads them as
+papyrus. `ranked.csv` therefore carries no FILL/CUT column; the earlier
+geometry note (`validation/errata_hole_geometry.py`, rim thickness 1.0 on 30
+of 33 holes) stands as the labels-only negative on thickness and density.
 
 #### Audit on model predictions
 
