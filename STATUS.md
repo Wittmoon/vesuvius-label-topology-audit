@@ -41,3 +41,4 @@ Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10
 
 - 2026-10-20 night 9b: fill-then-audit on all 152 flagged crops x 3 fix_holes methods (`validation/fill_then_audit.md`): closing k2 cuts holes 571->345 and fills 0/19 human-CUT holes >50% vs 6/11 FILL; 2D hole fill fills CUT and FILL alike (8/19 CUT welded); audit --after fusion/bridge metrics unchanged under every repair, so they do not catch the welds.
 - 2026-10-21: fix_holes --veto landed on the PR branch (408f098e3) with test; errata CUT list as veto on 20 crops: 0/19 CUT touched, FILL unchanged.
+- 2026-10-21: Kaggle 3rd-place nnU-Net stage-1 run on the Mac (`validation/kaggle3rd_prediction.md`, pre-registered): Dice median 0.49 on the 20 errata crops; fill fraction FILL median 0.67 (8/11 > 0.5) vs CUT 0.03 (1/19), p < 0.001. In-sample (786 training crops), so a consistency check on the human CUT/FILL calls, not an oracle.
