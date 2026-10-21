@@ -53,3 +53,11 @@ a pre-registered test.
 
 Reproduce: `scratch/label_quality/kaggle_full/fix/overnight/run.sh` and `crosstab.py`
 (villa worktree at 1dc04b189; hole masks from the same audit run, not from `audit_9ae3`).
+
+## Follow-up: `fix_holes.py --veto` (villa branch commit 408f098e3)
+
+`--veto CSV` takes `crop,center_zyx` rows (the errata format) and removes the hole-mask
+component nearest each centre, within 8 voxels, before any method runs. Check on the 20
+errata crops with the 19 human-CUT holes as the veto list and closing kernel 2: none of the
+19 CUT holes gained a voxel, the 11 FILL holes were filled exactly as before. Unit test
+`tests/test_fix_holes_veto.py`.
