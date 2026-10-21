@@ -44,3 +44,16 @@ remains a queue for an annotator, not an automatic correction.
 - 16 decided holes: the intervals are wide and the rules are not shown to be worse than chance, only not
   shown to be good enough to act on.
 - The holdout is one hole-rich tail of one dataset (the 20 worst-ranked Kaggle crops).
+- Display: each blind slice was windowed to its own 1st-99th intensity percentiles. On a bright crop with
+  a large dense region in the slice (B19 = E22) that compresses the papyrus detail; the reviewer reported
+  B19 as too bright to read. A fixed window per crop, or per-region normalisation, would be fairer.
+
+## Observation outside the question asked
+
+The reviewer, blind, reported that in many of the 19 slices the label outline did not sit on the papyrus
+as they would have drawn it: offset to one side of the sheet by a sheet's width or so, following a
+plausible path and then continuing on what looked like a neighbouring sheet, or lying over dark voxels
+with no visible paper. Some of these are 2D artefacts of slicing a 3D label (an oblique sheet looks
+offset or appears to jump), and red over dark can be thin, low-contrast papyrus. But it is a second
+reader seeing the placement defect by eye in the worst-ranked crops, and it is the first independent
+reading of these labels we have. It is recorded here as an observation, not a measurement.

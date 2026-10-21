@@ -61,7 +61,7 @@
  "validation/course4/tiles_w016_default_t256_s0.csv": "22b0f2f22e48d53ba8c22f4563ff541569e8562ed05aa10bffbf4ca94223e0c5",
  "validation/course4/tiles_w016_default_t64_s0.csv": "6c958e626342b652466d8241f3775df7b5d4fafe11cf984bd3f37d72a8be3137",
  "validation/cpu-parity.json": "a51307fa3597d8deae359160a3fd683db0fa4e376f7bd61742db438287797640",
- "validation/errata_cutfill.md": "e1ae95bcef2dd2fb756656291b04b0cb83ca2984d64e84d90141bdde77effbd8",
+ "validation/errata_cutfill.md": "5e7ca75fd453345a52cbe7c7ba872a879cb68de0d9535ab910ac6a66ddc2f787",
  "validation/errata_cutfill_ct_density.py": "ba0cd0aaeb8be920f9119a18688959d05a27c09c252a7ce29aef32b757374a67",
  "validation/errata_cutfill_dev.csv": "1875268f8f7a421aa09b4e2a9b18c6f3125a6cda717d27221d0f109c51f0ac58",
  "validation/errata_cutfill_holdout_calls.csv": "45f9873bbfed3ee006f13183ba482cda727d4aa0dd9a0a4d515019772b7c6557",
