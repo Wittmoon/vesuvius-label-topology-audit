@@ -1,4 +1,4 @@
-"""Per-angle material-run count between w033 and w037 (see PREREG_run_count.md). Builds on unwrap_gap.py."""
+"""Per-angle material-run count between w033 and w037 (see run_count_preregistration.md). Builds on unwrap_gap.py."""
 import argparse, csv, os, sys
 import numpy as np
 from scipy.ndimage import gaussian_filter1d

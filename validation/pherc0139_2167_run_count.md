@@ -66,14 +66,16 @@ holding that many meshes).
 | U1 | 14,856 | 55-95 | 0.070 | 0.199 | 0.14 | 0.10 | w033+w034+w036 (279), w034+w036 (210) | w034 and w036 on one band to 80 deg |
 | U2 | 19,500 | 55-95 | 0.161 | 0.172 | 0.29 | 0.14 | w034+w036+w037 (540), w036+w037 (340) | w034, w036, w037 in one band to 75 deg |
 
-Reading. Two meshes in one run (`same` + `amb`) is 0.07 at C1 and 0.17 at C2; at the gap places it is 0.11
-(G4) to 0.63 (E1), with ten of the twelve above 0.25. In the controls the only groups are w036+w037 and
-w035+w036, the pressed pairs the unwrap note describes, and they are `amb` (wide runs). In the gap the
+Reading. Two meshes in one run (`same` + `amb`) is 0.07 at C1 and 0.17 at C2; at the gap places it is 0.06
+(G2) to 0.63 (E1), eight of the twelve above 0.25. In the controls the groups are mostly w036+w037 and
+w035+w036, the pressed pairs the unwrap note describes, in `amb` (wide) runs; w034+w035 (58 and 94 crossings)
+and a few three-mesh groups also occur there. In the gap the
 groups contain w034 with w036 (E1, E4, E5, E6, G1, U1, U2), w034 with w035 (E3), w034 with w037 (G1, G3,
 G4), and at many E places w033 as well, i.e. three or four meshes in one run. That matches the by-eye read
 where it named a pair (w034+w036 at E1, E4, E5, E6, U1; w034+w035 at E3; w034+w037 at G1, G3, G4) and adds
 that w033 is often in the same run as w034 at the lower heights. G2, where the by-eye read saw w034 move
-between layers inside the slice, shows control-like groups and `air` 0.35 (controls 0.16 and 0.27); G3 and
+between layers inside the slice, shows the lowest sharing of the E and G places (its second group, w034+w036, does not occur in the
+controls) and `air` 0.35 (controls 0.16 and 0.27); G3 and
 G4 show `air` 0.43 and 0.39. E2, which the by-eye read called well separated, is the lowest-sharing E place
 and its top group is the w036/w037 pressed pair also seen in the controls.
 
@@ -112,7 +114,8 @@ deg, control B 160-200 deg (the two control sectors of the placement note). Same
 
 Medians over the 19 heights: gap `same` 0.11, `amb` 0.25, `air` 0.27, `empty_per_gap` 0.15; control A
 0.02 / 0.11 / 0.25 / 0.26; control B 0.01 / 0.08 / 0.25 / 0.26. `air` is the same inside and outside the
-gap at every height, so what differs in the gap is meshes sharing a run, not meshes off the papyrus. The
+gap at the median (it exceeds both controls at 12,000 and at 23,000-25,000), so what differs in the gap over
+most heights is meshes sharing a run, not meshes off the papyrus. The
 sharing is not uniform in z: from 16,000 to 18,000 the gap sector reads like a control sector (`same` 0.00
 to 0.04, `amb` 0.03 to 0.12), which agrees with the by-eye read of E2 (z 17,995, well separated) and with
 the narrower w034-w036 sharing in the unwraps there; it is strongest at 9,000-15,000 and again at 19,000-
@@ -123,7 +126,8 @@ the narrower w034-w036 sharing in the unwraps there; it is strongest at 9,000-15
 - It is a per-angle count at every height in the gap, against the same count in two sectors where the meshes
   are known to sit one per layer, with an instrument that was shown (0.97 / 0.96) to flag the signature it is
   asked about. It says: in the gap sector, over most of its height, two of the five Kaggle-era meshes lie on
-  one papyrus layer 3 to 10 times more often than outside it, and the mesh involved is w034, with w036 at the
+  one papyrus layer more often than outside it (sweep medians: `same` 0.11 against 0.02 and 0.01, `same`
+  plus `amb` 0.37 against 0.14 and 0.09, so about 3-4x combined and 5-11x on the narrow-run class), and the mesh involved is w034, with w036 at the
   lower heights and w037 at the upper ones, often with w033 in the same run.
 - A run is not a winding. A single run can hold several pressed sheets (the `amb` class exists for that, and
   the w036/w037 pressed pair at C2 shows a control doing it). So the numbers above are a lower bound on
