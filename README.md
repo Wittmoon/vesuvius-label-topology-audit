@@ -204,6 +204,24 @@ transfer failure, not by defects that touch under 1% of label voxels. The null
 does not show the flags are useless; it shows no association was detectable in
 this experiment, and without the checkpoint the test can only be repeated with
 another surface model.
+
+**With the Kaggle 3rd-place model the disagreement is a proofreading order
+(in-sample).** The 3rd-place nnU-Net stage-1 checkpoint, run on the Mac
+([validation/kaggle3rd_prediction.md](validation/kaggle3rd_prediction.md), pre-registered),
+tracks the 33 human calls: fill fraction median 0.67 on FILL holes against
+0.03 on CUT, and it bridges 81 of the 296 located holes in the 152 flagged
+crops and leaves 137 open. Run on all 892 crops, the share of predicted sheet
+more than 3 voxels from any labelled sheet (median 0.017) ranks crops where the
+model draws papyrus the label does not have; 39 of the top 50 are outside the
+flagged set, so the two instruments rank different crops. A blind check of the
+ten highest-ranked unflagged crops, one CT tile each, read by the author with
+the key withheld: eight of the eight tiles whose marker sat on the predicted
+sheet were papyrus the label missed; the other two had the marker off the sheet
+and were not scored. Ten tiles say the top of the queue is real, not how deep
+it stays real
+([data/kaggle3rd_disagreement_spotcheck.csv](data/kaggle3rd_disagreement_spotcheck.csv)).
+The model was trained on most of these crops, so it leans toward the labels;
+disagreements that survive in-sample are the strong ones.
 Probability inside the 10 errata holes that fall in the predicted tiles tracks
 the rim (ratio 0.8-0.9) for FILL, CUT and UNCLEAR alike
 ([data/prediction_agreement_hole_local.csv](data/prediction_agreement_hole_local.csv)), so the map is not a
@@ -623,6 +641,11 @@ Inputs this packet does not ship:
   `data/pherc0139_2167_run_count_{instrument,places,sweep}.csv` (per window) and
   `data/pherc0139_2167_run_count_{instrument,places}_crossings.csv` (per column x mesh):
   the per-angle material-run count, instrument check, 14 places and 19-height sweep.
+- `validation/kaggle3rd_prediction.md`, `validation/kaggle3rd_disagreement_preregistration.md`,
+  `validation/kaggle3rd_disagree_all.py`, `data/kaggle3rd_prediction_all_dice.csv`,
+  `data/kaggle3rd_prediction_all_holes.csv`, `data/kaggle3rd_disagreement_spotcheck.csv`:
+  the Kaggle 3rd-place model against the labels (33-hole calibration, 296 holes in the
+  flagged crops, the 892-crop disagreement queue, the 10-tile blind spot check).
 - `validation/open_data_surface_predictions_listing_2026-10-20.txt`,
   `validation/issue1912_comment_2026-10-20.md`: dated snapshots of the S3
   listing and the #1912 comment cited above.

@@ -79,3 +79,33 @@ clusters against 297; 340 fused components against 11). A raw argmax surface pre
 of magnitude noisier topologically than the hand-corrected label it was trained on, which is the
 number behind the earlier two-crop recto comparison (955 and 2,754 against 34) and the reason the
 Kaggle kernels all post-process before scoring.
+
+**All 892 crops: the disagreement queue and a blind spot check (2026-10-22).** Pre-registered the
+evening before (`kaggle3rd_disagreement_preregistration.md`, written before any prediction): ckpt A
+run on every Kaggle crop, then per crop the share of predicted sheet lying more than 3 voxels from any
+labelled sheet (`pred_far_frac`, from `kaggle3rd_disagree_all.py`), and the connected pieces of that
+far set of 200 voxels or more as candidates ("model draws sheet here, the label does not"). The
+pre-registration fixed what would be read: the ranked queue, how concentrated the candidates are,
+and a spot check of 10 candidates by eye in CT, by the author, before any claim.
+
+Queue: 892 crops, `pred_far_frac` median 0.017, 90th percentile 0.108. Of the top 50 crops, 39 are
+not in the 152-crop holed set, so the topology audit and the model rank different crops. Candidates:
+21,855 pieces in 850 crops (median 790 voxels, 90th percentile 6,299); 108 crops hold a piece of
+50,000 voxels or more and 60 a piece of 100,000 or more.
+
+Spot check: the ten crops with the highest `pred_far_frac` outside the holed set (range 0.36 to
+0.21), one tile each at the largest candidate, three CT slices through its centre with the label
+outline, the prediction outline and a centre marker; codes only, the key withheld from the reader.
+The author's calls: eight tiles SHEET (papyrus the label does not cover), two NOT. In the two NOT
+tiles (S08, S09) the marker sat 17 and 15 voxels off the predicted sheet, because the candidate
+piece is concave and its centroid falls in a gap; the reader noted this on both before the key
+was opened ("nearest magenta would read SHEET"), so they are recorded as unscorable, not as misses.
+Of the eight scorable tiles, eight read SHEET. Reader notes: S03 is a tougher call (bright field,
+little contrast between sheets); S10 may be followed fully by neither the model nor the label.
+Rows with code, crop, centre, marker-to-sheet distance and verdict:
+`data/kaggle3rd_disagreement_spotcheck.csv`. Tile images are crop-derived and not shipped (CC BY-NC).
+
+What ten tiles say: the top of the queue is real, in-sample. They do not say how deep the queue
+stays real, and the marker placement is a tooling fix for the next sitting (nearest candidate voxel
+to the centroid, not the centroid). The per-crop queue and candidate list are reproducible from the
+script and the shipped weights pointer; the 892 prediction volumes (34 GB) are not shipped.

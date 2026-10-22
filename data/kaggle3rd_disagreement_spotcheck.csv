@@ -1,0 +1,11 @@
+code,crop,pred_far_frac,candidate_size,center_zyx,centre_to_pred_vox,verdict,scorable,note
+S01,sample_00138,0.3599,341138,"[163,192,150]",4.6,SHEET,yes,
+S02,sample_00705,0.3343,374260,"[149,172,151]",2.4,SHEET,yes,
+S03,sample_00190,0.2554,37846,"[267,280,244]",0.0,SHEET,yes,"tougher call: bright field, little contrast between sheets; would benefit from other slices or 3D"
+S04,sample_00188,0.254,96856,"[164,131,164]",0.0,SHEET,yes,
+S05,sample_00317,0.2388,379368,"[163,144,166]",0.0,SHEET,yes,
+S06,sample_00179,0.2329,86987,"[97,251,89]",1.0,SHEET,yes,
+S07,sample_00841,0.2184,45650,"[169,106,277]",1.7,SHEET,yes,
+S08,sample_00418,0.2179,139256,"[154,230,181]",16.8,NOT,no (marker off sheet),"marker sat in a gap, not on the predicted sheet; nearest magenta would read SHEET"
+S09,sample_00642,0.2147,122875,"[161,205,82]",15.3,NOT,no (marker off sheet),"marker sat in a gap, not on the predicted sheet"
+S10,sample_00345,0.2051,70541,"[243,125,233]",2.2,SHEET,yes,neither model nor label may follow the papyrus fully; fold looks more complex
