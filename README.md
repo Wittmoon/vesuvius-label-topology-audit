@@ -222,6 +222,10 @@ it stays real
 ([data/kaggle3rd_disagreement_spotcheck.csv](data/kaggle3rd_disagreement_spotcheck.csv)).
 The model was trained on most of these crops, so it leans toward the labels;
 disagreements that survive in-sample are the strong ones.
+The 1st-place m7 model, run on the same top 50, covers the confirmed pieces by
+0.5 or more on only two of the eight SHEET tiles, so agreement between two
+label-trained models is not used as a filter (it would drop six of eight;
+[data/kaggle3rd_m7_agreement_top50.csv](data/kaggle3rd_m7_agreement_top50.csv)).
 Probability inside the 10 errata holes that fall in the predicted tiles tracks
 the rim (ratio 0.8-0.9) for FILL, CUT and UNCLEAR alike
 ([data/prediction_agreement_hole_local.csv](data/prediction_agreement_hole_local.csv)), so the map is not a
