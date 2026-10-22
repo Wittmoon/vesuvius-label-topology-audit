@@ -1,23 +1,45 @@
 # Label topology audit: evidence packet
 
-**Finding:** 17% of the public Vesuvius Challenge surface-label crops (152 of
-892) contain holes or handles, 571 in all: 314 interior (107 crops, 12%), 257
-on a crop face, where the crop truncated the sheet. Of 14 located interior
-holes in the 20 worst crops (the 13 where two AI reviewers agreed, plus one
-they were unsure of; not the 14 largest), checked by hand in CT by the
-submitter, 8 sit on continuous papyrus and should be filled, and 6 are pockets
-between two sheets the label merged and should be cut. The existing repair
-script, `fix_holes.py`, adds voxels into all 6 of those pockets
-(`data/repair_tiles.csv`), which is the wrong direction; whether it fills the
-8 was measured for only one of them, where `2d_hole_fill` added nothing
-(`closed_k3` added one voxel).
+**In short:** I wanted label review to be less manual. These tools scan a
+folder of surface labels and list the crops with problems, worst first; show
+each hole in the CT so a person can mark it fill or cut; and stop the existing
+fill script from gluing real gaps shut. A second tool checks whether a traced
+surface actually sits on the papyrus. Pull request:
+[ScrollPrize/villa#2147](https://github.com/ScrollPrize/villa/pull/2147).
+
+**What I found on the 892 Kaggle surface-label crops:**
+
+- 152 crops have holes or handles (571 in all: 314 inside the crop, 257 on a
+  crop face where the crop cut the sheet).
+- I checked 33 located holes by hand in the CT: 19 are real gaps between two
+  sheets (cut, don't fill), 11 are labelling misses (fill), 3 are unclear. All
+  33 with coordinates: [data/errata.csv](data/errata.csv).
+- The current `fix_holes.py` 2D fill closes 8 of the 19 real gaps. With the
+  reviewed list passed as `--veto` (closing kernel 2), none of the 19 gained a
+  voxel and the 11 misses were filled as before
+  ([validation/fill_then_audit.md](validation/fill_then_audit.md)).
+- I tried to make the fill/cut call automatically from hole size, shape and
+  CT density. No rule passed the bar I wrote down in advance, so the call
+  stays with a person
+  ([validation/errata_cutfill.md](validation/errata_cutfill.md)).
+- Placement: across 255 Scroll 1 segments, a median of 48% of sampled points
+  sit more than 2 voxels off the sheet. The pattern looks like mesh
+  resolution, not a whole segment being shifted.
+- I also tried snapping labels onto the CT first. It did not work on real
+  data; it is written up as a negative result in
+  [notes/label-snapping-negative-result.md](notes/label-snapping-negative-result.md).
+
+**Why it matters:** annotators get a short, ranked list instead of a pass over
+every crop, and repairs stop damaging real gaps. The reviewed holes can be
+exported in the folder layout villa's trainer uses, which is the "smaller set
+of precise labels in hard regions" the
+[2026 open problems](https://scrollprize.org/2026_open_problems) page asks for,
+and later possible training data for a better model. Nothing is trained yet.
 
 Individual submission. Implementation, experiments and write-up were produced
-with AI assistance (Claude) under the submitter's direction; the 14-hole hand
-check in CT is the submitter's own.
-
-The immediate deliverable is a prioritised proofreading queue with
-human-checked examples where filling would make a merged-sheet label worse.
+with AI assistance (Claude) under the submitter's direction; the hand check of
+the 33 holes in CT is the submitter's own. Everything below is the technical
+detail.
 
 **Tool:** `vesuvius.label_topology_audit`, a dataset-level topology audit for
 3D surface labels: it ranks a folder of crops worst first, locates the small
@@ -281,10 +303,11 @@ at full scale), binarised at > 127, read over HTTPS. Rows:
 
 ### What would help next, and what we are asking the community
 
-1. **Cut or fill, adjudicated.** Six of the 14 hand-checked holes in #2144
-   are cuts, judged by one person. A second annotator on those 14 and on the
-   19 unreviewed rows of `data/errata.csv` would test the 125-voxel size rule
-   above; a crop where `fix_holes.py` joined two sheets would make the case
+1. **Cut or fill, adjudicated.** All 33 holes in `data/errata.csv` now have a
+   verdict (19 cut, 11 fill, 3 unclear), judged by one person; the 6 cuts from
+   the first round are in #2144. A second annotator on the 33 would show how
+   often two people agree (the 125-voxel size rule did not pass its held-out
+   test, `validation/errata_cutfill.md`); a crop where `fix_holes.py` joined two sheets would make the case
    directly.
 2. **Paired-mesh validation.** #1845 and #1912 each have a pair of meshes for
    the same segment with a measured ink difference. Running the placement
@@ -362,7 +385,7 @@ by others unless marked):
 | #1912 | PHerc0139 on-scan meshes up to 100 um off the inked surface | motivates: offset to the density peak is not offset to the inked surface; that issue's five-window depth sweep is the closer tool |
 | #1549 | a mesh row rides about 97 voxels of dark CT with no sheet | the empty-profile warning and `no_peak_frac` |
 | #1845 | the coarser published mesh costs 0.04 AUC, nothing says which mesh to pick | motivates; the audit has not been run on that pair |
-| #2144 (ours) | 6 of 14 hand-checked holes are pockets to cut, not fill | the errata list; the hole mask carries no cut/fill hint yet |
+| #2144 (ours) | 6 of the first 14 hand-checked holes are pockets to cut, not fill (19 of 33 after the second round) | the errata list; the hole mask carries no cut/fill hint yet |
 | #1641, #1621 | sheet-switch detector; whole-winding displacement scores zero | **not covered**: distance to the nearest peak reads a clean jump to the neighbouring sheet as well placed |
 | #1675 | cross-cutting, non-sheet surfaces | potentially measurable (high `no_peak_frac`, low tangent agreement), not demonstrated |
 | #1522, #1727, #1977 | declared scale does not match the grid on hundreds of segments | preflight's gate; not repeated |
@@ -472,15 +495,19 @@ is uninformative at the mask sizes available (Notes). Run records:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on
-  `3d56d06ec`. Release revision `1dc04b189` (code.patch =
-  `git format-patch 3d56d06ec..1dc04b189`, 23 commits).
+  `3d56d06ec`. Release revision `568100831` (code.patch =
+  `git format-patch 3d56d06ec..568100831`, 32 commits).
 - Files: `vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py`,
   `.../image_proc/run/surface_placement_audit.py`,
   `.../image_proc/topology.py`, `.../scripts/detect_holes.py` (CPU path uses
-  the shared helper), `vesuvius/tests/test_label_topology_audit.py`,
-  `vesuvius/tests/test_surface_placement_audit.py`,
+  the shared helper), `.../scripts/fix_holes.py` (`--veto`),
+  `.../scripts/review_holes.py` (ranked hole review, veto list, trainer-layout
+  export), `.../scripts/hole_viewer.py` (Review panel),
+  `.../scripts/placement_edits.py` (placement worst cells for VC3D), five test
+  files under `vesuvius/tests/`, and the two docs
   `vesuvius/docs/label-topology-audit.md`, `vesuvius/docs/surface-placement-audit.md`.
-- Tests: at `1dc04b189` the two test files hold 41 + 31 test functions, 80
+- Tests: 91 across the five audit test files at `568100831`, all passing.
+  Older record: at `1dc04b189` the two test files hold 41 + 31 test functions, 80
   cases, all passing ([record](validation/pytest_1dc04b189.junit.xml)).
   Earlier records: 31 audit tests on a fresh export of upstream with the patch
   applied ([record](validation/upstream-source-tests.json)), 35 at `a620aca9e`
@@ -552,7 +579,7 @@ Inputs this packet does not ship:
 - `data/repair_tiles.csv`, `data/repair_review.csv`: tile index and per-tile
   judgments.
 - `data/errata.csv`: 33 holes with crop ID, centre, both AI verdicts,
-  consensus, human verdict (14 rows) and a suggested action.
+  consensus, human verdict (all 33 rows) and a suggested action.
 - `data/errata_hole_geometry.csv`: per errata hole, rim and shell thickness,
   density and principal-axis extents (`validation/errata_hole_geometry.py`).
 - `data/prediction_agreement_hole_local.csv`: the 10 errata holes inside the
@@ -628,14 +655,15 @@ released, their raw outputs are in `validation/negative_results/`.
 ## Limitations
 
 - **Judging:** the spot check and the repair check were judged by an AI
-  reviewer at thumbnail resolution, not by an expert annotator; the 14-hole
-  check is the submitter's.
+  reviewer at thumbnail resolution, not by an expert annotator; the 33-hole
+  CT check is the submitter's, one person, not an expert annotator.
 - **Hole location:** holes wider than a 3-step closing (about 6 voxels) are
   counted but not located; `locate_holes` has no upper volume cap.
 - **Thresholds:** tiny 100, thick 7, piece 500 and junction ratio 0.3 are
   heuristics, not tuned on reviewed data.
-- **Cut/fill size rule:** the ~125-voxel split was read off 15 reviewed holes
-  and has not been tested on holes nobody reviewed.
+- **Cut/fill size rule:** the ~125-voxel split was read off 15 reviewed holes;
+  on 16 held-out holes it agreed with the human on 12, short of the
+  pre-registered bar, so no automatic call ships (`validation/errata_cutfill.md`).
 - **Isotropic grids:** both audits assume isotropic voxels.
 - **Grid points without a normal:** on tifxyz input, points at hole edges and
   the grid border are not sampled (`n_no_normal`). The grid spike check does
