@@ -522,8 +522,8 @@ is uninformative at the mask sizes available (Notes). Run records:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on
-  `3d56d06ec`. Release revision `c8db970e1` (code.patch =
-  `git format-patch 3d56d06ec..c8db970e1`, 33 commits).
+  `3d56d06ec`. Release revision `55519242f` (code.patch =
+  `git format-patch 3d56d06ec..55519242f`, 34 commits).
 - Files: `vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py`,
   `.../image_proc/run/surface_placement_audit.py`,
   `.../image_proc/topology.py`, `.../scripts/detect_holes.py` (CPU path uses
@@ -532,10 +532,10 @@ is uninformative at the mask sizes available (Notes). Run records:
   export), `.../scripts/hole_viewer.py` (Review panel),
   `.../scripts/placement_edits.py` (placement worst cells for VC3D),
   `.../scripts/review_disagreements.py` (model-versus-label queue, blind tiles,
-  trainer-layout export), six test files under `vesuvius/tests/`, and the two docs
+  rank-stratified staging with decoy tiles, trainer-layout export), six test files under `vesuvius/tests/`, and the two docs
   `vesuvius/docs/label-topology-audit.md`, `vesuvius/docs/surface-placement-audit.md`.
-- Tests: 99 across the six audit test files at `c8db970e1`, all passing
-  (2026-10-22); 91 across five at `568100831`.
+- Tests: 102 across the six audit test files at `55519242f`, all passing
+  (2026-10-22); 99 at `c8db970e1`, 91 across five at `568100831`.
   Older record: at `1dc04b189` the two test files hold 41 + 31 test functions, 80
   cases, all passing ([record](validation/pytest_1dc04b189.junit.xml)).
   Earlier records: 31 audit tests on a fresh export of upstream with the patch
@@ -573,8 +573,8 @@ vesuvius.label_topology_audit --label figures/synthetic_label.tif --image figure
 Install: a fresh venv (Python 3.14) with `pip install -e vesuvius` from the
 patched villa checkout plus `tifffile zarr scipy scikit-image
 connected-components-3d opencv-python-headless numba imagecodecs matplotlib
-tqdm` runs both CLIs and passes the audit tests (80 on 2026-10-20, 99 at
-`c8db970e1`). The `models` extra
+tqdm` runs both CLIs and passes the audit tests (80 on 2026-10-20, 102 at
+`55519242f`). The `models` extra
 also covers these but pulls in a C++ build (`volume-cartographer`).
 
 The scripts in `validation/` take their paths from environment
