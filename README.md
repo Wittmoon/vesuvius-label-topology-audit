@@ -688,6 +688,12 @@ released, their raw outputs are in `validation/negative_results/`.
   (exactly 5 in 4% of columns, 47% in the controls), so it cannot stand in
   for a hand trace as a one-run-per-winding target; soft prior at most. Rows
   in `validation/negative_results/predsurf/`.
+- [ink-prediction-cross-check-2167](notes/ink-prediction-cross-check-2167-inconclusive.md):
+  correlating the Challenge's ink predictions of w033-w037 in (angle, z) to
+  tell which #2167 gap meshes share a sheet is inconclusive; the
+  pre-registered rule also passes w033-w036, a certainly different winding,
+  so its passes carry no weight. Pre-registration and rows in
+  `validation/negative_results/ink_xcheck_2167/`.
 
 ## Limitations
 

@@ -1,0 +1,28 @@
+INK CROSS-CHECK #2167 (scratch; method fixed in ../PREREG.md before gap computation)
+Rasters 0.25 deg x 100 um; Pearson at zero shift and peak over +-1 deg/+-200 um. Full numbers: pairs.csv, coverage.csv, verdict_table.txt.
+
+Peak r, band "all" (gap 55-95 | rest | ctlA 130-170 | ctlB 160-200):
+w033-w034 .15|.16|.10|.14   w033-w035 -.01|.05|.01|.00   w033-w036 .17|.04|.03|.04   w033-w037 .06|.03|.02|.03
+w034-w035 .20|.33|.21|.23   w034-w036 .22|.09|.11|.10   w034-w037 .10|.06|.04|.00
+w035-w036 .18|.12|.14|.12   w035-w037 .05|.04|.05|.07   w036-w037 .20|.11|.06|.03
+Shuffled-z null (gap, mean of p95): ~0.05-0.12.
+
+Findings
+- Every different-winding pair outside the gap sits at 0.0-0.16. w034-w035 is the exception (0.2-0.47 everywhere, highest at high z):
+  it behaves as a same/overlapping-layer pair, so it was excluded from the null controls (a post-hoc choice; flagged).
+- In the gap, w034-w036 (.22), w036-w037 (.20) and w035-w036 (.18) rise above their own outside-gap values (.09-.14) and above the
+  shuffled-z null p95. w034-w037, w035-w037 do not (.10, .05). w033-w036 also rises (.17 vs .04) although w033 is the innermost
+  winding and w036 is a different sheet outside the gap, so the rise is not specific to "same sheet".
+- By the preregistered rule only w033-w036, w034-w035, w034-w036, w035-w036, w036-w037 pass (all band), but the margin over the
+  strongest different-winding control (0.16) is 0.01-0.06, and w033-w036 passing shows the rule is not discriminating here.
+- Ceiling: even/odd grid-row split gives r=0.98 but those are adjacent interpolated cells, so it is NOT a same-papyrus ceiling.
+  The only real same-sheet reference is w034-w035 (0.33 overall, 0.47 high z), so true same-sheet ink agreement tops out near 0.2-0.5.
+- Coverage (frac bins ink>0.5 in the gap): w033 .19, w034 .10, w035 .08, w036 .16, w037 .13; no mesh is ink-empty in the gap.
+  w036/w037 have about 3x more ink in the gap than in ctlA/ctlB (.16/.13 vs .05), w034 unchanged.
+
+VERDICT: inconclusive-to-weak. Gap pairs involving w036 (with w034, w035, w037) correlate modestly above controls; w037 does not
+correlate with w034 or w035. No pair reaches the w034-w035 same-sheet level (0.33-0.47) in the gap. The ink evidence neither confirms
+that w034/w036/w037 are one sheet nor separates them cleanly. Controls separate only weakly.
+Caveats: all meshes share one ink model; text-line z-periodicity can correlate different windings (z-roll null addresses only partly);
+ink resolution here is 100 um bins from 20x20 block means of the full-res tif (ds8 not used); the gap pairs include meshes that
+may sit partly on air where ink prob is near-constant; w035 covers only ~half the angles, so its gap n is small (~22k bins).
