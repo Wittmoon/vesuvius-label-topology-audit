@@ -391,7 +391,7 @@ by others unless marked):
 | #1522, #1727, #1977 | declared scale does not match the grid on hundreds of segments | preflight's gate; not repeated |
 | #1660 | a frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings |
 | #1547 | two surfaces trace the same sheet | not covered |
-| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a 115 um shift still reads as placed 37% of the time at level 2, 60% unshifted), no answer; `data/pherc0139_2167_placement.csv` |
+| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a 115 um shift still reads as placed 37% of the time at level 2, 60% unshifted), no answer; `data/pherc0139_2167_placement.csv`. Follow-up asked for by the maintainer (2026-10-22): polar unwraps at his 12 places with the w033-w037 crossings overlaid, [validation/pherc0139_2167_unwraps.md](validation/pherc0139_2167_unwraps.md), same picture as his reading at all 12 heights |
 
 ### Surface placement on the public Scroll 1 segments
 
