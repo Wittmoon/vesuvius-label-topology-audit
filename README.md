@@ -654,6 +654,7 @@ Inputs this packet does not ship:
   `data/pherc0139_2167_run_count_{instrument,places}_crossings.csv` (per column x mesh):
   the per-angle material-run count, instrument check, 14 places and 19-height sweep.
 - `validation/kaggle3rd_prediction.md`, `validation/kaggle3rd_disagreement_preregistration.md`,
+  `validation/kaggle3rd_rank_decoy_preregistration.md` (rank-stratified decoy sitting, staged, not yet read),
   `validation/kaggle3rd_disagree_all.py`, `data/kaggle3rd_prediction_all_dice.csv`,
   `data/kaggle3rd_prediction_all_holes.csv`, `data/kaggle3rd_disagreement_queue.csv`
   (892 rows, the ranked queue), `data/kaggle3rd_disagreement_candidates.csv` (21,855
