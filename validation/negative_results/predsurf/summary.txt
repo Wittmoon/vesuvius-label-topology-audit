@@ -1,0 +1,32 @@
+Surface prediction level 1 (4.80 um/vox). Distances: mesh radius minus nearest run centre within 10 vox; 1 vox = 4.80 um.
+Band = [min mesh r - 4 vox, max mesh r + 4 vox] per column; n_runs = 1-runs intersecting the band.
+
+Per mesh |distance| (um), all places, columns with a run within 10 vox:  n  median  p90  frac<=2vox  frac_missing
+  w033  n=15209  median=10.7  p90=34.2  frac<=2vox=0.46  no-run-within-10=0.22
+  w034  n=17329  median=7.2  p90=27.6  frac<=2vox=0.60  no-run-within-10=0.11
+  w035  n=5200  median=12.0  p90=35.2  frac<=2vox=0.42  no-run-within-10=0.73
+  w036  n=15759  median=15.4  p90=36.9  frac<=2vox=0.32  no-run-within-10=0.19
+  w037  n=16432  median=14.2  p90=38.0  frac<=2vox=0.36  no-run-within-10=0.15
+  pooled median=11.5 p90=35.2 frac<=2vox=0.44
+  (ridge-peak diag, ALL pooled: median 15.3 um, p90 41.8 um, frac<=5um 0.17, frac<=10um 0.34)
+
+Per place: columns  median_n_runs  frac(n_runs==5)  frac(n_runs>=5)  median|d| pooled um  frac<=2vox
+  E1  cols=1031  med_runs=2  ==5:0.00  >=5:0.00  med|d|=7.1  <=2vox:0.59
+  E2  cols=1539  med_runs=3  ==5:0.19  >=5:0.19  med|d|=14.6  <=2vox:0.30
+  E3  cols=1007  med_runs=3  ==5:0.00  >=5:0.00  med|d|=18.3  <=2vox:0.30
+  E4  cols=1474  med_runs=3  ==5:0.01  >=5:0.01  med|d|=13.0  <=2vox:0.37
+  E5  cols=1431  med_runs=3  ==5:0.01  >=5:0.01  med|d|=10.6  <=2vox:0.47
+  E6  cols=1117  med_runs=3  ==5:0.00  >=5:0.00  med|d|=9.4  <=2vox:0.51
+  G1  cols=750  med_runs=3  ==5:0.00  >=5:0.00  med|d|=11.8  <=2vox:0.41
+  G2  cols=1570  med_runs=4  ==5:0.16  >=5:0.16  med|d|=10.6  <=2vox:0.46
+  G3  cols=1551  med_runs=3  ==5:0.00  >=5:0.00  med|d|=12.1  <=2vox:0.42
+  G4  cols=1851  med_runs=3  ==5:0.00  >=5:0.00  med|d|=12.8  <=2vox:0.39
+  C1  cols=1988  med_runs=5  ==5:0.63  >=5:0.81  med|d|=9.5  <=2vox:0.51
+  C2  cols=1855  med_runs=4  ==5:0.30  >=5:0.30  med|d|=15.3  <=2vox:0.34
+  U1  cols=1044  med_runs=3  ==5:0.40  >=5:0.40  med|d|=5.3  <=2vox:0.68
+  U2  cols=1201  med_runs=2  ==5:0.12  >=5:0.12  med|d|=11.8  <=2vox:0.44
+
+Fraction of columns with n_runs == 5 (pooled columns):
+  gap(E,G): 0.04  (n=13321, median n_runs 3)
+  control(C1,C2): 0.47  (n=3843, median n_runs 5)
+  U1,U2: 0.25  (n=2245, median n_runs 2)

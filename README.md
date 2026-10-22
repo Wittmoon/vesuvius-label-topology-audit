@@ -682,6 +682,12 @@ released, their raw outputs are in `validation/negative_results/`.
 - [placement-outside-volume-pr2112](notes/placement-outside-volume-pr2112.md)
   and [placement-vertex-spike](notes/placement-vertex-spike-negative-result.md):
   the two placement cases described in Part 2.
+- [surface-prediction-as-tracker-target](notes/surface-prediction-as-tracker-target-negative-result.md):
+  the Challenge's published surface prediction for PHerc0139 (level 1, 4.8 um)
+  gives a median of 3 runs per column in the #2167 gap where 5 meshes cross
+  (exactly 5 in 4% of columns, 47% in the controls), so it cannot stand in
+  for a hand trace as a one-run-per-winding target; soft prior at most. Rows
+  in `validation/negative_results/predsurf/`.
 
 ## Limitations
 
