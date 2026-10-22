@@ -8,7 +8,8 @@ Model: same as kaggle3rd_prediction_preregistration.md (arunodhayan 3rd-place st
 tile 192, step 0.85, no mirroring, MPS). Same in-sample caveat: trained on most of these crops, so it
 leans toward the labels. Disagreements that survive in-sample are the strong ones.
 
-Outputs (disagreement.csv, candidates.csv (scratch; not shipped)):
+Outputs (disagreement.csv, candidates.csv; scratch at run time, shipped 2026-10-22 as
+`data/kaggle3rd_disagreement_queue.csv` and `data/kaggle3rd_disagreement_candidates.csv`):
 - per crop: dice, label voxels, pred voxels, pred_far = pred voxels > 3 vox from any label voxel,
   label_far = label voxels > 3 vox from any pred voxel, both as counts and fractions, plus
   n_components and the largest component of pred_far; holed = in the 152 flagged set.

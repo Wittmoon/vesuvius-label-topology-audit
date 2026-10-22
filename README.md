@@ -222,7 +222,8 @@ it stays real
 ([data/kaggle3rd_disagreement_spotcheck.csv](data/kaggle3rd_disagreement_spotcheck.csv)).
 The model was trained on most of these crops, so it leans toward the labels;
 disagreements that survive in-sample are the strong ones.
-The 1st-place m7 model, run on the same top 50, covers the confirmed pieces by
+The 1st-place m7 model, run on the same 50 crops (the 50 highest-ranked
+outside the flagged set; 18 of them carry some other audit finding), covers the confirmed pieces by
 0.5 or more on only two of the eight SHEET tiles, so agreement between two
 label-trained models is not used as a filter (it would drop six of eight;
 [data/kaggle3rd_m7_agreement_top50.csv](data/kaggle3rd_m7_agreement_top50.csv)).
@@ -329,8 +330,8 @@ at full scale), binarised at > 127, read over HTTPS. Rows:
    verdict (19 cut, 11 fill, 3 unclear), judged by one person; the 6 cuts from
    the first round are in #2144. A second annotator on the 33 would show how
    often two people agree (the 125-voxel size rule did not pass its held-out
-   test, `validation/errata_cutfill.md`); a crop where `fix_holes.py` joined two sheets would make the case
-   directly.
+   test, `validation/errata_cutfill.md`); the fill-then-audit run shows the current
+   2D fill bridging 8 of the 19 cut holes (`validation/fill_then_audit.md`).
 2. **Paired-mesh validation.** #1845 and #1912 each have a pair of meshes for
    the same segment with a measured ink difference. Running the placement
    audit on both members of each pair and checking whether its offset row
@@ -347,16 +348,20 @@ at full scale), binarised at > 127, read over HTTPS. Rows:
    [validation/pherc0139_2167_placement.md](validation/pherc0139_2167_placement.md)):
    w033 shifted 58-115 um off its sheet still reads as placed 37% of the time
    at 9.6 um (60% unshifted), so the pre-registered check failed its own
-   instrument gate and the gap question stays open.
+   instrument gate. The later unwraps and the pre-registered run count
+   ([validation/pherc0139_2167_run_count.md](validation/pherc0139_2167_run_count.md))
+   answer the sharing question (two meshes on one papyrus run, 3-4x the
+   controls), not the winding one.
 4. **Catalog sweep.** The placement audit has been run on every public
    Scroll 1 segment, the topology audit on both PHerc0139 generations. Running it on a schedule
    with `aggregate.csv` published would turn single findings into a trend; the
    question is whether maintainers want the rows.
 
-The one feature we would build next, if the first ask gets a second annotator:
-a reviewable correction bundle per crop (CT and label review crops,
-CUT / FILL / UNCLEAR decisions, reversible deltas, before and after Betti
-numbers) so a reviewed repair can be checked and applied, not just ranked.
+The reviewable correction bundle this section once asked for now exists in
+part: `review_holes.py` and `review_disagreements.py` record CUT / FILL /
+UNCLEAR and SHEET / NOT calls against the CT and export the reviewed crops in
+the trainer layout. Still missing: reversible deltas and before/after Betti
+numbers per applied repair.
 
 ## Part 2: surface placement audit and ink experiments (secondary)
 
@@ -413,7 +418,7 @@ by others unless marked):
 | #1522, #1727, #1977 | declared scale does not match the grid on hundreds of segments | preflight's gate; not repeated |
 | #1660 | a frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings |
 | #1547 | two surfaces trace the same sheet | not covered |
-| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a 115 um shift still reads as placed 37% of the time at level 2, 60% unshifted), no answer; `data/pherc0139_2167_placement.csv`. Follow-up asked for by the maintainer (2026-10-22): polar unwraps at his 12 places with the w033-w037 crossings overlaid, [validation/pherc0139_2167_unwraps.md](validation/pherc0139_2167_unwraps.md), same picture as his reading at all 12 heights. Then the count version, pre-registered with a copy-onto-neighbour instrument check (0.97 / 0.96 flagged): two meshes in one papyrus run about 3-4x more often in the gap sector than in the controls over most heights (narrow runs alone 5-11x) (z sweep 9,000-27,000), w034 shares with w036 low and w037 high, often w033 too; the "empty layer" part of the by-eye read is not supported; a run is not a winding, [validation/pherc0139_2167_run_count.md](validation/pherc0139_2167_run_count.md) |
+| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a 115 um shift still reads as placed 37% of the time at level 2, 60% unshifted), no answer; `data/pherc0139_2167_placement.csv`. Follow-up asked for by the maintainer (2026-10-22): polar unwraps at his 12 places with the w033-w037 crossings overlaid, [validation/pherc0139_2167_unwraps.md](validation/pherc0139_2167_unwraps.md), same picture as his reading at all 12 heights. Then the count version, pre-registered with a copy-onto-neighbour instrument check (0.97 / 0.96 flagged): two meshes in one papyrus run about 3-4x more often in the gap sector than in the controls over most heights (narrow runs alone 5-11x) (z sweep 9,000-27,000), w034 shares with w036 at E1, E4, E5, E6 and both unwrap heights and with w037 at G1, G3, G4, often w033 too; the "empty layer" part of the by-eye read is not supported; a run is not a winding, [validation/pherc0139_2167_run_count.md](validation/pherc0139_2167_run_count.md) |
 
 ### Surface placement on the public Scroll 1 segments
 
@@ -517,18 +522,20 @@ is uninformative at the mask sizes available (Notes). Run records:
 ## Code
 
 - Repo `ScrollPrize/villa`, branch `feat/label-topology-audit`, based on
-  `3d56d06ec`. Release revision `568100831` (code.patch =
-  `git format-patch 3d56d06ec..568100831`, 32 commits).
+  `3d56d06ec`. Release revision `c8db970e1` (code.patch =
+  `git format-patch 3d56d06ec..c8db970e1`, 33 commits).
 - Files: `vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py`,
   `.../image_proc/run/surface_placement_audit.py`,
   `.../image_proc/topology.py`, `.../scripts/detect_holes.py` (CPU path uses
   the shared helper), `.../scripts/fix_holes.py` (`--veto`),
   `.../scripts/review_holes.py` (ranked hole review, veto list, trainer-layout
   export), `.../scripts/hole_viewer.py` (Review panel),
-  `.../scripts/placement_edits.py` (placement worst cells for VC3D), five test
-  files under `vesuvius/tests/`, and the two docs
+  `.../scripts/placement_edits.py` (placement worst cells for VC3D),
+  `.../scripts/review_disagreements.py` (model-versus-label queue, blind tiles,
+  trainer-layout export), six test files under `vesuvius/tests/`, and the two docs
   `vesuvius/docs/label-topology-audit.md`, `vesuvius/docs/surface-placement-audit.md`.
-- Tests: 91 across the five audit test files at `568100831`, all passing.
+- Tests: 99 across the six audit test files at `c8db970e1`, all passing
+  (2026-10-22); 91 across five at `568100831`.
   Older record: at `1dc04b189` the two test files hold 41 + 31 test functions, 80
   cases, all passing ([record](validation/pytest_1dc04b189.junit.xml)).
   Earlier records: 31 audit tests on a fresh export of upstream with the patch
@@ -566,7 +573,8 @@ vesuvius.label_topology_audit --label figures/synthetic_label.tif --image figure
 Install: a fresh venv (Python 3.14) with `pip install -e vesuvius` from the
 patched villa checkout plus `tifffile zarr scipy scikit-image
 connected-components-3d opencv-python-headless numba imagecodecs matplotlib
-tqdm` runs both CLIs and passes all 80 tests (2026-10-20). The `models` extra
+tqdm` runs both CLIs and passes the audit tests (80 on 2026-10-20, 99 at
+`c8db970e1`). The `models` extra
 also covers these but pulls in a C++ build (`volume-cartographer`).
 
 The scripts in `validation/` take their paths from environment
@@ -647,7 +655,9 @@ Inputs this packet does not ship:
   the per-angle material-run count, instrument check, 14 places and 19-height sweep.
 - `validation/kaggle3rd_prediction.md`, `validation/kaggle3rd_disagreement_preregistration.md`,
   `validation/kaggle3rd_disagree_all.py`, `data/kaggle3rd_prediction_all_dice.csv`,
-  `data/kaggle3rd_prediction_all_holes.csv`, `data/kaggle3rd_disagreement_spotcheck.csv`:
+  `data/kaggle3rd_prediction_all_holes.csv`, `data/kaggle3rd_disagreement_queue.csv`
+  (892 rows, the ranked queue), `data/kaggle3rd_disagreement_candidates.csv` (21,855
+  pieces), `data/kaggle3rd_disagreement_spotcheck.csv`:
   the Kaggle 3rd-place model against the labels (33-hole calibration, 296 holes in the
   flagged crops, the 892-crop disagreement queue, the 10-tile blind spot check).
 - `validation/open_data_surface_predictions_listing_2026-10-20.txt`,

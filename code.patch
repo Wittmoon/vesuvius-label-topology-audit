@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/32] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/33] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -19,7 +19,7 @@ reports, aggregate CSV, optional overlay PNGs, --after deltas and --fail-on.
  create mode 100644 vesuvius/tests/test_label_topology_audit.py
 
 diff --git a/vesuvius/README.md b/vesuvius/README.md
-index b5963d3d7e..82ccbe85ed 100644
+index b5963d3d7..82ccbe85e 100644
 --- a/vesuvius/README.md
 +++ b/vesuvius/README.md
 @@ -24,6 +24,7 @@ _this package is in active development_
@@ -32,7 +32,7 @@ index b5963d3d7e..82ccbe85ed 100644
  | `vesuvius.finalize_outputs`   | `models.run.finalize_outputs`      | performs softmax / argmax / none on the blended array and writes a final `uint8` volume                                                                                                                   |
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
 new file mode 100644
-index 0000000000..f5d6f29c29
+index 000000000..f5d6f29c2
 --- /dev/null
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -0,0 +1,47 @@
@@ -84,7 +84,7 @@ index 0000000000..f5d6f29c29
 +background). Thresholds (tiny 100, thick 7, piece 500, junction ratio 0.3) are
 +heuristics, not validated against annotated defects.
 diff --git a/vesuvius/pyproject.toml b/vesuvius/pyproject.toml
-index 8675cb6229..3c3a21dc56 100644
+index 8675cb622..3c3a21dc5 100644
 --- a/vesuvius/pyproject.toml
 +++ b/vesuvius/pyproject.toml
 @@ -220,6 +220,7 @@ Homepage = "https://github.com/ScrollPrize/villa"
@@ -97,7 +97,7 @@ index 8675cb6229..3c3a21dc56 100644
  include-package-data = true
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 new file mode 100644
-index 0000000000..42289d7b02
+index 000000000..42289d7b0
 --- /dev/null
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -0,0 +1,319 @@
@@ -422,7 +422,7 @@ index 0000000000..42289d7b02
 +    raise SystemExit(main())
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
 new file mode 100644
-index 0000000000..9321fc64e1
+index 000000000..9321fc64e
 --- /dev/null
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -0,0 +1,96 @@
@@ -522,11 +522,14 @@ index 0000000000..9321fc64e1
 +    rc = lta.main(["--label", str(tmp_path / "after.tif"), "--out", str(out),
 +                   "--fail-on", "b1_total_big=0"])
 +    assert rc == 2
+-- 
+2.56.0
+
 
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/32] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/33] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -539,7 +542,7 @@ cavity closed only by a diagonal step.
  2 files changed, 42 insertions(+), 6 deletions(-)
 
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 42289d7b02..0b943d380f 100644
+index 42289d7b0..0b943d380 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -235,7 +235,10 @@ def _parse_fail_on(specs: Sequence[str]) -> dict[str, float]:
@@ -591,7 +594,7 @@ index 42289d7b02..0b943d380f 100644
          w = csv.DictWriter(fh, fieldnames=list(rows[0]))
          w.writeheader()
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index 9321fc64e1..befc51f263 100644
+index 9321fc64e..befc51f26 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -51,6 +51,19 @@ def test_hollow_shell_has_one_cavity():
@@ -633,11 +636,14 @@ index 9321fc64e1..befc51f263 100644
 +    with pytest.raises(SystemExit):
 +        lta.main(["--batch", str(tmp_path), "--after", str(tmp_path / "after"), "--out", str(out)])
 +    assert not out.exists()
+-- 
+2.56.0
+
 
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/32] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/33] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -655,7 +661,7 @@ Subject: [PATCH 03/32] feat(label-topology-audit): rank crops, interior holes,
  create mode 100644 vesuvius/src/vesuvius/image_proc/topology.py
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index f5d6f29c29..3f15c3fbb7 100644
+index f5d6f29c2..3f15c3fbb 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -25,7 +25,12 @@ vesuvius.label_topology_audit --batch DATA_DIR --out audit_out
@@ -732,10 +738,10 @@ index f5d6f29c29..3f15c3fbb7 100644
 +  - it adds before/after deltas and `--fail-on` for CI
 +  - it ranks a whole folder, so the per-crop tools go to the worst crops first
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 0b943d380f..5e8d8e98c3 100644
+index 0b943d380..5e8d8e98c 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-@@ -8,7 +8,8 @@
+@@ -8,7 +8,8 @@ foreground; components touching them (or the crop border) are reported as
  Per crop it measures:
    * connected components (26-connectivity): count, size histogram, tiny fragments
    * per component: Euler characteristic and Betti numbers b1 (handles/holes
@@ -745,7 +751,7 @@ index 0b943d380f..5e8d8e98c3 100644
    * sheet thickness: 2*EDT-1 sampled at medial-ridge voxels (local EDT maxima)
    * fused sheets: after eroding by ``--erode`` voxels, a component that splits
      into >= 2 pieces of >= ``--min-piece`` voxels is "fused" (blind on 1-3
-@@ -26,7 +27,8 @@
+@@ -26,7 +27,8 @@ Usage:
  when present, for ``--plot``); with ``--after`` it names a directory holding
  same-named label files.
  
@@ -755,7 +761,7 @@ index 0b943d380f..5e8d8e98c3 100644
  ``<crop>.delta.json`` (metric: [before, after]) with ``--after``.
  Exit code 0 on success, 2 when a ``--fail-on METRIC=MAX`` limit is exceeded.
  
-@@ -45,13 +47,20 @@
+@@ -45,13 +47,20 @@ from typing import Any, Sequence
  
  import numpy as np
  
@@ -846,7 +852,7 @@ index 0b943d380f..5e8d8e98c3 100644
  
 diff --git a/vesuvius/src/vesuvius/image_proc/topology.py b/vesuvius/src/vesuvius/image_proc/topology.py
 new file mode 100644
-index 0000000000..e644a8e873
+index 000000000..e644a8e87
 --- /dev/null
 +++ b/vesuvius/src/vesuvius/image_proc/topology.py
 @@ -0,0 +1,37 @@
@@ -888,10 +894,10 @@ index 0000000000..e644a8e873
 +    b2 = n - 1  # the padding shell joins all outside background into one component
 +    return 1 + b2 - chi, b2, chi
 diff --git a/vesuvius/src/vesuvius/scripts/detect_holes.py b/vesuvius/src/vesuvius/scripts/detect_holes.py
-index dc87294401..281a5c3fca 100644
+index dc8729440..281a5c3fc 100644
 --- a/vesuvius/src/vesuvius/scripts/detect_holes.py
 +++ b/vesuvius/src/vesuvius/scripts/detect_holes.py
-@@ -41,6 +41,8 @@
+@@ -41,6 +41,8 @@ from tqdm import tqdm
  
  from scipy import ndimage as ndi
  
@@ -966,7 +972,7 @@ index dc87294401..281a5c3fca 100644
      # Betti numbers for a single component (b0 = 1)
      if comp_pad.ndim == 3:
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index befc51f263..b15e79b9cf 100644
+index befc51f26..b15e79b9c 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -122,3 +122,52 @@ def test_batch_after_missing_pair_errors_before_writing(tmp_path):
@@ -1022,11 +1028,14 @@ index befc51f263..b15e79b9cf 100644
 +    for fg, bg in ((26, 6), (6, 26)):
 +        topo = lambda v: dh.compute_component_topology(v, fg_connectivity=fg, bg_connectivity=bg, use_cpu=True)[:2]
 +        assert (topo(torus()), topo(shell()), topo(sheet())) == ((1, 0), (0, 1), (0, 0))
+-- 
+2.56.0
+
 
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/32] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/33] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1048,7 +1057,7 @@ Subject: [PATCH 04/32] feat(label_topology_audit): locate holes, write hole
  3 files changed, 212 insertions(+), 24 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 3f15c3fbb7..2b55037953 100644
+index 3f15c3fbb..2b5503795 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -27,11 +27,37 @@ vesuvius.label_topology_audit --batch DATA_DIR --out audit_out
@@ -1154,10 +1163,10 @@ index 3f15c3fbb7..2b55037953 100644
  
  - `scripts/detect_holes.py` computes the same per-component Betti numbers and
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 5e8d8e98c3..35a720b575 100644
+index 5e8d8e98c..35a720b57 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-@@ -9,11 +9,14 @@
+@@ -9,11 +9,14 @@ Per crop it measures:
    * connected components (26-connectivity): count, size histogram, tiny fragments
    * per component: Euler characteristic and Betti numbers b1 (handles/holes
      through a sheet) and b2 (enclosed cavities), from a padded bounding box;
@@ -1173,7 +1182,7 @@ index 5e8d8e98c3..35a720b575 100644
    * non-planar junction clusters (structure tensor): a clean sheet is rank-1;
      a second large eigenvalue marks merged sheets or bridges
  
-@@ -52,7 +55,7 @@
+@@ -52,7 +55,7 @@ from vesuvius.image_proc.topology import component_betti
  TINY = 100  # voxels; components smaller than this are "tiny fragments"
  THICK = 7  # voxels; ridge thickness at or above this is flagged
  SIZE_BINS = [1, 10, 100, 1_000, 10_000, 100_000, 10**9]
@@ -1182,7 +1191,7 @@ index 5e8d8e98c3..35a720b575 100644
  # ranked.csv order: most severe first; each entry is (metric, phrase for the reason column)
  SEVERITY = [("b1_interior", "interior holes"), ("b2_total_big", "cavities"),
              ("n_fused_components", "fused components"), ("n_junction_clusters", "junction clusters"),
-@@ -60,7 +63,7 @@
+@@ -60,7 +63,7 @@ SEVERITY = [("b1_interior", "interior holes"), ("b2_total_big", "cavities"),
  
  FLAT_KEYS = [
      "n_components", "n_tiny", "tiny_voxel_frac", "n_big_components", "n_closed_big",
@@ -1355,7 +1364,7 @@ index 5e8d8e98c3..35a720b575 100644
              m2, _ = audit(tifffile.imread(after_path), a.erode, a.min_piece, a.surface_value, ignore)
              f2 = flat(m2)
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index b15e79b9cf..ba977e4b56 100644
+index b15e79b9c..ba977e4b5 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -133,10 +133,10 @@ def test_hole_at_crop_face_is_excluded_from_interior_b1():
@@ -1428,11 +1437,14 @@ index b15e79b9cf..ba977e4b56 100644
 +    mask = tifffile.imread(out / "lab.hole_mask.tif")
 +    assert mask.sum() == 9 * 2 and mask[18:20, 18:21, 18:21].all()
 +    assert (out / "lab.holes.png").exists()
+-- 
+2.56.0
+
 
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/32] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/33] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1440,7 +1452,7 @@ Subject: [PATCH 05/32] docs(label_topology_audit): CT check of fix_holes
  1 file changed, 16 insertions(+)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 2b55037953..14624a5a1b 100644
+index 2b5503795..14624a5a1 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -138,6 +138,22 @@ The 10 crops at the top of `ranked.csv`, with the audit's hole masks passed to
@@ -1466,11 +1478,14 @@ index 2b55037953..14624a5a1b 100644
  ## Related tools
  
  - `scripts/detect_holes.py` computes the same per-component Betti numbers and
+-- 
+2.56.0
+
 
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/32] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/33] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1480,7 +1495,7 @@ Subject: [PATCH 06/32] fix(label-topology-audit): validate comparisons and
  3 files changed, 129 insertions(+), 29 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 14624a5a1b..f310ca2755 100644
+index 14624a5a1..f310ca275 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -3,8 +3,9 @@
@@ -1583,7 +1598,7 @@ index 14624a5a1b..f310ca2755 100644
  fill. Most holes that were left unchanged looked like pockets between merged
  sheets.
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 35a720b575..57e693bc7e 100644
+index 35a720b57..57e693bc7 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -3,7 +3,7 @@
@@ -1595,7 +1610,7 @@ index 35a720b575..57e693bc7e 100644
  
  Per crop it measures:
    * connected components (26-connectivity): count, size histogram, tiny fragments
-@@ -57,7 +57,7 @@
+@@ -57,7 +57,7 @@ THICK = 7  # voxels; ridge thickness at or above this is flagged
  SIZE_BINS = [1, 10, 100, 1_000, 10_000, 100_000, 10**9]
  EDGE = 6  # voxels; a located hole centred closer than this to a crop face is not interior
  # ranked.csv order: most severe first; each entry is (metric, phrase for the reason column)
@@ -1710,7 +1725,7 @@ index 35a720b575..57e693bc7e 100644
              delta = {k: [f[k], f2[k]] for k in f}
              (a.out / f"{name}.delta.json").write_text(json.dumps(delta, indent=1))
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index ba977e4b56..750dc51aa9 100644
+index ba977e4b5..750dc51aa 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -150,7 +150,7 @@ def test_ranked_puts_interior_holes_first_and_drops_clean_crops():
@@ -1790,11 +1805,14 @@ index ba977e4b56..750dc51aa9 100644
 +    metrics, _ = lta.audit(label)
 +    assert metrics["n_components"] == metrics["n_fused_components"] == 1
 +    assert metrics["fused_voxel_frac"] == 1
+-- 
+2.56.0
+
 
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/32] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/33] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -1810,7 +1828,7 @@ converting them. Four tests cover ROI parsing, tiling and the zarr CLI path.
  3 files changed, 241 insertions(+), 20 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index f310ca2755..f5deed4d43 100644
+index f310ca275..f5deed4d4 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -23,8 +23,36 @@ vesuvius.label_topology_audit --label before.tif --after refined.tif --out audit
@@ -1851,10 +1869,10 @@ index f310ca2755..f5deed4d43 100644
  `ranked.csv` with `--batch` (crops with topology/fusion/junction findings, worst first, with a one-line
  reason), `<crop>.delta.json` (`metric: [before, after]`) with `--after`,
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 57e693bc7e..74da83d564 100644
+index 57e693bc7..74da83d56 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-@@ -25,7 +25,14 @@
+@@ -25,7 +25,14 @@ Usage:
    vesuvius.label_topology_audit --label LABEL.tif --image IMG.tif --out DIR --plot
    vesuvius.label_topology_audit --label BEFORE.tif --after AFTER.tif --out DIR
    vesuvius.label_topology_audit --batch DATA_DIR --out DIR --fail-on b1_total_big=0
@@ -1870,7 +1888,7 @@ index 57e693bc7e..74da83d564 100644
  ``--batch`` reads ``DATA_DIR/labels/*.tif`` (and ``DATA_DIR/images/<same name>``
  when present, for ``--plot``); with ``--after`` it names a directory holding
  same-named label files.
-@@ -43,6 +50,7 @@
+@@ -43,6 +50,7 @@ from __future__ import annotations
  
  import argparse
  import csv
@@ -2101,7 +2119,7 @@ index 57e693bc7e..74da83d564 100644
          with open(a.out / "ranked.csv", "w", newline="") as fh:
              w = csv.DictWriter(fh, fieldnames=["rank", "crop", "reason"] + [k for k, _ in SEVERITY])
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index 750dc51aa9..113996fadb 100644
+index 750dc51aa..113996fad 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -1,5 +1,6 @@
@@ -2177,11 +2195,14 @@ index 750dc51aa9..113996fadb 100644
 +    tifffile.imwrite(tmp_path / "labels" / "a.tif", sheet())
 +    with pytest.raises(SystemExit):
 +        lta.main(["--batch", str(tmp_path), "--tile", "20", "--out", str(tmp_path / "out")])
+-- 
+2.56.0
+
 
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/32] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/33] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2195,7 +2216,7 @@ re-reading it per cut.
  3 files changed, 80 insertions(+), 19 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index f5deed4d43..ed4172dab8 100644
+index f5deed4d4..ed4172dab 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -50,6 +50,12 @@ meaningful for topology). Zarr input is read lazily, so:
@@ -2212,10 +2233,10 @@ index f5deed4d43..ed4172dab8 100644
  `--batch` stays a folder of `.tif` crops.
  
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 74da83d564..1e9725d6e1 100644
+index 74da83d56..1e9725d6e 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-@@ -32,7 +32,8 @@
+@@ -32,7 +32,8 @@ Usage:
  OME-Zarr group (local path or http(s) URL; ``--level`` picks the pyramid level).
  ``--roi z0:z1,y0:y1,x0:x1`` reads a window of it, ``--tile N`` splits the window
  into N-voxel cubes audited as separate crops (``<name>_z<z0>_y<y0>_x<x0>``), and
@@ -2321,7 +2342,7 @@ index 74da83d564..1e9725d6e1 100644
          try:
              m, flags = audit(lab, a.erode, a.min_piece, surface_value, ignore)
              if after_lab is not None:
-@@ -571,12 +600,12 @@ def load(window, threshold=None):
+@@ -571,12 +600,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                                 surface_value, -1 if ignore is None else ignore)
          if a.hole_masks:
              tifffile.imwrite(a.out / f"{name}.hole_mask.tif", flags["hole"].astype(np.uint8))
@@ -2336,7 +2357,7 @@ index 74da83d564..1e9725d6e1 100644
          for tag, vals in checked:
              for key, limit in limits.items():
                  if vals[key] > limit:
-@@ -586,7 +615,7 @@ def load(window, threshold=None):
+@@ -586,7 +615,7 @@ def main(argv: Sequence[str] | None = None) -> int:
          w = csv.DictWriter(fh, fieldnames=list(rows[0]))
          w.writeheader()
          w.writerows(rows)
@@ -2346,7 +2367,7 @@ index 74da83d564..1e9725d6e1 100644
          with open(a.out / "ranked.csv", "w", newline="") as fh:
              w = csv.DictWriter(fh, fieldnames=["rank", "crop", "reason"] + [k for k, _ in SEVERITY])
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index 113996fadb..deb220f49d 100644
+index 113996fad..deb220f49 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -345,6 +345,32 @@ def test_cli_zarr_roi_tile_threshold(tmp_path):
@@ -2382,11 +2403,14 @@ index 113996fadb..deb220f49d 100644
  def test_cli_batch_rejects_roi_and_tile(tmp_path):
      (tmp_path / "labels").mkdir()
      tifffile.imwrite(tmp_path / "labels" / "a.tif", sheet())
+-- 
+2.56.0
+
 
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/32] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/33] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -2410,7 +2434,7 @@ vertex block end is exact, sampling is seeded, tifxyz input works.
  create mode 100644 vesuvius/tests/test_surface_placement_audit.py
 
 diff --git a/vesuvius/README.md b/vesuvius/README.md
-index 82ccbe85ed..540ce01a03 100644
+index 82ccbe85e..540ce01a0 100644
 --- a/vesuvius/README.md
 +++ b/vesuvius/README.md
 @@ -25,6 +25,7 @@ _this package is in active development_
@@ -2423,7 +2447,7 @@ index 82ccbe85ed..540ce01a03 100644
  | `vesuvius.finalize_outputs`   | `models.run.finalize_outputs`      | performs softmax / argmax / none on the blended array and writes a final `uint8` volume                                                                                                                   |
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
 new file mode 100644
-index 0000000000..66606cbc03
+index 000000000..66606cbc0
 --- /dev/null
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -0,0 +1,87 @@
@@ -2515,7 +2539,7 @@ index 0000000000..66606cbc03
 +surface that jumped cleanly onto the neighbouring sheet reads as well placed.
 +Use it with the topology audit, not instead of it.
 diff --git a/vesuvius/pyproject.toml b/vesuvius/pyproject.toml
-index 3c3a21dc56..fb0c7d1dec 100644
+index 3c3a21dc5..fb0c7d1de 100644
 --- a/vesuvius/pyproject.toml
 +++ b/vesuvius/pyproject.toml
 @@ -221,6 +221,7 @@ Homepage = "https://github.com/ScrollPrize/villa"
@@ -2528,7 +2552,7 @@ index 3c3a21dc56..fb0c7d1dec 100644
  include-package-data = true
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 new file mode 100644
-index 0000000000..70c74c6058
+index 000000000..70c74c605
 --- /dev/null
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 @@ -0,0 +1,442 @@
@@ -2976,7 +3000,7 @@ index 0000000000..70c74c6058
 +    sys.exit(main())
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
 new file mode 100644
-index 0000000000..9e7dc1d243
+index 000000000..9e7dc1d24
 --- /dev/null
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -0,0 +1,174 @@
@@ -3154,11 +3178,14 @@ index 0000000000..9e7dc1d243
 +    with pytest.raises(SystemExit):
 +        spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
 +    assert spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--half", "0"]) == 1
+-- 
+2.56.0
+
 
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/32] feat: update 4 Python files
+Subject: [PATCH 10/33] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3169,7 +3196,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
  4 files changed, 156 insertions(+), 46 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 66606cbc03..048f619e2e 100644
+index 66606cbc0..048f619e2 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -39,8 +39,8 @@ vesuvius.surface_placement_audit --surface seg_a.obj seg_b/ --volume ct.zarr \
@@ -3218,7 +3245,7 @@ index 66606cbc03..048f619e2e 100644
 +mesh is more than 2 voxels (16 µm) from the sheet, and that is a resolution
 +limit of the mesh, not a tracing error that a global shift would fix.
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 1e9725d6e1..82f23558e7 100644
+index 1e9725d6e..82f23558e 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -353,12 +353,13 @@ def ranked(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -3239,10 +3266,10 @@ index 1e9725d6e1..82f23558e7 100644
              limits[key] = float(val)
          except ValueError:
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 70c74c6058..3c279d9ae7 100644
+index 70c74c605..3c279d9ae 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -30,7 +30,7 @@
+@@ -30,7 +30,7 @@ from typing import Any, Sequence
  
  import numpy as np
  
@@ -3251,7 +3278,7 @@ index 70c74c6058..3c279d9ae7 100644
  
  METRICS = (
      "n_samples", "n_inside_volume", "n_valid", "no_peak_frac",
-@@ -39,37 +39,38 @@
+@@ -39,37 +39,38 @@ METRICS = (
      "off_sheet_frac", "sheet_fwhm_median", "contrast_median",
      "n_patches", "patch_offset_q25", "patch_offset_median", "patch_offset_q75",
      "patch_offset_range", "patch_abs_gt_2_frac",
@@ -3337,7 +3364,7 @@ index 70c74c6058..3c279d9ae7 100644
  
  
  def _vertex_region_end(reader, size: int, probe: int = 4096) -> int:
-@@ -125,7 +131,10 @@ def is_vertex_block(pos: int) -> bool:
+@@ -125,7 +131,10 @@ def _vertex_region_end(reader, size: int, probe: int = 4096) -> int:
              hi = mid
      # exact end: scan the last window line by line
      blob = reader(lo, min(2 * probe, size - lo))
@@ -3349,7 +3376,7 @@ index 70c74c6058..3c279d9ae7 100644
      for ln in blob[pos - lo:].split(b"\n"):
          if not ln.startswith((b"v ", b"vn ", b"#")):
              break
-@@ -136,21 +145,23 @@ def is_vertex_block(pos: int) -> bool:
+@@ -136,21 +145,23 @@ def _vertex_region_end(reader, size: int, probe: int = 4096) -> int:
  def sample_obj(src: str, samples: int, blobs: int, rng: np.random.Generator, blob_bytes: int = 1 << 19):
      """Random surface points and normals from an obj, reading ``blobs`` byte ranges of the vertex block.
  
@@ -3380,7 +3407,7 @@ index 70c74c6058..3c279d9ae7 100644
      head = reader(0, 4096)
      m = re.search(rb"# Vertices: (\d+)", head)
      declared = int(m.group(1)) if m else -1
-@@ -160,19 +171,19 @@ def reader(s, n):
+@@ -160,19 +171,19 @@ def sample_obj(src: str, samples: int, blobs: int, rng: np.random.Generator, blo
      blobs = max(1, min(blobs, max(1, end // blob_bytes)))
      starts = np.sort(rng.integers(0, max(1, end - blob_bytes), blobs)) if end > blob_bytes else np.array([0])
      per = max(1, math.ceil(samples / len(starts)))
@@ -3429,7 +3456,7 @@ index 70c74c6058..3c279d9ae7 100644
  
  
  def is_tifxyz(src: str) -> bool:
-@@ -226,7 +249,8 @@ def one_cell(k):
+@@ -226,7 +249,8 @@ def read_profiles(vol, P: np.ndarray, N: np.ndarray, half: float, step: float, s
          sel = np.flatnonzero((key == k) & inside)
          lo = np.maximum(P[sel].min(0).astype(int) - pad, 0)
          hi = np.minimum(P[sel].max(0).astype(int) + pad + 1, shape)
@@ -3506,7 +3533,7 @@ index 70c74c6058..3c279d9ae7 100644
                  failed = True
      keys = [k for k in rows[0] if k not in ("source", "volume")]
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 9e7dc1d243..2b80147435 100644
+index 9e7dc1d24..2b8014743 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -71,6 +71,20 @@ def test_known_offset_is_recovered(tmp_path, ct, shift):
@@ -3550,11 +3577,14 @@ index 9e7dc1d243..2b80147435 100644
      P, N = spa._parse_v_vn(blob)
      assert P.tolist() == [[1, 2, 3], [7, 8, 9]]
      assert N.tolist() == [[0, 0, 1], [1, 0, 0]]
+-- 
+2.56.0
+
 
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/32] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/33] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3577,7 +3607,7 @@ resolution limit, not drift. Documented.
  1 file changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 048f619e2e..488ff418e5 100644
+index 048f619e2..488ff418e 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -99,10 +99,14 @@ public `54keV_7.91um_Scroll1A` volume, 20000 samples each, defaults:
@@ -3602,11 +3632,14 @@ index 048f619e2e..488ff418e5 100644
 +would fix. At 20000 samples over a segment of hundreds of cm² no 32-voxel
 +cell collects 30 points, so the `patch_*` metrics are NaN; they need a dense
 +sample (a small tifxyz patch, or `--samples` in the millions).
+-- 
+2.56.0
+
 
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/32] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/33] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3618,7 +3651,7 @@ points more than 2 vox off the sheet, snap sd 0.34, tangent agreement at
  1 file changed, 22 insertions(+), 13 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 488ff418e5..b064abb97d 100644
+index 488ff418e..b064abb97 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -90,23 +90,32 @@ Use it with the topology audit, not instead of it.
@@ -3667,11 +3700,14 @@ index 488ff418e5..b064abb97d 100644
 +(`data/scroll1_segment_placement.csv`). At 20000 samples over a segment of hundreds of cm² no 32-voxel
  cell collects 30 points, so the `patch_*` metrics are NaN; they need a dense
  sample (a small tifxyz patch, or `--samples` in the millions).
+-- 
+2.56.0
+
 
 From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 14:02:10 -0400
-Subject: [PATCH 13/32] feat(surface-placement-audit): --cache DIR keeps CT
+Subject: [PATCH 13/33] feat(surface-placement-audit): --cache DIR keeps CT
  chunks on disk
 
 ChunkCache wraps the volume and stores each native chunk it reads as a .npy
@@ -3686,7 +3722,7 @@ audit result unchanged.
  3 files changed, 95 insertions(+)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index b064abb97d..53b691758c 100644
+index b064abb97..53b691758 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -47,6 +47,10 @@ vesuvius.surface_placement_audit --surface seg_a.obj seg_b/ --volume ct.zarr \
@@ -3701,10 +3737,10 @@ index b064abb97d..53b691758c 100644
  ## Outputs
  
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 3c279d9ae7..4f261487de 100644
+index 3c279d9ae..4f261487d 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -25,6 +25,7 @@
+@@ -25,6 +25,7 @@ import math
  import os
  import re
  import sys
@@ -3798,7 +3834,7 @@ index 3c279d9ae7..4f261487de 100644
      rng = np.random.default_rng(a.seed)
      rows: list[dict[str, Any]] = []
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 2b80147435..916c8bb3b1 100644
+index 2b8014743..916c8bb3b 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -196,3 +196,29 @@ def test_bad_arguments(tmp_path, ct):
@@ -3831,11 +3867,14 @@ index 2b80147435..916c8bb3b1 100644
 +    _, _, again = run(tmp_path / "c", ct, [str(tmp_path / "s.obj")], "--cache", str(tmp_path / "cache"))
 +    assert direct[0]["offset_median"] == cached[0]["offset_median"] == again[0]["offset_median"]
 +    assert list((tmp_path / "cache").rglob("*.npy"))
+-- 
+2.56.0
+
 
 From 9ae3812997806a4e0e86344bd09f2705abbb1117 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:08:00 -0400
-Subject: [PATCH 14/32] fix(label-topology-audit): islands are not repairs;
+Subject: [PATCH 14/33] fix(label-topology-audit): islands are not repairs;
  corner contact with ignore voxels opens a component
 
 A closing fill cut off from the sheet by blocked voxels raised the Euler
@@ -3853,7 +3892,7 @@ Two regression tests.
  2 files changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 82f23558e7..1a47ead307 100644
+index 82f23558e..1a47ead30 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -126,6 +126,10 @@ def locate_holes(mask: np.ndarray, b1: int, blocked: np.ndarray | None = None, c
@@ -3877,7 +3916,7 @@ index 82f23558e7..1a47ead307 100644
      unl = (label == ignore_value) if ignore_value is not None else np.zeros_like(fg)
      comp, n = cc3d.connected_components(fg, connectivity=26, return_N=True)
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index deb220f49d..90ac6e1c64 100644
+index deb220f49..90ac6e1c6 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -376,3 +376,24 @@ def test_cli_batch_rejects_roi_and_tile(tmp_path):
@@ -3905,11 +3944,14 @@ index deb220f49d..90ac6e1c64 100644
 +    v[20, 30, 30] = 2
 +    m, _ = lta.audit(v)
 +    assert m["n_closed_big"] == 0
+-- 
+2.56.0
+
 
 From 4272804e4773f8bce7115d208eaa254055eb11cd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:48:25 -0400
-Subject: [PATCH 15/32] fix(audit): cache identity, non-default spacing,
+Subject: [PATCH 15/33] fix(audit): cache identity, non-default spacing,
  censored peaks, streaming tiles
 
 - surface_placement_audit: ChunkCache keyed on source path/URL, level (and size/mtime for local files); two volumes with equal geometry no longer share chunks
@@ -3926,10 +3968,10 @@ Subject: [PATCH 15/32] fix(audit): cache identity, non-default spacing,
  4 files changed, 182 insertions(+), 29 deletions(-)
 
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 1a47ead307..51c0b7ff1f 100644
+index 1a47ead30..51c0b7ff1 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-@@ -20,6 +20,9 @@
+@@ -20,6 +20,9 @@ Per crop it measures:
    * non-planar junction clusters (structure tensor): a clean sheet is rank-1;
      a second large eigenvalue marks merged sheets or bridges
  
@@ -3939,7 +3981,7 @@ index 1a47ead307..51c0b7ff1f 100644
  Usage:
    vesuvius.label_topology_audit --label LABEL.tif --out DIR
    vesuvius.label_topology_audit --label LABEL.tif --image IMG.tif --out DIR --plot
-@@ -565,25 +568,26 @@ def load(window):
+@@ -565,25 +568,26 @@ def main(argv: Sequence[str] | None = None) -> int:
              return tifffile.imread(vol)
          return read_window(vol, w)
  
@@ -3984,10 +4026,10 @@ index 1a47ead307..51c0b7ff1f 100644
              m, flags = audit(lab, a.erode, a.min_piece, surface_value, ignore)
              if after_lab is not None:
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 4f261487de..dbaa8abbdb 100644
+index 4f261487d..dbaa8abbd 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -14,12 +14,15 @@
+@@ -14,12 +14,15 @@ directory, plus the CT as a zarr array or OME-Zarr group (path or URL).
  Outputs per surface: ``<name>.json`` (summary), ``<name>.samples.csv`` (one row
  per sample with coordinates, so the offsets can be viewed in place), and
  ``aggregate.csv`` across surfaces. ``--plot`` adds ``<name>.png``.
@@ -4003,7 +4045,7 @@ index 4f261487de..dbaa8abbdb 100644
  import json
  import math
  import os
-@@ -34,7 +37,7 @@
+@@ -34,7 +37,7 @@ import numpy as np
  from vesuvius.image_proc.run.label_topology_audit import _parse_fail_on, open_volume
  
  METRICS = (
@@ -4030,7 +4072,7 @@ index 4f261487de..dbaa8abbdb 100644
          self.vol = vol
          self.ndim = vol.ndim
          self.shape = tuple(int(n) for n in vol.shape)
-@@ -248,7 +252,12 @@ def __init__(self, vol, root: str, default_chunk: int = 128):
+@@ -248,7 +252,12 @@ class ChunkCache:
          self.spatial = self.shape[-3:]
          chunks = getattr(vol, "chunks", None) or (default_chunk,) * 3
          self.chunks = tuple(int(c) for c in chunks[-3:])
@@ -4130,7 +4172,7 @@ index 4f261487de..dbaa8abbdb 100644
          m.update({"surface": name, "source": src, "volume": a.volume, "n_vertices": int(n_vert),
                    "half": a.half, "step": a.step, "sigma": a.sigma,
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index 90ac6e1c64..007d6fdf3a 100644
+index 90ac6e1c6..007d6fdf3 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -397,3 +397,58 @@ def test_component_touching_ignore_only_at_a_corner_is_open():
@@ -4193,7 +4235,7 @@ index 90ac6e1c64..007d6fdf3a 100644
 +    flat = lta.flat(m)
 +    assert all(flat[k] is not None for k in lta.flat_keys())
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 916c8bb3b1..7f31bfc852 100644
+index 916c8bb3b..7f31bfc85 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -222,3 +222,73 @@ def test_cache_flag_gives_the_same_result(tmp_path, ct):
@@ -4270,11 +4312,14 @@ index 916c8bb3b1..7f31bfc852 100644
 +    tifffile.imwrite(p, sheet_volume(z0=32.0))
 +    m = one_surface(tmp_path, str(p), 30.0)
 +    assert m["n_valid"] > 0 and m["censored_frac"] == 0.0
+-- 
+2.56.0
+
 
 From 5d6b5781841fe69c27ee1cdbe589cfd28a477abf Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:01:53 -0400
-Subject: [PATCH 16/32] fix(audit): URL inputs ending in .tif read as TIFF;
+Subject: [PATCH 16/33] fix(audit): URL inputs ending in .tif read as TIFF;
  docs name fused_voxel_frac, b1_face and censored profiles
 
 ---
@@ -4285,7 +4330,7 @@ Subject: [PATCH 16/32] fix(audit): URL inputs ending in .tif read as TIFF;
  4 files changed, 17 insertions(+), 5 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index ed4172dab8..94db26bdf7 100644
+index ed4172dab..94db26bdf 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -45,15 +45,16 @@ meaningful for topology). Zarr input is read lazily, so:
@@ -4309,7 +4354,7 @@ index ed4172dab8..94db26bdf7 100644
    closes cavities between them.
  
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 53b691758c..dbaa44986a 100644
+index 53b691758..dbaa44986 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -65,7 +65,8 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
@@ -4323,7 +4368,7 @@ index 53b691758c..dbaa44986a 100644
  | `sheet_fwhm_median` | half-maximum width of the located sheet, voxels |
  | `contrast_median` | median profile range |
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 51c0b7ff1f..28d01ac78d 100644
+index 51c0b7ff1..28d01ac78 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -383,7 +383,9 @@ def flat_keys() -> list[str]:
@@ -4338,7 +4383,7 @@ index 51c0b7ff1f..28d01ac78d 100644
  
  
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index 007d6fdf3a..879a5db186 100644
+index 007d6fdf3..879a5db18 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -452,3 +452,11 @@ def test_empty_crop_cannot_reach_a_gate_with_a_missing_value(tmp_path):
@@ -4353,11 +4398,14 @@ index 007d6fdf3a..879a5db186 100644
 +    assert _is_zarr("s3://bucket/vol")
 +    assert not _is_zarr("https://host/label.tif")
 +    assert not _is_zarr("https://host/label.TIFF")
+-- 
+2.56.0
+
 
 From c17d239558883c16632cd0aad810d25a09060650 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:06:47 -0400
-Subject: [PATCH 17/32] fix(audit): second review round: tif URLs fetched,
+Subject: [PATCH 17/33] fix(audit): second review round: tif URLs fetched,
  small obj vertex block, threshold name collisions refused, bounded symmetric
  profile grid
 
@@ -4371,7 +4419,7 @@ Default grid (half 8, step 1) is unchanged, so published placement results stand
  5 files changed, 66 insertions(+), 8 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index dbaa44986a..fef4053173 100644
+index dbaa44986..fef405317 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -48,7 +48,8 @@ vesuvius.surface_placement_audit --surface seg_a.obj seg_b/ --volume ct.zarr \
@@ -4385,7 +4433,7 @@ index dbaa44986a..fef4053173 100644
    the public Scroll 1 segments at 20000 samples fills roughly 20–40 GB.
  
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 28d01ac78d..87dd120734 100644
+index 28d01ac78..87dd12073 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 @@ -383,8 +383,8 @@ def flat_keys() -> list[str]:
@@ -4422,10 +4470,10 @@ index 28d01ac78d..87dd120734 100644
  
  
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index dbaa8abbdb..06631fc108 100644
+index dbaa8abbd..06631fc10 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -123,6 +123,13 @@ def is_vertex_block(pos: int) -> bool:
+@@ -123,6 +123,13 @@ def _vertex_region_end(reader, size: int, probe: int = 4096) -> int:
              return False
          return all(ln.startswith((b"v ", b"vn ")) for ln in lines)
  
@@ -4461,7 +4509,7 @@ index dbaa8abbdb..06631fc108 100644
      """
      n, m = prof.shape
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index 879a5db186..e75ec400c2 100644
+index 879a5db18..e75ec400c 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -460,3 +460,25 @@ def test_url_input_is_zarr_unless_it_names_a_tif():
@@ -4491,7 +4539,7 @@ index 879a5db186..e75ec400c2 100644
 +        lta.parse_thresholds("0.5000001,0.5000002")
 +    assert lta.parse_thresholds("0.5,0.6") == [0.5, 0.6]
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 7f31bfc852..85ea3ac4f2 100644
+index 7f31bfc85..85ea3ac4f 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -260,12 +260,13 @@ def test_cache_keeps_levels_of_one_source_apart(tmp_path):
@@ -4531,11 +4579,14 @@ index 7f31bfc852..85ea3ac4f2 100644
 +    _, t, _ = spa.read_profiles(vol, P, N, half=8, step=1.5, sigma=1.0, workers=1)
 +    assert t.min() >= -8 and t.max() <= 8 and 0.0 in t
 +    assert np.allclose(t, -t[::-1])
+-- 
+2.56.0
+
 
 From 582a625da2e64708863574113f63e784618f537a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 04:52:33 -0400
-Subject: [PATCH 18/32] docs(vesuvius): state what bridge_voxels locates and
+Subject: [PATCH 18/33] docs(vesuvius): state what bridge_voxels locates and
  what the placement controls show
 
 bridge_voxels counts foreground voxels within one voxel of two different
@@ -4557,7 +4608,7 @@ untested hypothesis, matching the evidence repository.
  4 files changed, 48 insertions(+), 13 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 94db26bdf7..9166e96c48 100644
+index 94db26bdf..9166e96c4 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -116,7 +116,7 @@ vesuvius.label_topology_audit --label DATA_DIR/labels/sample_00340.tif \
@@ -4570,7 +4621,7 @@ index 94db26bdf7..9166e96c48 100644
  | `largest_component_frac` | share of foreground in the biggest component |
  
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index fef4053173..c6fab86ce1 100644
+index fef405317..c6fab86ce 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -112,16 +112,19 @@ segments (10th / median / 90th):
@@ -4604,10 +4655,10 @@ index fef4053173..c6fab86ce1 100644
  cell collects 30 points, so the `patch_*` metrics are NaN; they need a dense
  sample (a small tifxyz patch, or `--samples` in the millions).
 diff --git a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-index 87dd120734..279528a8fc 100644
+index 87dd12073..279528a8f 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/label_topology_audit.py
-@@ -14,7 +14,9 @@
+@@ -14,7 +14,9 @@ Per crop it measures:
    * sheet thickness: 2*EDT-1 sampled at medial-ridge voxels (local EDT maxima)
    * fused sheets: after eroding by ``--erode`` voxels, a component that splits
      into >= 2 pieces of >= ``--min-piece`` voxels is "fused" (blind on 1-3
@@ -4619,7 +4670,7 @@ index 87dd120734..279528a8fc 100644
      (centre, size, interior/crop face); ``--hole-masks`` writes them for fix_holes.py
    * non-planar junction clusters (structure tensor): a clean sheet is rank-1;
 diff --git a/vesuvius/tests/test_label_topology_audit.py b/vesuvius/tests/test_label_topology_audit.py
-index e75ec400c2..e45c9b5ee2 100644
+index e75ec400c..e45c9b5ee 100644
 --- a/vesuvius/tests/test_label_topology_audit.py
 +++ b/vesuvius/tests/test_label_topology_audit.py
 @@ -285,9 +285,39 @@ def test_fusion_heuristic_flags_thick_lobes_joined_by_a_thin_bridge():
@@ -4663,11 +4714,14 @@ index e75ec400c2..e45c9b5ee2 100644
  
  
  def test_parse_roi_clips_and_rejects_empty():
+-- 
+2.56.0
+
 
 From fa2b1046d50457be33f420dde86c58038f2a33c7 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 05:47:40 -0400
-Subject: [PATCH 19/32] surface_placement_audit: report tifxyz grid points that
+Subject: [PATCH 19/33] surface_placement_audit: report tifxyz grid points that
  have no normal and are not sampled
 
 Points at hole edges and the grid border have no computable normal, so the
@@ -4683,7 +4737,7 @@ docs say what this audit cannot see. One test.
  3 files changed, 31 insertions(+), 5 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index c6fab86ce1..e4209545cb 100644
+index c6fab86ce..e4209545c 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -63,6 +63,7 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
@@ -4695,7 +4749,7 @@ index c6fab86ce1..e4209545cb 100644
  | `offset_median`, `offset_q25`, `offset_q75`, `offset_mean_abs` | signed offset from the surface point to the sheet peak, in voxels along the stored normal; positive means the peak lies in the normal direction |
  | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 06631fc108..9c2882649f 100644
+index 06631fc10..9c2882649 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 @@ -204,9 +204,13 @@ def sample_tifxyz(path: str, samples: int, rng: np.random.Generator):
@@ -4746,7 +4800,7 @@ index 06631fc108..9c2882649f 100644
          with open(os.path.join(a.out, f"{name}.json"), "w") as f:
              json.dump(m, f, indent=1)
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 85ea3ac4f2..d67e94f198 100644
+index 85ea3ac4f..d67e94f19 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -192,6 +192,24 @@ def test_tifxyz_input(tmp_path, ct):
@@ -4774,11 +4828,14 @@ index 85ea3ac4f2..d67e94f198 100644
  def test_bad_arguments(tmp_path, ct):
      with pytest.raises(SystemExit):
          spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+-- 
+2.56.0
+
 
 From e34fec95c1076e86febde15886762a216bbaf827 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:07:20 -0400
-Subject: [PATCH 20/32] surface_placement_audit: grid spike check on tifxyz
+Subject: [PATCH 20/33] surface_placement_audit: grid spike check on tifxyz
  input
 
 Adjacent valid grid points are joined when their distance is at most 4x
@@ -4796,7 +4853,7 @@ output. Islands with no tie are not flagged. One test.
  3 files changed, 89 insertions(+), 4 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index e4209545cb..77e9b1cc8e 100644
+index e4209545c..77e9b1cc8 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -64,6 +64,7 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
@@ -4808,10 +4865,10 @@ index e4209545cb..77e9b1cc8e 100644
  | `offset_median`, `offset_q25`, `offset_q75`, `offset_mean_abs` | signed offset from the surface point to the sheet peak, in voxels along the stored normal; positive means the peak lies in the normal direction |
  | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 9c2882649f..99a403602d 100644
+index 9c2882649..99a403602 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -46,6 +46,7 @@
+@@ -46,6 +46,7 @@ METRICS = (
      "snap_remeasure_sd", "snap_remeasure_abs_gt_2_frac",
      "tangent_absdiff_median_2", "tangent_absdiff_median_4", "tangent_absdiff_median_8",
      "tangent_corr_2", "tangent_corr_4", "tangent_corr_8",
@@ -4922,7 +4979,7 @@ index 9c2882649f..99a403602d 100644
          with open(os.path.join(a.out, f"{name}.json"), "w") as f:
              json.dump(m, f, indent=1)
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index d67e94f198..2328b863f0 100644
+index d67e94f19..2328b863f 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -202,7 +202,7 @@ def test_tifxyz_points_without_a_normal_are_counted_not_silently_dropped(tmp_pat
@@ -4966,11 +5023,14 @@ index d67e94f198..2328b863f0 100644
  def test_bad_arguments(tmp_path, ct):
      with pytest.raises(SystemExit):
          spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+-- 
+2.56.0
+
 
 From 3837369939ae5a0a163f1f841c2374a7b7a64aa4 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:14:40 -0400
-Subject: [PATCH 21/32] surface_placement_audit: grid interior holes and
+Subject: [PATCH 21/33] surface_placement_audit: grid interior holes and
  outside-volume warning
 
 n_grid_holes / grid_hole_points count 4-connected invalid groups that do
@@ -4988,7 +5048,7 @@ Two tests.
  3 files changed, 57 insertions(+), 1 deletion(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 77e9b1cc8e..1abc47e594 100644
+index 77e9b1cc8..1abc47e59 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -65,6 +65,8 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
@@ -5001,10 +5061,10 @@ index 77e9b1cc8e..1abc47e594 100644
  | `offset_median`, `offset_q25`, `offset_q75`, `offset_mean_abs` | signed offset from the surface point to the sheet peak, in voxels along the stored normal; positive means the peak lies in the normal direction |
  | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 99a403602d..a604159d47 100644
+index 99a403602..a604159d4 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -46,7 +46,8 @@
+@@ -46,7 +46,8 @@ METRICS = (
      "snap_remeasure_sd", "snap_remeasure_abs_gt_2_frac",
      "tangent_absdiff_median_2", "tangent_absdiff_median_4", "tangent_absdiff_median_8",
      "tangent_corr_2", "tangent_corr_4", "tangent_corr_8",
@@ -5014,7 +5074,7 @@ index 99a403602d..a604159d47 100644
  )
  TANGENT_RADII = (2.0, 4.0, 8.0)
  
-@@ -245,6 +246,22 @@ class villa PR #2067 found after resampling. CT sampling cannot see them because
+@@ -245,6 +246,22 @@ def grid_step_check(x: np.ndarray, y: np.ndarray, z: np.ndarray, has_point: np.n
              "n_grid_spikes": int(spike.sum()), "grid_spike_rc": np.argwhere(spike.reshape(has_point.shape))}
  
  
@@ -5077,7 +5137,7 @@ index 99a403602d..a604159d47 100644
          valid &= inside
          m = summarize(off, contrast, valid, inside, patch, prof, t, a.half, a.min_contrast)
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 2328b863f0..17a5dbe842 100644
+index 2328b863f..17a5dbe84 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -235,6 +235,32 @@ def test_grid_spikes_at_hole_edges_are_counted_and_located(tmp_path, ct):
@@ -5113,11 +5173,14 @@ index 2328b863f0..17a5dbe842 100644
  def test_bad_arguments(tmp_path, ct):
      with pytest.raises(SystemExit):
          spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+-- 
+2.56.0
+
 
 From 30db2ad5aa5ce48f46882cfca1b9a28c995303f9 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:24:26 -0400
-Subject: [PATCH 22/32] surface_placement_audit: warn when almost no inside
+Subject: [PATCH 22/33] surface_placement_audit: warn when almost no inside
  point finds a sheet peak
 
 A surface with a missing downscale factor (PR #2112) can land inside the
@@ -5130,7 +5193,7 @@ Warn to stderr when fewer than 5% of inside points find a peak, with a test.
  3 files changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 1abc47e594..650968f4ee 100644
+index 1abc47e59..650968f4e 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -67,7 +67,7 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
@@ -5143,7 +5206,7 @@ index 1abc47e594..650968f4ee 100644
  | `offset_abs_gt_1_frac`, `_2_`, `_3_` | share of valid points more than 1, 2 or 3 voxels from the peak |
  | `n_censored`, `censored_frac` | inside points with enough contrast whose profile rises to an end sample and has no accepted peak: the sheet may lie at or beyond the search limit (`half`) |
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index a604159d47..ed6294c5ec 100644
+index a604159d4..ed6294c5e 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 @@ -661,6 +661,13 @@ def main(argv: Sequence[str] | None = None) -> int:
@@ -5161,7 +5224,7 @@ index a604159d47..ed6294c5ec 100644
          m.update({"surface": name, "source": src, "volume": a.volume, "n_vertices": int(n_vert),
                    "n_no_normal": n_no_normal, **grid, "half": a.half, "step": a.step, "sigma": a.sigma,
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index 17a5dbe842..ee6a7abc21 100644
+index 17a5dbe84..ee6a7abc2 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -261,6 +261,20 @@ def test_surface_outside_the_volume_warns_and_is_reported(tmp_path, ct, capsys):
@@ -5185,11 +5248,14 @@ index 17a5dbe842..ee6a7abc21 100644
  def test_bad_arguments(tmp_path, ct):
      with pytest.raises(SystemExit):
          spa.main(["--surface", "x.obj", "--volume", ct, "--out", str(tmp_path), "--fail-on", "nope=1"])
+-- 
+2.56.0
+
 
 From 1dc04b189e4d25ace70294d62cd05b7024878fe9 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:42:13 -0400
-Subject: [PATCH 23/32] surface_placement_audit: grid check edge cases from
+Subject: [PATCH 23/33] surface_placement_audit: grid check edge cases from
  review
 
 Spike rule: a tied group larger than 5% of the surface is a fold, not a
@@ -5205,7 +5271,7 @@ grids, 4-connected holes and obj input.
  3 files changed, 68 insertions(+), 5 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 650968f4ee..a6e7766f9f 100644
+index 650968f4e..a6e7766f9 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -64,7 +64,7 @@ surface, and `<name>.png` with `--plot` (offset as colour in two projections).
@@ -5218,10 +5284,10 @@ index 650968f4ee..a6e7766f9f 100644
  | `outside_volume_frac` | fraction of sampled points whose profile does not fit inside the volume. Above 0.1 the audit warns: a surface mostly outside the volume is in the wrong coordinate frame (missing downscale or physical scale, villa PRs #2112 and #2137), and its offsets mean nothing until the metadata is fixed |
  | `no_peak_frac` | share of inside points with no qualifying peak (low contrast, air, or a shoulder). When fewer than 5% of inside points find a peak the audit warns: the surface sits inside the volume bounds but in empty space, which is what a missing downscale factor looks like (villa PR #2112), or it is paired with the wrong volume or level |
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index ed6294c5ec..50c750f6ec 100644
+index ed6294c5e..50c750f6e 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -36,6 +36,9 @@
+@@ -36,6 +36,9 @@ import numpy as np
  
  from vesuvius.image_proc.run.label_topology_audit import _parse_fail_on, open_volume
  
@@ -5240,7 +5306,7 @@ index ed6294c5ec..50c750f6ec 100644
      """Geometry of a tifxyz grid without the CT. Adjacent valid grid points are joined
      when their distance is at most ``factor`` times the median step; the largest
      connected group is the surface. Any other group that is still tied to the rest by
-@@ -228,7 +231,10 @@ class villa PR #2067 found after resampling. CT sampling cannot see them because
+@@ -228,7 +231,10 @@ def grid_step_check(x: np.ndarray, y: np.ndarray, z: np.ndarray, has_point: np.n
      if len(d) == 0:
          return {"grid_step_median": float("nan"), "grid_step_max": float("nan"), "n_grid_spikes": 0,
                  "grid_spike_rc": np.zeros((0, 2), int)}
@@ -5252,7 +5318,7 @@ index ed6294c5ec..50c750f6ec 100644
      short = d <= factor * med
      graph = coo_matrix((np.ones(short.sum()), (a[short], b[short])), shape=(n, n))
      _, comp = connected_components(graph, directed=False)
-@@ -241,6 +247,7 @@ class villa PR #2067 found after resampling. CT sampling cannot see them because
+@@ -241,6 +247,7 @@ def grid_step_check(x: np.ndarray, y: np.ndarray, z: np.ndarray, has_point: np.n
      tied[la[cross]] = True
      tied[lb[cross]] = True
      tied[largest] = False
@@ -5279,7 +5345,7 @@ index ed6294c5ec..50c750f6ec 100644
                        file=sys.stderr)
                  with open(os.path.join(a.out, f"{name}.grid_spikes.csv"), "w", newline="") as f:
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index ee6a7abc21..c5d3c58bf9 100644
+index ee6a7abc2..c5d3c58bf 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
 @@ -235,6 +235,62 @@ def test_grid_spikes_at_hole_edges_are_counted_and_located(tmp_path, ct):
@@ -5345,11 +5411,14 @@ index ee6a7abc21..c5d3c58bf9 100644
  def test_interior_grid_holes_are_counted_but_border_notches_are_not():
      """Only holes enclosed by valid points count (villa PR #2128's punched flattenings);
      a notch in the grid edge is the trace ending, not a defect."""
+-- 
+2.56.0
+
 
 From 408f098e329888864484135ce4dd476f901eca6e Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 01:57:07 -0400
-Subject: [PATCH 24/32] fix_holes: --veto leaves listed holes open
+Subject: [PATCH 24/33] fix_holes: --veto leaves listed holes open
 
 CSV of crop,center_zyx (the topology audit errata format); the hole-mask component nearest each centre within 8 voxels is dropped before any method runs, and the log says how many were left open. Needed because a blind repair fills real gaps in the papyrus as readily as labelling misses.
 ---
@@ -5359,7 +5428,7 @@ CSV of crop,center_zyx (the topology audit errata format); the hole-mask compone
  create mode 100644 vesuvius/tests/test_fix_holes_veto.py
 
 diff --git a/vesuvius/src/vesuvius/scripts/fix_holes.py b/vesuvius/src/vesuvius/scripts/fix_holes.py
-index 355819c977..4022c5d315 100644
+index 355819c97..4022c5d31 100644
 --- a/vesuvius/src/vesuvius/scripts/fix_holes.py
 +++ b/vesuvius/src/vesuvius/scripts/fix_holes.py
 @@ -319,6 +319,38 @@ def _list_subfolders(root: Path) -> List[Path]:
@@ -5465,7 +5534,7 @@ index 355819c977..4022c5d315 100644
                  print(msg)
 diff --git a/vesuvius/tests/test_fix_holes_veto.py b/vesuvius/tests/test_fix_holes_veto.py
 new file mode 100644
-index 0000000000..8a29ae8df9
+index 000000000..8a29ae8df
 --- /dev/null
 +++ b/vesuvius/tests/test_fix_holes_veto.py
 @@ -0,0 +1,47 @@
@@ -5516,11 +5585,14 @@ index 0000000000..8a29ae8df9
 +    mask[2, 2, 2] = True
 +    kept, n = fix_holes._apply_veto(mask, [(0, 0, 0)], max_dist=1.0)
 +    assert n == 0 and kept.sum() == 1
+-- 
+2.56.0
+
 
 From 0633147f5d86b50ab57d7634bda228044119bec0 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 13:50:35 -0400
-Subject: [PATCH 25/32] review_holes: record fill/cut calls on ranked holes,
+Subject: [PATCH 25/33] review_holes: record fill/cut calls on ranked holes,
  write the veto list
 
 Walks the holes that label_topology_audit located, worst crop first, shows each as
@@ -5537,7 +5609,7 @@ review step.
  create mode 100644 vesuvius/tests/test_review_holes.py
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 9166e96c48..4971ab8a07 100644
+index 9166e96c4..4971ab8a0 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -80,29 +80,55 @@ be finite. A batch may leave reports for earlier valid crops if a later crop fai
@@ -5625,7 +5697,7 @@ index 9166e96c48..4971ab8a07 100644
    - it separates holes on crop faces from interior ones
 diff --git a/vesuvius/src/vesuvius/scripts/review_holes.py b/vesuvius/src/vesuvius/scripts/review_holes.py
 new file mode 100644
-index 0000000000..b888ac9847
+index 000000000..b888ac984
 --- /dev/null
 +++ b/vesuvius/src/vesuvius/scripts/review_holes.py
 @@ -0,0 +1,164 @@
@@ -5795,7 +5867,7 @@ index 0000000000..b888ac9847
 +    main()
 diff --git a/vesuvius/tests/test_review_holes.py b/vesuvius/tests/test_review_holes.py
 new file mode 100644
-index 0000000000..10450a736a
+index 000000000..10450a736
 --- /dev/null
 +++ b/vesuvius/tests/test_review_holes.py
 @@ -0,0 +1,78 @@
@@ -5877,11 +5949,14 @@ index 0000000000..10450a736a
 +    review_holes.review(data, audit, out2, lambda png, p: next(answers))
 +    assert fix_holes._load_veto(out2 / "veto.csv") == {"crop_1": [(10, 30, 30)]}
 +    assert (out2 / "fix_in" / "crop_1" / "hole_mask.tif").exists()
+-- 
+2.56.0
+
 
 From 9848326c544d66ea09f89ce4d3f490243127bcb5 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 17:27:42 -0400
-Subject: [PATCH 26/32] feat(scripts): review holes in hole_viewer.py with a CT
+Subject: [PATCH 26/33] feat(scripts): review holes in hole_viewer.py with a CT
  layer and fill/cut panel
 
 hole_viewer.py gains a Review dock: Next hole steps through the holes that
@@ -5904,7 +5979,7 @@ crop first, two verdicts reach verdicts.csv and the CUT one veto.csv.
  4 files changed, 166 insertions(+), 7 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 4971ab8a07..f856a57de8 100644
+index 4971ab8a0..f856a57de 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -111,8 +111,14 @@ python src/vesuvius/scripts/review_holes.py --data DATA_DIR --audit audit_out --
@@ -5935,10 +6010,10 @@ index 4971ab8a07..f856a57de8 100644
    and writes the veto list and the folder layout the two scripts above read.
  - This audit is the dataset-level pass that runs before them:
 diff --git a/vesuvius/src/vesuvius/scripts/hole_viewer.py b/vesuvius/src/vesuvius/scripts/hole_viewer.py
-index d0fac5c585..ddcbf4e64a 100644
+index d0fac5c58..ddcbf4e64 100644
 --- a/vesuvius/src/vesuvius/scripts/hole_viewer.py
 +++ b/vesuvius/src/vesuvius/scripts/hole_viewer.py
-@@ -11,6 +11,7 @@
+@@ -11,6 +11,7 @@ Usage:
  from __future__ import annotations
  
  import argparse
@@ -5946,7 +6021,7 @@ index d0fac5c585..ddcbf4e64a 100644
  from dataclasses import dataclass, field
  from datetime import datetime
  from pathlib import Path
-@@ -27,6 +28,7 @@
+@@ -27,6 +28,7 @@ import cc3d
  
  from detect_holes import compute_component_topology, localize_holes
  from fix_holes import _fix_2d_hole_fill, _fix_morph_close, _fix_alpha_wrap
@@ -5990,7 +6065,7 @@ index d0fac5c585..ddcbf4e64a 100644
      _update_nav_label()
  
  
-@@ -545,14 +560,98 @@ def _on_restore() -> None:
+@@ -545,14 +560,98 @@ def make_ignore_widget(viewer: napari.Viewer) -> Container:
  # CLI & main
  # ---------------------------------------------------------------------------
  
@@ -6116,10 +6191,10 @@ index d0fac5c585..ddcbf4e64a 100644
      viewer.window.add_dock_widget(make_detect_holes_widget(viewer), area="right", name="Detect Holes")
      viewer.window.add_dock_widget(make_fix_holes_widget(viewer), area="right", name="Fix Holes")
 diff --git a/vesuvius/src/vesuvius/scripts/review_holes.py b/vesuvius/src/vesuvius/scripts/review_holes.py
-index b888ac9847..14931efe5c 100644
+index b888ac984..14931efe5 100644
 --- a/vesuvius/src/vesuvius/scripts/review_holes.py
 +++ b/vesuvius/src/vesuvius/scripts/review_holes.py
-@@ -10,6 +10,10 @@
+@@ -10,6 +10,10 @@ Writes under ``--out``:
    verdicts.csv   crop,center_zyx,voxels,interior,verdict   (every call)
    veto.csv       crop,center_zyx                           (CUT rows, for ``fix_holes.py --veto``)
    fix_in/<crop>/<crop>_surf.tif + hole_mask.tif            (reviewed crops, ``fix_holes.py --in-dir`` layout)
@@ -6176,7 +6251,7 @@ index b888ac9847..14931efe5c 100644
      n = {k: sum(1 for r in v.values() if r["verdict"] == k) for k in VERDICTS.values()}
      print(f"{len(v)} verdicts ({n}); veto list: {a.out / 'veto.csv'}; staged crops: {a.out / 'fix_in'}")
 diff --git a/vesuvius/tests/test_review_holes.py b/vesuvius/tests/test_review_holes.py
-index 10450a736a..fc681f74d7 100644
+index 10450a736..fc681f74d 100644
 --- a/vesuvius/tests/test_review_holes.py
 +++ b/vesuvius/tests/test_review_holes.py
 @@ -76,3 +76,21 @@ def test_resume_skips_answered_holes_and_quit_keeps_them(tmp_path):
@@ -6201,11 +6276,14 @@ index 10450a736a..fc681f74d7 100644
 +    # a second staging run must not duplicate the order entry
 +    review_holes.stage_ranked(data, audit, out)
 +    assert (out / "fix_in" / "order.txt").read_text().split() == ["crop_1"]
+-- 
+2.56.0
+
 
 From 070abd4c8710463234b367a1aec4b590eb4e4c87 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 17:48:24 -0400
-Subject: [PATCH 27/32] surface_placement_audit: export the worst cells as a
+Subject: [PATCH 27/33] surface_placement_audit: export the worst cells as a
  VC3D point collection
 
 Writes <name>.worst_cells.csv (cells whose median offset exceeds 2 voxels,
@@ -6222,7 +6300,7 @@ surface's own frame.
  3 files changed, 89 insertions(+), 2 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index a6e7766f9f..8788fa20d8 100644
+index a6e7766f9..8788fa20d 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -58,7 +58,10 @@ vesuvius.surface_placement_audit --surface seg_a.obj seg_b/ --volume ct.zarr \
@@ -6259,10 +6337,10 @@ index a6e7766f9f..8788fa20d8 100644
  It measures distance to the nearest density peak, not winding identity: a
  surface that jumped cleanly onto the neighbouring sheet reads as well placed.
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 50c750f6ec..83066925e1 100644
+index 50c750f6e..83066925e 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-@@ -45,7 +45,7 @@
+@@ -45,7 +45,7 @@ METRICS = (
      "offset_abs_gt_1_frac", "offset_abs_gt_2_frac", "offset_abs_gt_3_frac", "offset_at_limit_frac",
      "off_sheet_frac", "sheet_fwhm_median", "contrast_median",
      "n_patches", "patch_offset_q25", "patch_offset_median", "patch_offset_q75",
@@ -6347,10 +6425,10 @@ index 50c750f6ec..83066925e1 100644
              plot(P, off, valid, os.path.join(a.out, f"{name}.png"), name)
          rows.append(m)
 diff --git a/vesuvius/tests/test_surface_placement_audit.py b/vesuvius/tests/test_surface_placement_audit.py
-index c5d3c58bf9..4a05d2794b 100644
+index c5d3c58bf..4a05d2794 100644
 --- a/vesuvius/tests/test_surface_placement_audit.py
 +++ b/vesuvius/tests/test_surface_placement_audit.py
-@@ -6,6 +6,7 @@
+@@ -6,6 +6,7 @@ from __future__ import annotations
  
  import csv
  import json
@@ -6384,11 +6462,14 @@ index c5d3c58bf9..4a05d2794b 100644
 +    assert p0[0] == pytest.approx(float(cells[0]["x"]), abs=0.1)
 +    assert p0[2] == pytest.approx(34.0, abs=1.0)        # z last, the shifted half
 +    assert int(rows[0]["n_worst_cells"]) == len(cells)
+-- 
+2.56.0
+
 
 From 1f2e4655a1de1822bcfa4eb9cbc0d3b85066fe4e Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 17:57:33 -0400
-Subject: [PATCH 28/32] Export reviewer verdicts and VC3D edits as training
+Subject: [PATCH 28/33] Export reviewer verdicts and VC3D edits as training
  pairs
 
 review_holes.py --export-training DIR writes one .npz per verdict (CT,
@@ -6416,7 +6497,7 @@ Nothing is trained; the exports only keep the pairs. Two tests.
  create mode 100644 vesuvius/tests/test_placement_edits.py
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index f856a57de8..360b5fb689 100644
+index f856a57de..360b5fb68 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -124,6 +124,12 @@ python src/vesuvius/scripts/hole_viewer.py --root-dir review/fix_in --suffix1 _s
@@ -6443,7 +6524,7 @@ index f856a57de8..360b5fb689 100644
    - it adds cavities, fusion, junction and thickness checks
    - it separates holes on crop faces from interior ones
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 8788fa20d8..7bb303fa5e 100644
+index 8788fa20d..7bb303fa5 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -102,7 +102,17 @@ surfaces with the same normal convention.
@@ -6466,7 +6547,7 @@ index 8788fa20d8..7bb303fa5e 100644
  It measures distance to the nearest density peak, not winding identity: a
  surface that jumped cleanly onto the neighbouring sheet reads as well placed.
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 83066925e1..36f95a2952 100644
+index 83066925e..36f95a295 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 @@ -302,7 +302,7 @@ def cell_ids(P: np.ndarray, size: float = 32.0) -> np.ndarray:
@@ -6525,7 +6606,7 @@ index 83066925e1..36f95a2952 100644
              m["n_worst_cells"] = len(cells)
 diff --git a/vesuvius/src/vesuvius/scripts/placement_edits.py b/vesuvius/src/vesuvius/scripts/placement_edits.py
 new file mode 100644
-index 0000000000..2729e34f21
+index 000000000..2729e34f2
 --- /dev/null
 +++ b/vesuvius/src/vesuvius/scripts/placement_edits.py
 @@ -0,0 +1,113 @@
@@ -6643,10 +6724,10 @@ index 0000000000..2729e34f21
 +if __name__ == "__main__":
 +    main()
 diff --git a/vesuvius/src/vesuvius/scripts/review_holes.py b/vesuvius/src/vesuvius/scripts/review_holes.py
-index 14931efe5c..84a30ba1ce 100644
+index 14931efe5..84a30ba1c 100644
 --- a/vesuvius/src/vesuvius/scripts/review_holes.py
 +++ b/vesuvius/src/vesuvius/scripts/review_holes.py
-@@ -15,6 +15,10 @@
+@@ -15,6 +15,10 @@ Writes under ``--out``:
  ``--stage-only`` stages the top crops without asking anything, for reviewing in
  ``hole_viewer.py --root-dir OUT/fix_in`` (its Review panel writes the same two CSVs).
  
@@ -6720,7 +6801,7 @@ index 14931efe5c..84a30ba1ce 100644
          print(f"staged {len(staged)} crops in {a.out / 'fix_in'}; open with "
 diff --git a/vesuvius/tests/test_placement_edits.py b/vesuvius/tests/test_placement_edits.py
 new file mode 100644
-index 0000000000..a2301ca086
+index 000000000..a2301ca08
 --- /dev/null
 +++ b/vesuvius/tests/test_placement_edits.py
 @@ -0,0 +1,50 @@
@@ -6775,7 +6856,7 @@ index 0000000000..a2301ca086
 +    assert all(int(r["n_moved"]) == 0 and abs(float(r["median_shift"])) < 1e-6
 +               for r in csv.DictReader(open(tmp_path / "same" / "edits.csv")))
 diff --git a/vesuvius/tests/test_review_holes.py b/vesuvius/tests/test_review_holes.py
-index fc681f74d7..363307b071 100644
+index fc681f74d..363307b07 100644
 --- a/vesuvius/tests/test_review_holes.py
 +++ b/vesuvius/tests/test_review_holes.py
 @@ -94,3 +94,22 @@ def test_stage_only_lays_out_what_hole_viewer_reads(tmp_path):
@@ -6801,11 +6882,14 @@ index fc681f74d7..363307b071 100644
 +    assert str(ex["verdict"]) == "CUT" and list(ex["center_zyx"]) == [10, 30, 30]
 +    assert ex["mask"][8, 8, 8] == 1 and ex["label"][8, 8, 8] == 0     # cube centred on the hole
 +    assert ex["label"][8, 0, 0] == 1                                     # sheet around it
+-- 
+2.56.0
+
 
 From beb644570553f2f9927c0ea42355ba01eef816f8 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 18:05:48 -0400
-Subject: [PATCH 29/32] Training exports: negatives, prediction cubes,
+Subject: [PATCH 29/33] Training exports: negatives, prediction cubes,
  provenance
 
 placement_edits.py: --all-cells also exports the cells the audit did not
@@ -6826,7 +6910,7 @@ output per crop as a pred cube; --reviewer and provenance.json.
  6 files changed, 139 insertions(+), 37 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 360b5fb689..6672fe38ec 100644
+index 360b5fb68..6672fe38e 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -127,8 +127,11 @@ python src/vesuvius/scripts/fix_holes.py --in-dir review/fix_in --veto review/ve
@@ -6843,7 +6927,7 @@ index 360b5fb689..6672fe38ec 100644
  # 4. count again; this sees filled holes but not a fill that welded two sheets,
  #    so look at the added voxels on the CT for anything you did not review
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 7bb303fa5e..eccfa45807 100644
+index 7bb303fa5..eccfa4580 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -108,11 +108,14 @@ surfaces with the same normal convention.
@@ -6867,10 +6951,10 @@ index 7bb303fa5e..eccfa45807 100644
  It measures distance to the nearest density peak, not winding identity: a
  surface that jumped cleanly onto the neighbouring sheet reads as well placed.
 diff --git a/vesuvius/src/vesuvius/scripts/placement_edits.py b/vesuvius/src/vesuvius/scripts/placement_edits.py
-index 2729e34f21..1ef7827ad4 100644
+index 2729e34f2..1ef7827ad 100644
 --- a/vesuvius/src/vesuvius/scripts/placement_edits.py
 +++ b/vesuvius/src/vesuvius/scripts/placement_edits.py
-@@ -8,16 +8,25 @@
+@@ -8,16 +8,25 @@ the audit had measured there, so each edit becomes a training pair: the CT and t
  surface as traced, and where a human put it. Nothing is trained here.
  
  Writes under ``--out``:
@@ -6898,7 +6982,7 @@ index 2729e34f21..1ef7827ad4 100644
  from pathlib import Path
  from typing import Dict, List
  
-@@ -27,6 +36,7 @@
+@@ -27,6 +36,7 @@ CELL = 32.0
  
  
  def grid_points(path: str):
@@ -7029,10 +7113,10 @@ index 2729e34f21..1ef7827ad4 100644
  
  if __name__ == "__main__":
 diff --git a/vesuvius/src/vesuvius/scripts/review_holes.py b/vesuvius/src/vesuvius/scripts/review_holes.py
-index 84a30ba1ce..6effac8704 100644
+index 84a30ba1c..6effac870 100644
 --- a/vesuvius/src/vesuvius/scripts/review_holes.py
 +++ b/vesuvius/src/vesuvius/scripts/review_holes.py
-@@ -17,7 +17,10 @@
+@@ -17,7 +17,10 @@ Writes under ``--out``:
  
  ``--export-training DIR`` turns ``verdicts.csv`` into training examples: one ``.npz``
  per verdict with the CT, label and hole-mask cube around the hole and the verdict,
@@ -7044,7 +7128,7 @@ index 84a30ba1ce..6effac8704 100644
  
  Next step after a review session (from ``vesuvius/``)::
  
-@@ -26,9 +29,11 @@
+@@ -26,9 +29,11 @@ Next step after a review session (from ``vesuvius/``)::
  """
  import argparse
  import csv
@@ -7125,10 +7209,10 @@ index 84a30ba1ce..6effac8704 100644
          return
      if a.stage_only:
 diff --git a/vesuvius/tests/test_placement_edits.py b/vesuvius/tests/test_placement_edits.py
-index a2301ca086..f5068245cd 100644
+index a2301ca08..f5068245c 100644
 --- a/vesuvius/tests/test_placement_edits.py
 +++ b/vesuvius/tests/test_placement_edits.py
-@@ -3,6 +3,7 @@
+@@ -3,6 +3,7 @@ did there, so an edit becomes a training example: a correct drag must read as a
  equal to the offset the audit measured, and untouched cells must read as unmoved.
  """
  import csv
@@ -7158,7 +7242,7 @@ index a2301ca086..f5068245cd 100644
      placement_edits.main(["--before", before, "--after", before, "--cells", str(out / "before.worst_cells.json"),
                            "--out", str(tmp_path / "same")])
 diff --git a/vesuvius/tests/test_review_holes.py b/vesuvius/tests/test_review_holes.py
-index 363307b071..9b1f0f8398 100644
+index 363307b07..9b1f0f839 100644
 --- a/vesuvius/tests/test_review_holes.py
 +++ b/vesuvius/tests/test_review_holes.py
 @@ -104,12 +104,20 @@ def test_export_training_keeps_each_verdict_with_the_ct_it_was_made_from(tmp_pat
@@ -7183,11 +7267,14 @@ index 363307b071..9b1f0f8398 100644
      assert ex["mask"][8, 8, 8] == 1 and ex["label"][8, 8, 8] == 0     # cube centred on the hole
      assert ex["label"][8, 0, 0] == 1                                     # sheet around it
 +    assert ex["pred"][8, 8, 8] == 1 and ex["label"][8, 8, 8] == 0        # model drew it, label did not
+-- 
+2.56.0
+
 
 From dfa69e0a7387b8ccc7fe6b0045a3c51ed51af2e9 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 18:11:34 -0400
-Subject: [PATCH 30/32] placement_edits: score several candidate traces per
+Subject: [PATCH 30/33] placement_edits: score several candidate traces per
  cell against the human's pick
 
 --candidate NAME=TIFXYZ (repeatable, same grid as --before) adds per worst
@@ -7204,7 +7291,7 @@ against the human's final call. Test with on-sheet and off-sheet candidates.
  3 files changed, 112 insertions(+), 6 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index eccfa45807..856971ae55 100644
+index eccfa4580..856971ae5 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -116,6 +116,15 @@ surfaces with the same normal convention.
@@ -7224,10 +7311,10 @@ index eccfa45807..856971ae55 100644
  It measures distance to the nearest density peak, not winding identity: a
  surface that jumped cleanly onto the neighbouring sheet reads as well placed.
 diff --git a/vesuvius/src/vesuvius/scripts/placement_edits.py b/vesuvius/src/vesuvius/scripts/placement_edits.py
-index 1ef7827ad4..b9636a342d 100644
+index 1ef7827ad..b9636a342 100644
 --- a/vesuvius/src/vesuvius/scripts/placement_edits.py
 +++ b/vesuvius/src/vesuvius/scripts/placement_edits.py
-@@ -20,6 +20,15 @@
+@@ -20,6 +20,15 @@ so a 32-voxel cell fits inside it whatever its alignment.
  
  A correct edit shows ``median_shift`` close to ``median_offset``: the surface moved by the
  distance the audit measured. Rerun the audit on ``--after`` to confirm the cell is gone.
@@ -7243,7 +7330,7 @@ index 1ef7827ad4..b9636a342d 100644
  """
  import argparse
  import csv
-@@ -28,7 +37,7 @@
+@@ -28,7 +37,7 @@ import json
  import sys
  from datetime import datetime, timezone
  from pathlib import Path
@@ -7363,7 +7450,7 @@ index 1ef7827ad4..b9636a342d 100644
  
  if __name__ == "__main__":
 diff --git a/vesuvius/tests/test_placement_edits.py b/vesuvius/tests/test_placement_edits.py
-index f5068245cd..8e4017adeb 100644
+index f5068245c..8e4017ade 100644
 --- a/vesuvius/tests/test_placement_edits.py
 +++ b/vesuvius/tests/test_placement_edits.py
 @@ -63,3 +63,31 @@ def test_drag_onto_the_sheet_reads_as_the_measured_offset(tmp_path):
@@ -7398,11 +7485,14 @@ index f5068245cd..8e4017adeb 100644
 +    assert arrs["cand_C_1"].shape == arrs["before_1"].shape
 +    prov = json.loads((tmp_path / "edits" / "provenance.json").read_text())
 +    assert prov["candidates"] == {"B": on, "C": under}
+-- 
+2.56.0
+
 
 From d9d1fa42818329ae6292bb1cc014a8df48863351 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 18:31:48 -0400
-Subject: [PATCH 31/32] placement_edits: rank candidates on absolute offset,
+Subject: [PATCH 31/33] placement_edits: rank candidates on absolute offset,
  measure unflagged cells, cube level
 
 Review fixes. audit_pick ranked on |median signed offset|, so a candidate
@@ -7424,7 +7514,7 @@ tests.
  4 files changed, 110 insertions(+), 31 deletions(-)
 
 diff --git a/vesuvius/docs/surface-placement-audit.md b/vesuvius/docs/surface-placement-audit.md
-index 856971ae55..4dd6cbc4c0 100644
+index 856971ae5..4dd6cbc4c 100644
 --- a/vesuvius/docs/surface-placement-audit.md
 +++ b/vesuvius/docs/surface-placement-audit.md
 @@ -121,7 +121,12 @@ surfaces with the same normal convention.
@@ -7442,7 +7532,7 @@ index 856971ae55..4dd6cbc4c0 100644
    passed as one more candidate, get compared against the human's pick, and
    the pick is the label a tracer-choosing model would train on.
 diff --git a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
-index 36f95a2952..887f01d044 100644
+index 36f95a295..887f01d04 100644
 --- a/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 +++ b/vesuvius/src/vesuvius/image_proc/run/surface_placement_audit.py
 @@ -727,8 +727,6 @@ def main(argv: Sequence[str] | None = None) -> int:
@@ -7464,10 +7554,10 @@ index 36f95a2952..887f01d044 100644
              plot(P, off, valid, os.path.join(a.out, f"{name}.png"), name)
          rows.append(m)
 diff --git a/vesuvius/src/vesuvius/scripts/placement_edits.py b/vesuvius/src/vesuvius/scripts/placement_edits.py
-index b9636a342d..7a32cab75f 100644
+index b9636a342..7a32cab75 100644
 --- a/vesuvius/src/vesuvius/scripts/placement_edits.py
 +++ b/vesuvius/src/vesuvius/scripts/placement_edits.py
-@@ -13,8 +13,11 @@
+@@ -13,8 +13,11 @@ Writes under ``--out``:
                     --volume, pred_<rank> with --prediction (the surface model's output there)
    provenance.json  the inputs, the editor, the audit's own settings, the time
  
@@ -7481,7 +7571,7 @@ index b9636a342d..7a32cab75f 100644
  cells the audit flagged and a model would learn to always move. The CT cube is 48 voxels
  so a 32-voxel cell fits inside it whatever its alignment.
  
-@@ -25,7 +28,8 @@
+@@ -25,7 +28,8 @@ Several tracers of the same region: ``--candidate NAME=TIFXYZ`` (repeatable, sam
  ``--before``; ``before`` is always a candidate) adds per cell the distance from the human's
  final surface to each candidate (``dist_<name>``), the audit's own measured offset of each
  candidate there with ``--volume`` (``off_<name>``), ``chosen`` (the candidate the human's
@@ -7613,7 +7703,7 @@ index b9636a342d..7a32cab75f 100644
      prov = {"before": a.before, "after": a.after, "cells": str(a.cells), "volume": a.volume,
              "prediction": a.prediction, "level": a.level, "half": a.half, "all_cells": a.all_cells,
 diff --git a/vesuvius/tests/test_placement_edits.py b/vesuvius/tests/test_placement_edits.py
-index 8e4017adeb..602b2e093d 100644
+index 8e4017ade..602b2e093 100644
 --- a/vesuvius/tests/test_placement_edits.py
 +++ b/vesuvius/tests/test_placement_edits.py
 @@ -84,6 +84,7 @@ def test_candidates_record_which_tracer_the_human_and_the_audit_each_pick(tmp_pa
@@ -7668,11 +7758,14 @@ index 8e4017adeb..602b2e093d 100644
 +                                     ct, {}, workers=1, min_support=1)
 +    assert e[0]["audit_pick"] == "steady" and e[0]["chosen"] == "steady"
 +    assert abs(e[0]["off_split"]) < 1 and e[0]["aoff_split"] == pytest.approx(4.0, abs=0.6)
+-- 
+2.56.0
+
 
 From 5681008314045555416c3fcc0be3de4a541c00f5 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 21:46:16 -0400
-Subject: [PATCH 32/32] review_holes: write the training export in the trainer
+Subject: [PATCH 32/33] review_holes: write the training export in the trainer
  layout too
 
 --export-training now also writes images/<id>.tif and labels/<id>_<target>.tif
@@ -7687,7 +7780,7 @@ records both. Test extended; doc step 3b updated.
  3 files changed, 38 insertions(+), 10 deletions(-)
 
 diff --git a/vesuvius/docs/label-topology-audit.md b/vesuvius/docs/label-topology-audit.md
-index 6672fe38ec..fbf266c091 100644
+index 6672fe38e..fbf266c09 100644
 --- a/vesuvius/docs/label-topology-audit.md
 +++ b/vesuvius/docs/label-topology-audit.md
 @@ -129,7 +129,10 @@ python src/vesuvius/scripts/fix_holes.py --in-dir review/fix_in --veto review/ve
@@ -7703,7 +7796,7 @@ index 6672fe38ec..fbf266c091 100644
    --export-training review/train --predictions predictions/
  
 diff --git a/vesuvius/src/vesuvius/scripts/review_holes.py b/vesuvius/src/vesuvius/scripts/review_holes.py
-index 6effac8704..751f4b47af 100644
+index 6effac870..751f4b47a 100644
 --- a/vesuvius/src/vesuvius/scripts/review_holes.py
 +++ b/vesuvius/src/vesuvius/scripts/review_holes.py
 @@ -118,16 +118,21 @@ def _cube(arr: np.ndarray, center, half: int) -> np.ndarray:
@@ -7785,7 +7878,7 @@ index 6effac8704..751f4b47af 100644
          return
      if a.stage_only:
 diff --git a/vesuvius/tests/test_review_holes.py b/vesuvius/tests/test_review_holes.py
-index 9b1f0f8398..c2162d028f 100644
+index 9b1f0f839..c2162d028 100644
 --- a/vesuvius/tests/test_review_holes.py
 +++ b/vesuvius/tests/test_review_holes.py
 @@ -121,3 +121,10 @@ def test_export_training_keeps_each_verdict_with_the_ct_it_was_made_from(tmp_pat
@@ -7799,3 +7892,569 @@ index 9b1f0f8398..c2162d028f 100644
 +    assert tifffile.imread(dest / "images" / "crop_1_0000.tif").shape == (16, 16, 16)
 +    assert cut[8, 8, 8] == 0 and fill[8, 8, 8] == 1 and fill[8, 0, 0] == 1
 +    assert prov["target"] == "surface" and prov["ignore_value"] == 2
+-- 
+2.56.0
+
+
+From c8db970e1c4e59e974e7b9e498c3635554c4ce0d Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Thu, 22 Oct 2026 17:31:56 -0400
+Subject: [PATCH 33/33] review_disagreements: rank model-vs-label disagreement,
+ stage blind tiles, export corrected labels
+
+Adds vesuvius/scripts/review_disagreements.py, the model-side counterpart
+of review_holes.py. Given a label folder and a folder of surface
+predictions it ranks crops by the fraction of predicted papyrus more than
+--tol voxels from any labelled papyrus (ignore value excluded), keeps
+connected far components of at least --min-vox voxels, and writes
+queue.csv and candidates.csv. --stage-only renders one blind tile per
+candidate (z/y/x slices, label and model outlines, marker on the model
+sheet) with a sheet.csv for the reader and a separate key.csv, so the
+reader never sees the crop id or rank. The marker is the component voxel
+nearest its centroid, not the centroid itself, so it cannot land off a
+concave component. The terminal review is resumable and keyed by
+crop+marker; --export-training writes examples in the trainer layout
+(images/<id>.tif, labels/<id>_<target>.tif): the marker's component is
+set for "sheet", the label is left unchanged for "not", "unclear" is
+skipped. Restaging refuses to overwrite a sheet.csv that already holds
+verdicts.
+
+review_holes.py: the trainer-layout writer is extracted into
+write_trainer_pair() so both scripts share it; no behaviour change.
+
+Tests: vesuvius/tests/test_review_disagreements.py (8) plus the existing
+review_holes tests, 12 passed.
+---
+ .../vesuvius/scripts/review_disagreements.py  | 312 ++++++++++++++++++
+ vesuvius/src/vesuvius/scripts/review_holes.py |  14 +-
+ vesuvius/tests/test_review_disagreements.py   | 160 +++++++++
+ 3 files changed, 482 insertions(+), 4 deletions(-)
+ create mode 100644 vesuvius/src/vesuvius/scripts/review_disagreements.py
+ create mode 100644 vesuvius/tests/test_review_disagreements.py
+
+diff --git a/vesuvius/src/vesuvius/scripts/review_disagreements.py b/vesuvius/src/vesuvius/scripts/review_disagreements.py
+new file mode 100644
+index 000000000..054a6f359
+--- /dev/null
++++ b/vesuvius/src/vesuvius/scripts/review_disagreements.py
+@@ -0,0 +1,312 @@
++#!/usr/bin/env python3
++"""Review the places where a surface model draws papyrus the label does not have.
++
++Ranking: ``pred_far`` = prediction voxels (value 1) farther than ``--tol`` from any label
++voxel (label value ``--ignore-value`` is excluded on both sides). A candidate is a
++26-connected component of ``pred_far`` with at least ``--min-vox`` voxels. Crops are
++ranked by ``pred_far_frac`` = pred_far / prediction voxels. The marker of a candidate is
++the component voxel nearest its centroid (a concave component's centroid can sit in a gap
++off the sheet); all three slices go through the marker.
++
++Writes under ``--out``:
++  queue.csv       crop,dice,pred_far,pred_far_frac,n_cand,largest   (every ranked crop)
++  candidates.csv  crop,size,center_zyx,marker_zyx,marker_to_centroid_vox
++  tiles/<code>.png, sheet.csv (code,verdict,note: for the reader), key.csv (code,crop,
++                  center_zyx,marker_zyx,size,pred_far_frac: shown only after the calls)
++  verdicts.csv    crop,center_zyx,marker_zyx,size,verdict,note      (resumable)
++
++Tiles are blind: the title is the code. Verdicts: ``s`` sheet (papyrus the label misses),
++``n`` not, ``u`` unclear, ``k`` skip, ``q`` quit. ``--stage-only`` writes everything but
++verdicts.csv and exits.
++
++``--export-training DIR`` writes the whole crop (CT and corrected label) per verdict in
++the trainer layout (``images/<id>.tif``, ``labels/<id>_<target>.tif``) plus ``index.csv``
++and ``provenance.json``. ``sheet``: the label with the candidate component set to 1.
++``not``: the label unchanged (a confirmed negative, changed_voxels 0). ``unclear`` is
++not exported.
++"""
++import argparse
++import csv
++import getpass
++import json
++import sys
++from concurrent.futures import ProcessPoolExecutor
++from datetime import datetime, timezone
++from pathlib import Path
++from typing import Callable, Dict, List, Optional, Tuple
++
++import numpy as np
++import tifffile
++from scipy import ndimage
++
++from vesuvius.scripts.review_holes import write_trainer_pair
++
++VERDICTS = {"s": "SHEET", "n": "NOT", "u": "UNCLEAR"}
++FIELDS = ["crop", "center_zyx", "marker_zyx", "size", "verdict", "note"]
++INDEX_FIELDS = ["file", "crop", "center_zyx", "marker_zyx", "size", "verdict", "changed_voxels"]
++QUEUE_FIELDS = ["crop", "dice", "pred_far", "pred_far_frac", "n_cand", "largest"]
++CAND_FIELDS = ["crop", "size", "center_zyx", "marker_zyx", "marker_to_centroid_vox"]
++KEY_FIELDS = ["code", "crop", "center_zyx", "marker_zyx", "size", "pred_far_frac"]
++LEGEND = "cyan=label  magenta=model  yellow +=on model sheet"
++
++
++def _zyx(v) -> str:
++    return json.dumps([int(x) for x in v], separators=(",", ":"))
++
++
++def far_components(pred: np.ndarray, label: np.ndarray, tol: float, ignore_value: int):
++    """``(components, sizes, pred_vox, label_vox)``: 26-connected components of the
++    prediction-minus-label-neighbourhood voxels, with their voxel counts."""
++    valid = label != ignore_value
++    a = (pred == 1) & valid
++    b = (label == 1) & valid
++    dl = ndimage.distance_transform_edt(~b) if b.any() else np.full(b.shape, 1e3, np.float32)
++    far = a & (dl > tol)
++    lab, n = ndimage.label(far, structure=np.ones((3, 3, 3)))
++    sizes = np.bincount(lab.ravel(), minlength=n + 1)[1:] if n else np.zeros(0, int)
++    return lab, sizes, a, b
++
++
++def analyse(job) -> Tuple[dict, List[dict]]:
++    """Rank one crop. Candidates (largest first, at most ``per_crop``) carry the marker."""
++    data, predictions, crop, tol, min_vox, ignore_value, per_crop = job
++    pred = tifffile.imread(predictions / f"{crop}.tif")
++    label = tifffile.imread(data / "labels" / f"{crop}.tif")
++    lab, sizes, a, b = far_components(pred, label, tol, ignore_value)
++    dice = 2 * (a & b).sum() / max(1, a.sum() + b.sum())
++    big = [k + 1 for k in np.argsort(-sizes, kind="stable") if sizes[k] >= min_vox]
++    boxes = ndimage.find_objects(lab)
++    cands = []
++    for k in big[:per_crop]:
++        box = boxes[k - 1]
++        vox = np.argwhere(lab[box] == k) + np.array([s.start for s in box])
++        centroid = vox.mean(axis=0)
++        d = np.linalg.norm(vox - centroid, axis=1)
++        j = int(d.argmin())
++        cands.append({"crop": crop, "size": int(sizes[k - 1]), "center_zyx": _zyx(np.round(centroid)),
++                      "marker_zyx": _zyx(vox[j]), "marker_to_centroid_vox": round(float(d[j]), 1)})
++    far = int(sizes.sum())
++    row = {"crop": crop, "dice": round(float(dice), 3), "pred_far": far,
++           "pred_far_frac": round(far / max(1, int(a.sum())), 4), "n_cand": len(big),
++           "largest": int(sizes.max()) if len(sizes) else 0}
++    return row, cands
++
++
++def load_excluded(path: Optional[Path]) -> set:
++    if path is None:
++        return set()
++    with open(path, newline="") as fh:
++        return {r["crop"] for r in csv.DictReader(fh)}
++
++
++def _write_csv(path: Path, fields: List[str], rows) -> None:
++    with open(path, "w", newline="") as fh:
++        w = csv.DictWriter(fh, fieldnames=fields)
++        w.writeheader()
++        w.writerows(rows)
++
++
++def rank_crops(data: Path, predictions: Path, tol: float = 3.0, min_vox: int = 200,
++               ignore_value: int = 2, per_crop: int = 1, exclude: Optional[set] = None,
++               workers: int = 1) -> Tuple[List[dict], Dict[str, List[dict]]]:
++    """Every crop with a prediction and a label, worst ``pred_far_frac`` first."""
++    exclude = exclude or set()
++    crops = sorted(p.stem for p in predictions.glob("*.tif")
++                   if p.stem not in exclude and (data / "labels" / f"{p.stem}.tif").exists())
++    jobs = [(data, predictions, c, tol, min_vox, ignore_value, per_crop) for c in crops]
++    if workers > 1:
++        with ProcessPoolExecutor(workers) as ex:
++            results = list(ex.map(analyse, jobs))
++    else:
++        results = [analyse(j) for j in jobs]
++    rows = sorted((r for r, _ in results), key=lambda r: -r["pred_far_frac"])
++    return rows, {r["crop"]: c for r, c in results}
++
++
++def render_tile(img: np.ndarray, label: np.ndarray, pred: np.ndarray, marker, png: Path,
++                title: str, half: int = 80) -> Path:
++    """Three orthogonal slices through ``marker``: label outline cyan, prediction magenta."""
++    import matplotlib
++    matplotlib.use("Agg")
++    import matplotlib.pyplot as plt
++
++    lo, hi = np.percentile(img, [1, 99.5])
++    fig, axs = plt.subplots(1, 3, figsize=(12, 4.4))
++    for ax, (name, i, (u, v)) in zip(axs, [("z", 0, (1, 2)), ("y", 1, (0, 2)), ("x", 2, (0, 1))]):
++        take = tuple(marker[i] if d == i else slice(None) for d in range(3))
++        im, lb, pd = img[take], label[take] == 1, pred[take] == 1
++        start = [max(0, min(marker[d] - half, n - 2 * half)) for d, n in zip((u, v), im.shape)]
++        w = tuple(slice(st, st + 2 * half) for st in start)
++        ax.imshow(im[w], cmap="gray", vmin=lo, vmax=hi, interpolation="nearest")
++        if lb[w].any():
++            ax.contour(lb[w].astype(float), [0.5], colors="cyan", linewidths=1)
++        if pd[w].any():
++            ax.contour(pd[w].astype(float), [0.5], colors="magenta", linewidths=1)
++        ax.plot(marker[v] - start[1], marker[u] - start[0], "+", color="yellow", ms=9, mew=1.5)
++        ax.set_title(f"{name} slice", fontsize=9)
++        ax.axis("off")
++    fig.suptitle(title, fontsize=11)
++    fig.tight_layout()
++    png.parent.mkdir(parents=True, exist_ok=True)
++    fig.savefig(png, dpi=100)
++    plt.close(fig)
++    return png
++
++
++def stage(data: Path, predictions: Path, out: Path, tol: float = 3.0, min_vox: int = 200,
++          ignore_value: int = 2, limit: Optional[int] = None, per_crop: int = 1,
++          exclude: Optional[set] = None, half: int = 80, workers: int = 1) -> List[dict]:
++    """Rank, then write queue/candidates/tiles/key/sheet for the top ``limit`` crops."""
++    sheet = out / "sheet.csv"
++    if sheet.exists():
++        with open(sheet, newline="") as fh:
++            if any(r.get("verdict") for r in csv.DictReader(fh)):
++                raise SystemExit(f"{sheet} already holds verdicts; move it aside before restaging")
++    rows, cands = rank_crops(data, predictions, tol, min_vox, ignore_value, per_crop, exclude, workers)
++    out.mkdir(parents=True, exist_ok=True)
++    _write_csv(out / "queue.csv", QUEUE_FIELDS, rows)
++    keys, flat = [], []
++    for r in rows[:limit]:
++        for c in cands[r["crop"]]:
++            flat.append(c)
++            keys.append({"code": f"S{len(keys) + 1:02d}", **{k: c[k] for k in ("crop", "center_zyx", "marker_zyx", "size")},
++                         "pred_far_frac": r["pred_far_frac"]})
++    _write_csv(out / "candidates.csv", CAND_FIELDS, flat)
++    _write_csv(out / "key.csv", KEY_FIELDS, keys)
++    _write_csv(out / "sheet.csv", ["code", "verdict", "note"], [{"code": k["code"]} for k in keys])
++    cache = {}
++    for k in keys:
++        crop = k["crop"]
++        if crop not in cache:
++            cache = {crop: (tifffile.imread(data / "images" / f"{crop}.tif").astype(np.float32),
++                            tifffile.imread(data / "labels" / f"{crop}.tif"),
++                            tifffile.imread(predictions / f"{crop}.tif"))}
++        render_tile(*cache[crop], json.loads(k["marker_zyx"]), out / "tiles" / f"{k['code']}.png",
++                    f"{k['code']}   {LEGEND}", half)
++    return keys
++
++
++def load_verdicts(path: Path) -> Dict[Tuple[str, str], dict]:
++    if not path.exists():
++        return {}
++    with open(path, newline="") as fh:
++        return {(r["crop"], r["marker_zyx"]): r for r in csv.DictReader(fh)}
++
++
++def ask_terminal(png: Path, prompt: str) -> str:
++    """Show the tile in a matplotlib window and read one key from the terminal."""
++    import matplotlib
++    import matplotlib.pyplot as plt
++
++    if matplotlib.get_backend().lower() == "agg":
++        print(f"no display backend: open {png} yourself", file=sys.stderr)
++    else:
++        plt.close("all")
++        fig = plt.figure(figsize=(12, 4.4))
++        plt.imshow(plt.imread(png))
++        plt.axis("off")
++        if fig.canvas.manager is not None:
++            fig.canvas.manager.set_window_title(prompt)
++        plt.show(block=False)
++        plt.pause(0.1)
++    while True:
++        k = input(f"{prompt}  [s]heet [n]ot [u]nclear s[k]ip [q]uit > ").strip().lower()
++        if k in ("s", "n", "u", "k", "q"):
++            return k
++
++
++def review(out: Path, ask: Callable[[Path, str], str]) -> Dict[Tuple[str, str], dict]:
++    """Ask for each staged tile not already in verdicts.csv. The prompt shows the code only."""
++    with open(out / "key.csv", newline="") as fh:
++        keys = list(csv.DictReader(fh))
++    verdicts = load_verdicts(out / "verdicts.csv")
++    for n, k in enumerate(keys, 1):
++        key = (k["crop"], k["marker_zyx"])
++        if key in verdicts:
++            continue
++        ans = ask(out / "tiles" / f"{k['code']}.png", f"{k['code']} ({n}/{len(keys)})")
++        if ans == "q":
++            break
++        if ans == "k":
++            continue
++        verdicts[key] = {"crop": k["crop"], "center_zyx": k["center_zyx"], "marker_zyx": k["marker_zyx"],
++                         "size": k["size"], "verdict": VERDICTS[ans], "note": ""}
++        _write_csv(out / "verdicts.csv", FIELDS, verdicts.values())
++    _write_csv(out / "verdicts.csv", FIELDS, verdicts.values())
++    return verdicts
++
++
++def export_training(data: Path, predictions: Path, out: Path, dest: Path, tol: float = 3.0,
++                    min_vox: int = 200, reviewer: str = "", target: str = "surface",
++                    ignore_value: int = 2) -> List[dict]:
++    """Corrected labels for the SHEET and NOT verdicts in ``out/verdicts.csv``."""
++    rows = [r for r in load_verdicts(out / "verdicts.csv").values() if r["verdict"] in ("SHEET", "NOT")]
++    dest.mkdir(parents=True, exist_ok=True)
++    index, cache = [], {}
++    for i, r in enumerate(rows):
++        crop = r["crop"]
++        if crop not in cache:
++            cache = {crop: (tifffile.imread(data / "images" / f"{crop}.tif"),
++                            tifffile.imread(data / "labels" / f"{crop}.tif"),
++                            tifffile.imread(predictions / f"{crop}.tif"))}
++        ct, label, pred = cache[crop]
++        corrected, changed = label.copy(), 0
++        if r["verdict"] == "SHEET":
++            lab, _, _, _ = far_components(pred, label, tol, ignore_value)
++            k = lab[tuple(json.loads(r["marker_zyx"]))]
++            if k == 0:
++                sys.exit(f"{crop} marker {r['marker_zyx']} is not on a candidate: rerun with the --tol/--min-vox used to stage")
++            comp = lab == k
++            if comp.sum() != int(r["size"]) or comp.sum() < min_vox:
++                sys.exit(f"{crop} marker {r['marker_zyx']}: component has {int(comp.sum())} voxels, verdict recorded {r['size']}")
++            changed = int((comp & (label != 1)).sum())
++            corrected[comp] = 1
++        stem = f"{crop}_{i:04d}"
++        write_trainer_pair(dest, stem, ct, corrected, target)
++        index.append({"file": stem, **{k: r[k] for k in INDEX_FIELDS[1:-1]}, "changed_voxels": changed})
++    _write_csv(dest / "index.csv", INDEX_FIELDS, index)
++    prov = {"data": str(data), "predictions": str(predictions), "verdicts": str(out / "verdicts.csv"),
++            "tol": tol, "min_vox": min_vox, "target": target, "ignore_value": ignore_value,
++            "reviewer": reviewer, "n": len(index),
++            "exported_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
++    (dest / "provenance.json").write_text(json.dumps(prov, indent=1))
++    return index
++
++
++def main(argv=None):
++    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    ap.add_argument("--data", type=Path, required=True, help="directory with labels/<crop>.tif and images/<crop>.tif")
++    ap.add_argument("--predictions", type=Path, required=True, help="surface model output per crop (<crop>.tif, argmax, 1 = sheet)")
++    ap.add_argument("--out", type=Path, required=True, help="where queue.csv, tiles/, key.csv, verdicts.csv go")
++    ap.add_argument("--tol", type=float, default=3.0, help="a prediction voxel is far when this many voxels from any label voxel")
++    ap.add_argument("--min-vox", type=int, default=200, help="smallest far component worth a tile")
++    ap.add_argument("--exclude", type=Path, help="CSV with a `crop` column: crops to drop (e.g. the holed set)")
++    ap.add_argument("--limit", type=int, default=None, help="review only the top N crops by pred_far_frac")
++    ap.add_argument("--per-crop", type=int, default=1, help="candidates per crop, largest first")
++    ap.add_argument("--half", type=int, default=80, help="half-width of each slice in voxels")
++    ap.add_argument("--stage-only", action="store_true", help="write queue/candidates/tiles/key/sheet and ask nothing")
++    ap.add_argument("--export-training", type=Path, metavar="DIR",
++                    help="write OUT/verdicts.csv as corrected labels in the trainer layout into DIR and ask nothing")
++    ap.add_argument("--reviewer", default=getpass.getuser(), help="who made the calls (provenance)")
++    ap.add_argument("--target", default="surface", help="with --export-training: target name in labels/<id>_<target>.tif")
++    ap.add_argument("--ignore-value", type=int, default=2, help="label value excluded from the comparison")
++    ap.add_argument("--workers", type=int, default=4, help="processes for the ranking pass")
++    a = ap.parse_args(argv)
++    if a.export_training:
++        n = export_training(a.data, a.predictions, a.out, a.export_training, a.tol, a.min_vox,
++                            a.reviewer, a.target, a.ignore_value)
++        print(f"exported {len(n)} examples to {a.export_training}")
++        return
++    if a.stage_only or not (a.out / "key.csv").exists():
++        keys = stage(a.data, a.predictions, a.out, a.tol, a.min_vox, a.ignore_value, a.limit,
++                     a.per_crop, load_excluded(a.exclude), a.half, a.workers)
++        print(f"staged {len(keys)} tiles in {a.out / 'tiles'}")
++        if a.stage_only:
++            return
++    v = review(a.out, ask_terminal)
++    n = {k: sum(1 for r in v.values() if r["verdict"] == k) for k in VERDICTS.values()}
++    print(f"{len(v)} verdicts ({n}) in {a.out / 'verdicts.csv'}")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/vesuvius/src/vesuvius/scripts/review_holes.py b/vesuvius/src/vesuvius/scripts/review_holes.py
+index 751f4b47a..3b17ceaf1 100644
+--- a/vesuvius/src/vesuvius/scripts/review_holes.py
++++ b/vesuvius/src/vesuvius/scripts/review_holes.py
+@@ -117,6 +117,14 @@ def _cube(arr: np.ndarray, center, half: int) -> np.ndarray:
+     return out
+ 
+ 
++def write_trainer_pair(dest: Path, stem: str, ct: np.ndarray, label: np.ndarray, target: str) -> None:
++    """Write one example in the villa trainer layout: ``images/<stem>.tif`` and ``labels/<stem>_<target>.tif``."""
++    (dest / "images").mkdir(parents=True, exist_ok=True)
++    (dest / "labels").mkdir(parents=True, exist_ok=True)
++    tifffile.imwrite(dest / "images" / f"{stem}.tif", ct)
++    tifffile.imwrite(dest / "labels" / f"{stem}_{target}.tif", label)
++
++
+ def export_training(data: Path, audit: Path, out: Path, dest: Path, half: int = 16,
+                     predictions: Optional[Path] = None, reviewer: str = "",
+                     target: str = "surface", ignore_value: int = 2) -> List[dict]:
+@@ -131,8 +139,7 @@ def export_training(data: Path, audit: Path, out: Path, dest: Path, half: int =
+     ``<crop>.tif`` per crop. Nothing is trained here; the export only keeps the pairs.
+     """
+     rows = list(load_verdicts(out / "verdicts.csv").values())
+-    (dest / "images").mkdir(parents=True, exist_ok=True)
+-    (dest / "labels").mkdir(exist_ok=True)
++    dest.mkdir(parents=True, exist_ok=True)
+     index, cache = [], {}
+     for i, r in enumerate(rows):
+         crop = r["crop"]
+@@ -153,8 +160,7 @@ def export_training(data: Path, audit: Path, out: Path, dest: Path, half: int =
+             corrected[hole] = 1
+         elif r["verdict"] != "CUT":
+             corrected[hole] = ignore_value
+-        tifffile.imwrite(dest / "images" / f"{stem}.tif", cubes["ct"])
+-        tifffile.imwrite(dest / "labels" / f"{stem}_{target}.tif", corrected)
++        write_trainer_pair(dest, stem, cubes["ct"], corrected, target)
+         index.append({"file": f"{stem}.npz", **r})
+     with open(dest / "index.csv", "w", newline="") as fh:
+         w = csv.DictWriter(fh, fieldnames=["file", *FIELDS])
+diff --git a/vesuvius/tests/test_review_disagreements.py b/vesuvius/tests/test_review_disagreements.py
+new file mode 100644
+index 000000000..0982ba290
+--- /dev/null
++++ b/vesuvius/tests/test_review_disagreements.py
+@@ -0,0 +1,160 @@
++"""review_disagreements must rank model-drawn papyrus the label lacks, put the marker on
++the component (not in a concave gap), keep the reader blind, and export exactly the
++reviewed component, so a corrected label never gains voxels nobody looked at.
++"""
++import csv
++import json
++import pytest
++
++import numpy as np
++import tifffile
++from vesuvius.scripts import review_disagreements as rd
++
++SHAPE = (48, 48, 48)
++
++
++def _dataset(tmp_path):
++    data, pred = tmp_path / "data", tmp_path / "pred"
++    for d in (data / "labels", data / "images", pred):
++        d.mkdir(parents=True)
++    rng = np.random.default_rng(0)
++    label = np.zeros(SHAPE, np.uint8)
++    label[24, 4:20, 4:20] = 1                       # a sheet both agree on
++    label[2, 2:6, 2:6] = 2                          # ignore region
++    p = np.zeros(SHAPE, np.uint8)
++    p[24, 4:20, 4:20] = 1
++    p[24, 5:7, 5:7] = 1                             # inside the label: not far
++    p[24, 22:25, 4:8] = 1                           # touches the label edge: within tolerance, not far
++    # C-shaped far component: its centroid falls in the gap
++    p[40, 30:46, 30:34] = 1
++    p[40, 30:46, 42:46] = 1
++    p[40, 30:34, 30:46] = 1
++    # a second crop with a smaller far blob
++    p2 = p.copy()
++    p2[40] = 0
++    p2[36:40, 36:44, 36:44] = 1
++    for name, pr in (("crop_a", p), ("crop_b", p2), ("crop_c", np.where(label == 1, 1, 0).astype(np.uint8))):
++        tifffile.imwrite(data / "labels" / f"{name}.tif", label)
++        tifffile.imwrite(data / "images" / f"{name}.tif", rng.integers(0, 255, SHAPE, np.uint8))
++        tifffile.imwrite(pred / f"{name}.tif", pr)
++    return data, pred
++
++
++def _stage(tmp_path, **kw):
++    data, pred = _dataset(tmp_path)
++    out = tmp_path / "rev"
++    keys = rd.stage(data, pred, out, min_vox=30, half=20, **kw)
++    return data, pred, out, keys
++
++
++def test_ranking_finds_far_component_and_ignores_one_under_tolerance(tmp_path):
++    data, pred = _dataset(tmp_path)
++    rows, cands = rd.rank_crops(data, pred, min_vox=30)
++    assert rows[-1]["crop"] == "crop_c"
++    by = {r["crop"]: r for r in rows}
++    assert by["crop_c"]["pred_far"] == 0 and by["crop_c"]["n_cand"] == 0 and cands["crop_c"] == []
++    a = by["crop_a"]
++    assert a["n_cand"] == 1                          # the 3-voxel-beyond blob is under tol
++    assert a["largest"] == cands["crop_a"][0]["size"] == 3 * 64 - 2 * 16   # C: two arms and a cap, two 4x4 corners shared
++    assert a["pred_far_frac"] > 0 and by["crop_b"]["largest"] == 4 * 8 * 8
++
++
++def test_concave_component_marker_is_on_the_component(tmp_path):
++    data, pred = _dataset(tmp_path)
++    _, cands = rd.rank_crops(data, pred, min_vox=30)
++    c = cands["crop_a"][0]
++    p = tifffile.imread(pred / "crop_a.tif")
++    marker, centre = json.loads(c["marker_zyx"]), np.array(json.loads(c["center_zyx"]))
++    assert p[tuple(marker)] == 1
++    assert p[tuple(centre)] == 0                     # the centroid itself is in the gap
++    assert c["marker_to_centroid_vox"] > 0
++    assert np.linalg.norm(np.array(marker) - centre) <= 8
++
++
++def test_exclude_drops_a_crop(tmp_path):
++    data, pred = _dataset(tmp_path)
++    ex = tmp_path / "ex.csv"
++    ex.write_text("crop\ncrop_a\n")
++    rows, _ = rd.rank_crops(data, pred, min_vox=30, exclude=rd.load_excluded(ex))
++    assert "crop_a" not in {r["crop"] for r in rows}
++
++
++def test_stage_only_writes_blind_tiles_and_separate_key(tmp_path):
++    data, pred = _dataset(tmp_path)
++    out = tmp_path / "rev"
++    rd.main(["--data", str(data), "--predictions", str(pred), "--out", str(out), "--min-vox", "30",
++             "--half", "20", "--workers", "1", "--stage-only", "--per-crop", "1"])
++    keys = list(csv.DictReader(open(out / "key.csv")))
++    assert [k["code"] for k in keys] == ["S01", "S02"]
++    assert {k["crop"] for k in keys} == {"crop_a", "crop_b"}
++    assert sorted(p.name for p in (out / "tiles").iterdir()) == ["S01.png", "S02.png"]
++    sheet = list(csv.DictReader(open(out / "sheet.csv")))
++    assert [r["code"] for r in sheet] == ["S01", "S02"] and not any(r["verdict"] for r in sheet)
++    assert "crop" not in open(out / "sheet.csv").read()
++    assert not (out / "verdicts.csv").exists()
++    assert (out / "queue.csv").exists() and (out / "candidates.csv").exists()
++
++
++def test_resume_does_not_reask_and_prompt_hides_the_crop(tmp_path):
++    _, _, out, _ = _stage(tmp_path)
++    prompts = []
++    answers = iter(["s", "q"])
++
++    def ask(png, prompt):
++        assert png.exists()
++        prompts.append(prompt)
++        return next(answers)
++
++    rd.review(out, ask)
++    assert not any("crop_" in p for p in prompts)
++    asked = []
++    rd.review(out, lambda png, p: asked.append(p) or "n")
++    assert len(asked) == 1 and asked[0].startswith("S02")      # S01 was answered, not re-asked
++    assert [r["verdict"] for r in csv.DictReader(open(out / "verdicts.csv"))] == ["SHEET", "NOT"]
++
++
++def test_export_sets_exactly_the_component_for_sheet_and_nothing_for_not(tmp_path):
++    data, pred, out, _ = _stage(tmp_path)
++    code_of = {k["crop"]: k["code"] for k in csv.DictReader(open(out / "key.csv"))}
++    rd.review(out, lambda png, p: "s" if p.startswith(code_of["crop_a"]) else "n")
++    dest = tmp_path / "train"
++    rd.main(["--data", str(data), "--predictions", str(pred), "--out", str(out), "--min-vox", "30",
++             "--export-training", str(dest), "--reviewer", "tester"])
++    rows = list(csv.DictReader(open(dest / "index.csv")))
++    by = {r["crop"]: r for r in rows}
++    assert by["crop_a"]["verdict"] == "SHEET" and by["crop_b"]["verdict"] == "NOT"
++    ia, ib = (int(by[c]["file"].rsplit("_", 1)[1]) for c in ("crop_a", "crop_b"))
++    label = tifffile.imread(data / "labels" / "crop_a.tif")
++    p = tifffile.imread(pred / "crop_a.tif")
++    fixed = tifffile.imread(dest / "labels" / f"crop_a_{ia:04d}_surface.tif")
++    expected = np.zeros(SHAPE, bool)
++    expected[40, 30:46, 30:34] = expected[40, 30:46, 42:46] = expected[40, 30:34, 30:46] = True
++    assert ((fixed != label)).sum() == expected.sum() == int(by["crop_a"]["changed_voxels"])
++    assert (fixed[expected] == 1).all() and (fixed[~expected] == label[~expected]).all()
++    assert np.array_equal(tifffile.imread(dest / "labels" / f"crop_b_{ib:04d}_surface.tif"),
++                          tifffile.imread(data / "labels" / "crop_b.tif"))
++    assert by["crop_b"]["changed_voxels"] == "0"
++    assert tifffile.imread(dest / "images" / f"crop_a_{ia:04d}.tif").shape == SHAPE
++    prov = json.loads((dest / "provenance.json").read_text())
++    assert prov["reviewer"] == "tester" and prov["tol"] == 3.0 and prov["min_vox"] == 30 and prov["n"] == 2
++
++
++def test_unclear_is_not_exported(tmp_path):
++    data, pred, out, _ = _stage(tmp_path)
++    rd.review(out, lambda png, p: "u")
++    dest = tmp_path / "train"
++    assert rd.export_training(data, pred, out, dest, min_vox=30) == []
++    assert not list(dest.glob("labels/*"))
++
++
++def test_restage_refuses_to_overwrite_a_filled_sheet(tmp_path):
++    # A reader's filled sheet is the only record of their calls; restaging must not blank it.
++    data, pred = _dataset(tmp_path)
++    out = tmp_path / "rev"
++    args = ["--data", str(data), "--predictions", str(pred), "--out", str(out), "--min-vox", "30",
++            "--half", "20", "--workers", "1", "--stage-only", "--per-crop", "1"]
++    rd.main(args)
++    (out / "sheet.csv").write_text("code,verdict,note\nS01,sheet,\nS02,,\n")
++    with pytest.raises(SystemExit, match="already holds verdicts"):
++        rd.main(args)
++    assert "S01,sheet" in (out / "sheet.csv").read_text()
+-- 
+2.56.0
+

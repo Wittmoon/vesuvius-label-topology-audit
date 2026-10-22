@@ -59,4 +59,4 @@ points are 48 um apart so offsets under about 12 um are within their accuracy; t
 follows w033, so where w033 itself wanders (G4 after 35.5 deg, where the w033 reference switches piece) the
 rows jump. No layer was tracked continuously from the control sector into the gap; that would be the
 decisive version (a per-angle count of material runs between w033 and w037 against the four expected steps,
-over every height), and it is not done here.
+over every height). It was done the same day: `pherc0139_2167_run_count.md`.

@@ -127,8 +127,8 @@ the narrower w034-w036 sharing in the unwraps there; it is strongest at 9,000-15
   are known to sit one per layer, with an instrument that was shown (0.97 / 0.96) to flag the signature it is
   asked about. It says: in the gap sector, over most of its height, two of the five Kaggle-era meshes lie on
   one papyrus layer more often than outside it (sweep medians: `same` 0.11 against 0.02 and 0.01, `same`
-  plus `amb` 0.37 against 0.14 and 0.09, so about 3-4x combined and 5-11x on the narrow-run class), and the mesh involved is w034, with w036 at the
-  lower heights and w037 at the upper ones, often with w033 in the same run.
+  plus `amb` 0.37 against 0.14 and 0.09, so about 3-4x combined and 5-11x on the narrow-run class), and the mesh involved is w034, with w036 at E1, E4,
+  E5, E6 and both unwrap heights and with w037 at G1, G3, G4, often with w033 in the same run.
 - A run is not a winding. A single run can hold several pressed sheets (the `amb` class exists for that, and
   the w036/w037 pressed pair at C2 shows a control doing it). So the numbers above are a lower bound on
   layers and say nothing about how many windings are missing from the label set, only that two labels share

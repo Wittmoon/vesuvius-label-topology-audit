@@ -99,7 +99,8 @@ outline, the prediction outline and a centre marker; codes only, the key withhel
 The author's calls: eight tiles SHEET (papyrus the label does not cover), two NOT. In the two NOT
 tiles (S08, S09) the marker sat 17 and 15 voxels off the predicted sheet, because the candidate
 piece is concave and its centroid falls in a gap; the reader noted this on both before the key
-was opened ("nearest magenta would read SHEET"), so they are recorded as unscorable, not as misses.
+was opened ("nearest magenta would read SHEET"), so they are recorded as unscorable, not as misses (verdict NOT with scorable=no in the
+spot-check CSV, UNSCORABLE in the m7 CSV).
 Of the eight scorable tiles, eight read SHEET. Reader notes: S03 is a tougher call (bright field,
 little contrast between sheets); S10 may be followed fully by neither the model nor the label.
 Rows with code, crop, centre, marker-to-sheet distance and verdict:
@@ -107,22 +108,24 @@ Rows with code, crop, centre, marker-to-sheet distance and verdict:
 
 What ten tiles say: the top of the queue is real, in-sample. They do not say how deep the queue
 stays real, and the marker placement is a tooling fix for the next sitting (nearest candidate voxel
-to the centroid, not the centroid). The per-crop queue and candidate list are reproducible from the
-script and the shipped weights pointer; the 892 prediction volumes (34 GB) are not shipped.
+to the centroid, not the centroid). The per-crop queue and candidate list are shipped
+(`data/kaggle3rd_disagreement_queue.csv`, `data/kaggle3rd_disagreement_candidates.csv`) and
+reproducible from the script and the weights pointer; the 892 prediction volumes (34 GB) are not.
 
 ### Does a second model agree? (exploratory, 2026-10-22, not pre-registered)
 
 Question: could agreement between two independent surface models cut the review load, by
 dropping queue entries that only the 3rd-place model draws? The 1st-place m7 nnU-Net (fold 0,
 3d_fullres, tile 192, step 0.85, no mirroring; the same weights the table above uses) was run on
-the top 50 crops of the queue (11 s per crop on the Mac GPU). Metric per crop: the share of the
+the 50 highest-ranked crops outside the holed set, the spot-check population (11 s per crop on
+the Mac GPU; the queue's own top 50 holds 11 holed crops, not run). Metric per crop: the share of the
 3rd-place far component (the spot-check piece for S01-S20, the largest piece otherwise) that m7
 also calls sheet. Rows: `data/kaggle3rd_m7_agreement_top50.csv`.
 
 Result: on the eight tiles the author called SHEET, m7 covers the piece by 0.18, 0.79, 0.00, 0.05,
 0.18, 0.06, 0.79 and 0.29; only two of eight reach 0.5. The two unscorable tiles read 0.00 and
-0.01. Across the top 50, six crops reach 0.5 (nine at 0.4). m7 follows the label where the
+0.01. Across the 50, six crops reach 0.5 (nine at 0.4). m7 follows the label where the
 3rd-place model draws extra papyrus, which is what a model trained on these labels should do. A
 filter on agreement would have dropped six of the eight confirmed SHEET tiles, so it is not used.
-What it does say: the queue's papyrus is not a shared-model artefact that both models invent, and
-a second label-trained model is no substitute for the reader's eye on these crops.
+What it does say: a second label-trained model is no substitute for the reader's eye on these
+crops. It does not show the queue's papyrus is real; only the CT read does that.
