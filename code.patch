@@ -1,7 +1,7 @@
 From 6e4a88154f649fde3e17f795f4e4ebca79381582 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:36:47 -0400
-Subject: [PATCH 01/34] feat(vesuvius): add vesuvius.label_topology_audit for
+Subject: [PATCH 01/35] feat(vesuvius): add vesuvius.label_topology_audit for
  3D surface labels
 
 Reports components, Betti-1/2 (holes, cavities), thickness, erosion-split
@@ -529,7 +529,7 @@ index 000000000..9321fc64e
 From 941cd5c8911edbbaae413dd1219fa1c346ef1d63 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sat, 17 Oct 2026 18:46:56 -0400
-Subject: [PATCH 02/34] fix(vesuvius): label_topology_audit checks --after
+Subject: [PATCH 02/35] fix(vesuvius): label_topology_audit checks --after
  against --fail-on, validates paired files
 
 Apply --fail-on limits to the --after volume too, error before writing
@@ -643,7 +643,7 @@ index 9321fc64e..befc51f26 100644
 From 392a2911716e15642a472a366b028b14a2c570f1 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:06:32 -0400
-Subject: [PATCH 03/34] feat(label-topology-audit): rank crops, interior holes,
+Subject: [PATCH 03/35] feat(label-topology-audit): rank crops, interior holes,
  shared Betti helper
 
 - b1_interior: hole count with 6 voxels trimmed off each crop face
@@ -1035,7 +1035,7 @@ index befc51f26..b15e79b9c 100644
 From b8bb45319a36f8f720cf2076f98d3983ede3e31f Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:57:57 -0400
-Subject: [PATCH 04/34] feat(label_topology_audit): locate holes, write hole
+Subject: [PATCH 04/35] feat(label_topology_audit): locate holes, write hole
  masks for fix_holes
 
 - locate_holes: background blobs that a 3-step closing fills and whose
@@ -1444,7 +1444,7 @@ index b15e79b9c..ba977e4b5 100644
 From ace26f2fcc75fce9b2b9be069c57bc66f075c6fd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 08:58:29 -0400
-Subject: [PATCH 05/34] docs(label_topology_audit): CT check of fix_holes
+Subject: [PATCH 05/35] docs(label_topology_audit): CT check of fix_holes
  repairs on the 10 worst crops
 
 ---
@@ -1485,7 +1485,7 @@ index 2b5503795..14624a5a1 100644
 From 605e9d222afaec79fba42605cdff3f38d1cf37cc Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 12:18:57 -0400
-Subject: [PATCH 06/34] fix(label-topology-audit): validate comparisons and
+Subject: [PATCH 06/35] fix(label-topology-audit): validate comparisons and
  bound crop thickness
 
 ---
@@ -1812,7 +1812,7 @@ index ba977e4b5..750dc51aa 100644
 From a620aca9e582adef94f8f25931f19e65aebcb781 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 16:10:58 -0400
-Subject: [PATCH 07/34] feat(label-topology-audit): read zarr input with a
+Subject: [PATCH 07/35] feat(label-topology-audit): read zarr input with a
  window, tiles and a threshold
 
 --label/--after/--image accept a zarr array or OME-Zarr group (local path or
@@ -2202,7 +2202,7 @@ index 750dc51aa..113996fad 100644
 From f87736560882c0d8c7ab1e9dbe5ff6840b84d22a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:03:46 -0400
-Subject: [PATCH 08/34] feat(label-topology-audit): sweep several thresholds
+Subject: [PATCH 08/35] feat(label-topology-audit): sweep several thresholds
  from one read
 
 --threshold T1,T2,... binarises each window at every cut after a single
@@ -2410,7 +2410,7 @@ index 113996fad..deb220f49 100644
 From 4e35515627ab5e1d24842d116d5ed8c7afb9bb1b Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:32:24 -0400
-Subject: [PATCH 09/34] feat(surface-placement-audit): measure where a traced
+Subject: [PATCH 09/35] feat(surface-placement-audit): measure where a traced
  surface sits on the CT sheet
 
 vesuvius.surface_placement_audit samples a VolCart obj (local or URL, read by
@@ -3185,7 +3185,7 @@ index 000000000..9e7dc1d24
 From 9f1117705625a6bd1912f00dacd50e1f71c9d019 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 22:57:03 -0400
-Subject: [PATCH 10/34] feat: update 4 Python files
+Subject: [PATCH 10/35] feat: update 4 Python files
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 ---
@@ -3584,7 +3584,7 @@ index 9e7dc1d24..2b8014743 100644
 From 005887b3fc3be86caf7dd32846adfa5571df81df Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Sun, 18 Oct 2026 23:20:44 -0400
-Subject: [PATCH 11/34] feat(surface-placement-audit): snap and tangent
+Subject: [PATCH 11/35] feat(surface-placement-audit): snap and tangent
  controls, review fixes
 
 Two controls on the offsets: each located peak is remeasured after snapping
@@ -3639,7 +3639,7 @@ index 048f619e2..488ff418e 100644
 From 49626183f8c763fe9a4d9a6a3eccd09a2b301463 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 09:36:15 -0400
-Subject: [PATCH 12/34] docs(surface-placement-audit): results over all 255
+Subject: [PATCH 12/35] docs(surface-placement-audit): results over all 255
  public Scroll 1 segments
 
 Replace the three-segment table with quantiles across the full public set
@@ -3707,7 +3707,7 @@ index 488ff418e..b064abb97 100644
 From 1f05080017b8fa104db525044133d504070b3eac Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 14:02:10 -0400
-Subject: [PATCH 13/34] feat(surface-placement-audit): --cache DIR keeps CT
+Subject: [PATCH 13/35] feat(surface-placement-audit): --cache DIR keeps CT
  chunks on disk
 
 ChunkCache wraps the volume and stores each native chunk it reads as a .npy
@@ -3874,7 +3874,7 @@ index 2b8014743..916c8bb3b 100644
 From 9ae3812997806a4e0e86344bd09f2705abbb1117 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:08:00 -0400
-Subject: [PATCH 14/34] fix(label-topology-audit): islands are not repairs;
+Subject: [PATCH 14/35] fix(label-topology-audit): islands are not repairs;
  corner contact with ignore voxels opens a component
 
 A closing fill cut off from the sheet by blocked voxels raised the Euler
@@ -3951,7 +3951,7 @@ index deb220f49..90ac6e1c6 100644
 From 4272804e4773f8bce7115d208eaa254055eb11cd Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 17:48:25 -0400
-Subject: [PATCH 15/34] fix(audit): cache identity, non-default spacing,
+Subject: [PATCH 15/35] fix(audit): cache identity, non-default spacing,
  censored peaks, streaming tiles
 
 - surface_placement_audit: ChunkCache keyed on source path/URL, level (and size/mtime for local files); two volumes with equal geometry no longer share chunks
@@ -4319,7 +4319,7 @@ index 916c8bb3b..7f31bfc85 100644
 From 5d6b5781841fe69c27ee1cdbe589cfd28a477abf Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:01:53 -0400
-Subject: [PATCH 16/34] fix(audit): URL inputs ending in .tif read as TIFF;
+Subject: [PATCH 16/35] fix(audit): URL inputs ending in .tif read as TIFF;
  docs name fused_voxel_frac, b1_face and censored profiles
 
 ---
@@ -4405,7 +4405,7 @@ index 007d6fdf3..879a5db18 100644
 From c17d239558883c16632cd0aad810d25a09060650 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Mon, 19 Oct 2026 18:06:47 -0400
-Subject: [PATCH 17/34] fix(audit): second review round: tif URLs fetched,
+Subject: [PATCH 17/35] fix(audit): second review round: tif URLs fetched,
  small obj vertex block, threshold name collisions refused, bounded symmetric
  profile grid
 
@@ -4586,7 +4586,7 @@ index 7f31bfc85..85ea3ac4f 100644
 From 582a625da2e64708863574113f63e784618f537a Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 04:52:33 -0400
-Subject: [PATCH 18/34] docs(vesuvius): state what bridge_voxels locates and
+Subject: [PATCH 18/35] docs(vesuvius): state what bridge_voxels locates and
  what the placement controls show
 
 bridge_voxels counts foreground voxels within one voxel of two different
@@ -4721,7 +4721,7 @@ index e75ec400c..e45c9b5ee 100644
 From fa2b1046d50457be33f420dde86c58038f2a33c7 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 05:47:40 -0400
-Subject: [PATCH 19/34] surface_placement_audit: report tifxyz grid points that
+Subject: [PATCH 19/35] surface_placement_audit: report tifxyz grid points that
  have no normal and are not sampled
 
 Points at hole edges and the grid border have no computable normal, so the
@@ -4835,7 +4835,7 @@ index 85ea3ac4f..d67e94f19 100644
 From e34fec95c1076e86febde15886762a216bbaf827 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:07:20 -0400
-Subject: [PATCH 20/34] surface_placement_audit: grid spike check on tifxyz
+Subject: [PATCH 20/35] surface_placement_audit: grid spike check on tifxyz
  input
 
 Adjacent valid grid points are joined when their distance is at most 4x
@@ -5030,7 +5030,7 @@ index d67e94f19..2328b863f 100644
 From 3837369939ae5a0a163f1f841c2374a7b7a64aa4 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:14:40 -0400
-Subject: [PATCH 21/34] surface_placement_audit: grid interior holes and
+Subject: [PATCH 21/35] surface_placement_audit: grid interior holes and
  outside-volume warning
 
 n_grid_holes / grid_hole_points count 4-connected invalid groups that do
@@ -5180,7 +5180,7 @@ index 2328b863f..17a5dbe84 100644
 From 30db2ad5aa5ce48f46882cfca1b9a28c995303f9 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:24:26 -0400
-Subject: [PATCH 22/34] surface_placement_audit: warn when almost no inside
+Subject: [PATCH 22/35] surface_placement_audit: warn when almost no inside
  point finds a sheet peak
 
 A surface with a missing downscale factor (PR #2112) can land inside the
@@ -5255,7 +5255,7 @@ index 17a5dbe84..ee6a7abc2 100644
 From 1dc04b189e4d25ace70294d62cd05b7024878fe9 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Tue, 20 Oct 2026 06:42:13 -0400
-Subject: [PATCH 23/34] surface_placement_audit: grid check edge cases from
+Subject: [PATCH 23/35] surface_placement_audit: grid check edge cases from
  review
 
 Spike rule: a tied group larger than 5% of the surface is a fold, not a
@@ -5418,7 +5418,7 @@ index ee6a7abc2..c5d3c58bf 100644
 From 408f098e329888864484135ce4dd476f901eca6e Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 01:57:07 -0400
-Subject: [PATCH 24/34] fix_holes: --veto leaves listed holes open
+Subject: [PATCH 24/35] fix_holes: --veto leaves listed holes open
 
 CSV of crop,center_zyx (the topology audit errata format); the hole-mask component nearest each centre within 8 voxels is dropped before any method runs, and the log says how many were left open. Needed because a blind repair fills real gaps in the papyrus as readily as labelling misses.
 ---
@@ -5592,7 +5592,7 @@ index 000000000..8a29ae8df
 From 0633147f5d86b50ab57d7634bda228044119bec0 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 13:50:35 -0400
-Subject: [PATCH 25/34] review_holes: record fill/cut calls on ranked holes,
+Subject: [PATCH 25/35] review_holes: record fill/cut calls on ranked holes,
  write the veto list
 
 Walks the holes that label_topology_audit located, worst crop first, shows each as
@@ -5956,7 +5956,7 @@ index 000000000..10450a736
 From 9848326c544d66ea09f89ce4d3f490243127bcb5 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 17:27:42 -0400
-Subject: [PATCH 26/34] feat(scripts): review holes in hole_viewer.py with a CT
+Subject: [PATCH 26/35] feat(scripts): review holes in hole_viewer.py with a CT
  layer and fill/cut panel
 
 hole_viewer.py gains a Review dock: Next hole steps through the holes that
@@ -6283,7 +6283,7 @@ index 10450a736..fc681f74d 100644
 From 070abd4c8710463234b367a1aec4b590eb4e4c87 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 17:48:24 -0400
-Subject: [PATCH 27/34] surface_placement_audit: export the worst cells as a
+Subject: [PATCH 27/35] surface_placement_audit: export the worst cells as a
  VC3D point collection
 
 Writes <name>.worst_cells.csv (cells whose median offset exceeds 2 voxels,
@@ -6469,7 +6469,7 @@ index c5d3c58bf..4a05d2794 100644
 From 1f2e4655a1de1822bcfa4eb9cbc0d3b85066fe4e Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 17:57:33 -0400
-Subject: [PATCH 28/34] Export reviewer verdicts and VC3D edits as training
+Subject: [PATCH 28/35] Export reviewer verdicts and VC3D edits as training
  pairs
 
 review_holes.py --export-training DIR writes one .npz per verdict (CT,
@@ -6889,7 +6889,7 @@ index fc681f74d..363307b07 100644
 From beb644570553f2f9927c0ea42355ba01eef816f8 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 18:05:48 -0400
-Subject: [PATCH 29/34] Training exports: negatives, prediction cubes,
+Subject: [PATCH 29/35] Training exports: negatives, prediction cubes,
  provenance
 
 placement_edits.py: --all-cells also exports the cells the audit did not
@@ -7274,7 +7274,7 @@ index 363307b07..9b1f0f839 100644
 From dfa69e0a7387b8ccc7fe6b0045a3c51ed51af2e9 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 18:11:34 -0400
-Subject: [PATCH 30/34] placement_edits: score several candidate traces per
+Subject: [PATCH 30/35] placement_edits: score several candidate traces per
  cell against the human's pick
 
 --candidate NAME=TIFXYZ (repeatable, same grid as --before) adds per worst
@@ -7492,7 +7492,7 @@ index f5068245c..8e4017ade 100644
 From d9d1fa42818329ae6292bb1cc014a8df48863351 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 18:31:48 -0400
-Subject: [PATCH 31/34] placement_edits: rank candidates on absolute offset,
+Subject: [PATCH 31/35] placement_edits: rank candidates on absolute offset,
  measure unflagged cells, cube level
 
 Review fixes. audit_pick ranked on |median signed offset|, so a candidate
@@ -7765,7 +7765,7 @@ index 8e4017ade..602b2e093 100644
 From 5681008314045555416c3fcc0be3de4a541c00f5 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Wed, 21 Oct 2026 21:46:16 -0400
-Subject: [PATCH 32/34] review_holes: write the training export in the trainer
+Subject: [PATCH 32/35] review_holes: write the training export in the trainer
  layout too
 
 --export-training now also writes images/<id>.tif and labels/<id>_<target>.tif
@@ -7899,7 +7899,7 @@ index 9b1f0f839..c2162d028 100644
 From c8db970e1c4e59e974e7b9e498c3635554c4ce0d Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Thu, 22 Oct 2026 17:31:56 -0400
-Subject: [PATCH 33/34] review_disagreements: rank model-vs-label disagreement,
+Subject: [PATCH 33/35] review_disagreements: rank model-vs-label disagreement,
  stage blind tiles, export corrected labels
 
 Adds vesuvius/scripts/review_disagreements.py, the model-side counterpart
@@ -8462,7 +8462,7 @@ index 000000000..0982ba290
 From 55519242f8c49f9020290d9610ad5595b28c1528 Mon Sep 17 00:00:00 2001
 From: Wittmoon <jmoon@lunarink.com>
 Date: Thu, 22 Oct 2026 18:17:19 -0400
-Subject: [PATCH 34/34] review_disagreements: rank-stratified staging with
+Subject: [PATCH 34/35] review_disagreements: rank-stratified staging with
  blind decoy tiles
 
 A reader who only sees candidates cannot show they say NOT when NOT is right, and ten tiles from the top of the queue say nothing about how deep it stays real. Add --ranks (stage --limit crops from each queue position), --decoys N (control points per candidate, alternating label-and-model-covered and off-sheet, shuffled into the S-series with --seed, no outlines in a decoy sitting), kind and rank in key.csv, a per-kind/per-rank verdict tally printed after a review, and exclusion of decoys from --export-training. Three tests.
@@ -8748,6 +8748,84 @@ index 0982ba290..e26d4f073 100644
 +    index = rd.export_training(data, pred, out, tmp_path / "train", min_vox=30)
 +    assert {r["crop"] for r in index} == {"crop_a", "crop_b"} and len(index) == 2
 +
+-- 
+2.56.0
+
+
+From da96928b89322b6bff5b194069e3fb0e7bf2b882 Mon Sep 17 00:00:00 2001
+From: Wittmoon <jmoon@lunarink.com>
+Date: Thu, 22 Oct 2026 18:29:02 -0400
+Subject: [PATCH 35/35] review_disagreements: alternate decoy kinds across
+ crops
+
+With one decoy per crop the alternation restarted at covered for every crop, so a sitting never held an off-sheet control. Carry the alternation across crops.
+---
+ .../src/vesuvius/scripts/review_disagreements.py     | 12 +++++++-----
+ vesuvius/tests/test_review_disagreements.py          |  4 ++--
+ 2 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/vesuvius/src/vesuvius/scripts/review_disagreements.py b/vesuvius/src/vesuvius/scripts/review_disagreements.py
+index ba7932534..923c6a9f8 100644
+--- a/vesuvius/src/vesuvius/scripts/review_disagreements.py
++++ b/vesuvius/src/vesuvius/scripts/review_disagreements.py
+@@ -135,9 +135,10 @@ def rank_crops(data: Path, predictions: Path, tol: float = 3.0, min_vox: int = 2
+ 
+ 
+ def decoy_points(label: np.ndarray, pred: np.ndarray, tol: float, ignore_value: int, n: int,
+-                 rng: np.random.Generator, margin: int = 8) -> List[Tuple[str, Tuple[int, int, int]]]:
++                 rng: np.random.Generator, margin: int = 8, start: int = 0) -> List[Tuple[str, Tuple[int, int, int]]]:
+     """``n`` control points alternating ``decoy_covered`` (label and model both sheet) and
+-    ``decoy_off`` (farther than ``tol`` from both), at least ``margin`` voxels from the faces."""
++    ``decoy_off`` (farther than ``tol`` from both), at least ``margin`` voxels from the faces.
++    ``start`` continues the alternation across crops so one decoy per crop still gives both kinds."""
+     valid = label != ignore_value
+     covered = (label == 1) & (pred == 1) & valid
+     off = (ndimage.distance_transform_edt(label != 1) > tol) & (ndimage.distance_transform_edt(pred != 1) > tol) & valid
+@@ -146,7 +147,7 @@ def decoy_points(label: np.ndarray, pred: np.ndarray, tol: float, ignore_value:
+     pools = {"decoy_covered": np.argwhere(covered & inner), "decoy_off": np.argwhere(off & inner)}
+     out = []
+     for i in range(n):
+-        kind = KINDS[1 + i % 2]
++        kind = KINDS[1 + (start + i) % 2]
+         pool = pools[kind]
+         if len(pool) == 0:
+             continue
+@@ -203,7 +204,7 @@ def stage(data: Path, predictions: Path, out: Path, tol: float = 3.0, min_vox: i
+     for start in (ranks or [1]):
+         picked += [(i + 1, rows[i]) for i in range(start - 1, min(len(rows), (start - 1) + (limit or len(rows))))]
+     rng = np.random.default_rng(seed)
+-    keys, flat, cache = [], [], {}
++    keys, flat, cache, n_decoy = [], [], {}, 0
+ 
+     def load(crop):
+         if crop not in cache:
+@@ -220,9 +221,10 @@ def stage(data: Path, predictions: Path, out: Path, tol: float = 3.0, min_vox: i
+                          "pred_far_frac": r["pred_far_frac"], "kind": "candidate", "rank": rank})
+             if decoys:
+                 _, label, pred = load(r["crop"])
+-                for kind, pt in decoy_points(label, pred, tol, ignore_value, decoys, rng):
++                for kind, pt in decoy_points(label, pred, tol, ignore_value, decoys, rng, start=n_decoy):
+                     keys.append({"crop": r["crop"], "center_zyx": _zyx(pt), "marker_zyx": _zyx(pt), "size": 0,
+                                  "pred_far_frac": r["pred_far_frac"], "kind": kind, "rank": rank})
++                    n_decoy += 1
+     if decoys:
+         random.Random(seed).shuffle(keys)
+     for i, k in enumerate(keys, 1):
+diff --git a/vesuvius/tests/test_review_disagreements.py b/vesuvius/tests/test_review_disagreements.py
+index e26d4f073..1d4b0d8a8 100644
+--- a/vesuvius/tests/test_review_disagreements.py
++++ b/vesuvius/tests/test_review_disagreements.py
+@@ -201,8 +201,8 @@ def test_decoy_verdicts_are_scored_by_kind_and_never_exported(tmp_path):
+     rows = rd.score(out)
+     by = {(r["kind"], r["rank"]): r for r in rows}
+     assert by[("candidate", "1")]["SHEET"] == 1 and by[("candidate", "2")]["SHEET"] == 1
+-    assert by[("decoy_covered", "1")]["SHEET"] == 1 and by[("decoy_covered", "2")]["SHEET"] == 1
+-    assert sum(r["NOT"] for r in rows if r["kind"] == "decoy_off") == 0   # odd decoys=1 gives covered only
++    assert by[("decoy_covered", "1")]["SHEET"] == 1                 # one decoy per crop still alternates kinds
++    assert by[("decoy_off", "2")]["NOT"] == 1 and ("decoy_off", "1") not in by
+     index = rd.export_training(data, pred, out, tmp_path / "train", min_vox=30)
+     assert {r["crop"] for r in index} == {"crop_a", "crop_b"} and len(index) == 2
+ 
 -- 
 2.56.0
 
