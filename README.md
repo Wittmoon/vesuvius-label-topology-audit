@@ -391,7 +391,7 @@ by others unless marked):
 | #1522, #1727, #1977 | declared scale does not match the grid on hundreds of segments | preflight's gate; not repeated |
 | #1660 | a frame mismatch renders a black strip and exits 0 | the outside-volume and empty-profile warnings |
 | #1547 | two surfaces trace the same sheet | not covered |
-| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a 115 um shift still reads as placed 37% of the time at level 2, 60% unshifted), no answer; `data/pherc0139_2167_placement.csv`. Follow-up asked for by the maintainer (2026-10-22): polar unwraps at his 12 places with the w033-w037 crossings overlaid, [validation/pherc0139_2167_unwraps.md](validation/pherc0139_2167_unwraps.md), same picture as his reading at all 12 heights |
+| #2167 | w035 covers ~258 deg; in the gap w036 sits at w034's radius, "checking against the CT is needed" | pre-registered run of the placement audit on the gap vs outside sectors: instrument check failed (a 115 um shift still reads as placed 37% of the time at level 2, 60% unshifted), no answer; `data/pherc0139_2167_placement.csv`. Follow-up asked for by the maintainer (2026-10-22): polar unwraps at his 12 places with the w033-w037 crossings overlaid, [validation/pherc0139_2167_unwraps.md](validation/pherc0139_2167_unwraps.md), same picture as his reading at all 12 heights. Then the count version, pre-registered with a copy-onto-neighbour instrument check (0.97 / 0.96 flagged): two meshes in one papyrus run 3-10x more often in the gap sector than in the controls at most heights (z sweep 9,000-27,000), w034 shares with w036 low and w037 high, often w033 too; the "empty layer" part of the by-eye read is not supported; a run is not a winding, [validation/pherc0139_2167_run_count.md](validation/pherc0139_2167_run_count.md) |
 
 ### Surface placement on the public Scroll 1 segments
 
@@ -615,6 +615,14 @@ Inputs this packet does not ship:
   `validation/pherc0139_2167_placement_preregistration.md`, `validation/pherc0139_2167/`:
   the issue #2167 gap-sector run (13 sector inputs, bootstrap CIs, positive
   controls, blind sheets, frozen code and ids).
+- `validation/pherc0139_2167_unwraps.md`, `figures/pherc0139_2167_unwraps/`,
+  `data/pherc0139_2167_unwrap_crossings.csv`, `validation/pherc0139_2167/unwrap_gap.py`:
+  the maintainer's requested polar unwraps at 12 places + 2 heights.
+- `validation/pherc0139_2167_run_count.md`, `validation/pherc0139_2167/run_count.py`,
+  `validation/pherc0139_2167/run_count_preregistration.md`,
+  `data/pherc0139_2167_run_count_{instrument,places,sweep}.csv` (per window) and
+  `data/pherc0139_2167_run_count_{instrument,places}_crossings.csv` (per column x mesh):
+  the per-angle material-run count, instrument check, 14 places and 19-height sweep.
 - `validation/open_data_surface_predictions_listing_2026-10-20.txt`,
   `validation/issue1912_comment_2026-10-20.md`: dated snapshots of the S3
   listing and the #1912 comment cited above.
