@@ -1,7 +1,7 @@
 # Status
 
 Code revision: `da96928b8` (code.patch reproduces this tree on `3d56d06ec`, 35 commits, 102 tests).
-Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-22).
+Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10-23).
 
 - 2026-10-18: branch `feat/label-topology-audit` pushed to the fork
   (https://github.com/Wittmoon/villa/tree/feat/label-topology-audit) and this
@@ -52,3 +52,4 @@ Pull request: https://github.com/ScrollPrize/villa/pull/2147 (open as of 2026-10
 - 2026-10-22, night: two whole-packet state reviews (Codex read-only, Claude Opus read-only) reconciled. Packet fixes: code.patch and the README Code section moved to `c8db970e1` (33 commits, six test files, 99 tests, `review_disagreements.py`); the m7 run is now described as the 50 highest-ranked crops outside the holed set, not the queue's top 50, and the unsupported "not a shared-model artefact" sentence is dropped; S08/S09 labelled UNSCORABLE in the m7 rows; `w036 low / w037 high` replaced by the named places (G1 is z 11,000); the 892-row queue and 21,855-piece candidate list shipped (`data/kaggle3rd_disagreement_queue.csv`, `data/kaggle3rd_disagreement_candidates.csv`); stale "gap question stays open", "not done here" and "feature we would build next" lines updated; CHECKSUMS rebuilt. Review texts stay internal.
 - 2026-10-22, later: `review_disagreements.py` gains `--ranks` (stage crops from given queue positions, for precision by rank) and `--decoys N` (control tiles per candidate, alternating label-and-model-covered and off-sheet points, shuffled blind into the code series, no outlines in a decoy sitting; key.csv records kind and rank; decoys never exported as training data; verdicts tallied per kind and rank after a review). Villa branch `da96928b8` (two commits; the second carries the decoy alternation across crops), 35 commits, 102 tests; code.patch and CHECKSUMS rebuilt. No new sitting run yet.
 - 2026-10-22, later: pre-registration for the rank-stratified decoy sitting written before any call: `validation/kaggle3rd_rank_decoy_preregistration.md` (ranks 50/200/500 x 3, 9 decoys, decoy kill rule 7 of 9, counts not percentages).
+- 2026-10-23: README opening rewritten after two readiness reviews: leads with the 892-crop queue and the 10-tile check, separates the closing-fill result from the `--veto` guarantee, states the mesh-resolution reading as untested, marks the early AI spot check superseded, adds the limits paragraph. Evidence unchanged.

@@ -1,40 +1,56 @@
 # Label topology audit: evidence packet
 
-**In short:** I wanted label review to be less manual. These tools scan a
-folder of surface labels and list the crops with problems, worst first; show
-each hole in the CT so a person can mark it fill or cut; and stop the existing
-fill script from gluing real gaps shut. A second tool checks whether a traced
-surface actually sits on the papyrus. Pull request:
+**In short:** The Challenge's [2026 open problems](https://scrollprize.org/2026_open_problems)
+page names label drift as a main bottleneck and asks for active learning. This packet
+holds a ranked review queue over all 892 Kaggle surface-label crops, built from two
+signals (label topology, and a surface model disagreeing with the label), with the
+reviewer's calls saved in the trainer's folder layout, and the tools that produce it:
 [ScrollPrize/villa#2147](https://github.com/ScrollPrize/villa/pull/2147).
 
 **What I found on the 892 Kaggle surface-label crops:**
 
-- 152 crops have holes or handles (571 in all: 314 inside the crop, 257 on a
-  crop face where the crop cut the sheet).
-- I checked 33 located holes by hand in the CT: 19 are real gaps between two
-  sheets (cut, don't fill), 11 are labelling misses (fill), 3 are unclear. All
-  33 with coordinates: [data/errata.csv](data/errata.csv).
-- The current `fix_holes.py` 2D fill closes 8 of the 19 real gaps. With the
-  reviewed list passed as `--veto` (closing kernel 2), none of the 19 gained a
-  voxel and the 11 misses were filled as before
-  ([validation/fill_then_audit.md](validation/fill_then_audit.md)).
+- Label topology: 152 crops have holes or handles (571 in all: 314 inside the
+  crop, 257 on a crop face where the crop cut the sheet). I checked 33 located
+  holes by hand in the CT: 19 are real gaps between two sheets (cut, don't
+  fill), 11 are labelling misses (fill), 3 are unclear. All 33 with
+  coordinates: [data/errata.csv](data/errata.csv).
+- What the fill does to them: the current `fix_holes.py` 2D fill welds 8 of the
+  19 real gaps shut and fills 5 of the 11 misses. A closing fill with kernel 2
+  welds none of the 19 and fills 6 of the 11
+  ([validation/fill_then_audit.md](validation/fill_then_audit.md)). The
+  closing still adds a few voxels inside real gaps (14% of each on average), so
+  the reviewed list passed as `--veto` keeps those 19 at zero added voxels. The
+  method change moves the counts; the veto protects what a person has reviewed.
+- Model-versus-label disagreement: I ran the Kaggle 3rd-place surface model
+  over all 892 crops and ranked crops by how much papyrus the model draws where
+  the label has none. 39 of the top 50 have no hole finding, so this ranks
+  different crops from the hole audit. A blind check of the ten highest-ranked
+  hole-free crops, one CT tile each, one reader (me), no control tiles: 8 of
+  the 8 tiles I could score were papyrus the label misses; 2 were unscorable
+  because the marker fell off the sheet
+  ([validation/kaggle3rd_prediction.md](validation/kaggle3rd_prediction.md)).
+  A rank-stratified sitting with decoy tiles is staged and not yet read.
 - I tried to make the fill/cut call automatically from hole size, shape and
   CT density. No rule passed the bar I wrote down in advance, so the call
   stays with a person
   ([validation/errata_cutfill.md](validation/errata_cutfill.md)).
 - Placement: across 255 Scroll 1 segments, a median of 48% of sampled points
-  sit more than 2 voxels off the sheet. The pattern looks like mesh
-  resolution, not a whole segment being shifted.
+  sit more than 2 voxels off the sheet. This may be mesh resolution rather
+  than a whole segment being shifted; that reading was not tested.
 - I also tried snapping labels onto the CT first. It did not work on real
   data; it is written up as a negative result in
   [notes/label-snapping-negative-result.md](notes/label-snapping-negative-result.md).
 
 **Why it matters:** annotators get a short, ranked list instead of a pass over
-every crop, and repairs stop damaging real gaps. The reviewed holes can be
-exported in the folder layout villa's trainer uses, which is the "smaller set
-of precise labels in hard regions" the
-[2026 open problems](https://scrollprize.org/2026_open_problems) page asks for,
-and later possible training data for a better model. Nothing is trained yet.
+every crop, and repairs stop damaging real gaps. The reviewed crops export in
+the folder layout villa's trainer uses. The open problems page asks for a
+smaller set of precise labels in hard regions; this is a start on that, not
+the set itself. Nothing is trained yet.
+
+**Limits:** one reader, who is also the author; the ten tiles say the top of
+the queue is real, not how deep it stays real; the 3rd-place model was trained
+on 786 of the 892 crops, so it leans toward the labels. Both queues are
+proofreading orders, not corrections.
 
 Individual submission. Implementation, experiments and write-up were produced
 with AI assistance (Claude) under the submitter's direction; the hand check of
@@ -105,7 +121,8 @@ checks its output. Compared with what the repo already has:
   voxels.
 - Provisional AI spot check of 29 located holes: 12 judged apparent label
   defects, 0 judged real tears, 17 unclear (mostly at crop faces); 10 clean
-  controls were also inspected. Not an expert precision estimate.
+  controls were also inspected. Not an expert precision estimate. Superseded by
+  the hand check of 33 holes above (19 of 33 are real gaps).
 
 #### fix_holes before/after, 10 worst crops
 
