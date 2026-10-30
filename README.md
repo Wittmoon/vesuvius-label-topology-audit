@@ -234,7 +234,9 @@ flagged set, so the two instruments rank different crops. A blind check of the
 ten highest-ranked unflagged crops, one CT tile each, read by the author with
 the key withheld: eight of the eight tiles whose marker sat on the predicted
 sheet were papyrus the label missed; the other two had the marker off the sheet
-and were not scored. Ten tiles say the top of the queue is real, not how deep
+and were not scored. Scoring the eight alone gives an exact (Clopper-Pearson)
+95% lower bound of 0.63; counting both unscored tiles as misses gives 8 of 10
+and a lower bound of 0.44. Ten tiles say the top of the queue is real, not how deep
 it stays real
 ([data/kaggle3rd_disagreement_spotcheck.csv](data/kaggle3rd_disagreement_spotcheck.csv)).
 The model was trained on most of these crops, so it leans toward the labels;
