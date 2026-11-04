@@ -51,3 +51,26 @@ Outputs (scratch/title_region_data_20261104/out/control_20261104/):
 Per PREREG_title.md s.3 and s.10: STOP. No scoring of the candidate region, no decoy comparison, no R.
 The candidate list, bank and I16 image remain frozen and unused for scoring. Anything further (a better
 exemplar bank, a contrast-matched null, a different detector) is a new pre-registration, not a rerun.
+
+## Addendum 2026-11-04: blocking fixed, rerun. Verdict unchanged: FAIL.
+User instruction: "fix and rerun". Fix: control.py block id is now (region, floor(v_centre / 3P)) exactly as
+PREREG_title.md s.3.5 states, with 1.5P bands as the reported-only sensitivity; the L_px / L_px2 options
+(which belonged to the s.7 margin bootstrap, not the control) were removed. titlecore.py unchanged
+(57775813…, matches PREREG_title_code.sha256); control.py v2 sha256
+3f3b4e6f390d7d22c10461e5bebc7af70bad274d14bb4659392c0ec3a4c4a1a1 (v1 ebf28307… kept in the first section).
+Window scores are byte-identical to the first run (81 of 81 windows, both true and scrambled), so this is
+the same test with the interval computed correctly, not a second attempt and not a re-tuning (s.3 gate text).
+
+| quantity | value | 95% interval (3P bands) | 1.5P bands, reported only |
+|---|---|---|---|
+| AUC_true | 0.928 | 0.866 - 0.989 | 0.864 - 0.975 |
+| AUC_scrambled | 0.975 | 0.934 - 1.000 | |
+| diff true - scrambled | -0.047 | -0.107 - +0.013 | -0.101 - -0.001 |
+
+Blocks: positives 4 (C3, 3P bands), negatives 6 (G12 and G23, 3 bands each). lo(diff) < 0 under both
+bandings. Gate FAIL. Lane remains stopped; no title score computed.
+
+Outputs (scratch/title_region_data_20261104/out/control_20261104_v2/):
+- control_result.json  6b54b8a2904ea8ebf7e81ddb928cd08bdcea6740d8c772be2eece826635d5dbf
+- control_scores.csv   7b1f441e326dcfce6f843413504d86af5df28876f679f98f190d618d59952489
+- code_v2.sha256 (both scripts)
