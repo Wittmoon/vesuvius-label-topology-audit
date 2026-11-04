@@ -726,8 +726,10 @@ released, their raw outputs are in `validation/negative_results/`.
   three pre-registered tests (blank-papyrus null, stroke morphology, title
   template control with a phase-scrambled bank) all find that the dense_native
   2D ink map on PHerc Paris 4 separates letters from blank papyrus by texture,
-  not letter shape (blank FPR 0.763, morphology AUC 0.474, true bank minus
-  scrambled bank -0.047 with interval -0.107 to +0.013). No 0/N "no title here"
+  not letter shape (blank-papyrus FPR 0.763, interval 0.744 to 0.782, per crop
+  0.59 to 0.85; morphology AUC 0.474, interval 0.422 to 0.528; true bank AUC
+  0.928 against scrambled bank 0.975, difference -0.047 with interval -0.107
+  to +0.013). No 0/N "no title here"
   claim can rest on that map. Pre-registrations, results and rows in
   `validation/` (`ink_detectability_g3v2_*`, `ink_detectability_morph_*`,
   `PREREG_title.md`, `RESULT_title.md`).
