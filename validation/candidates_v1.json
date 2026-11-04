@@ -1,0 +1,216 @@
+{
+ "seed": 20261104,
+ "alphabet": "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
+ "n_real": 7,
+ "n_decoy": 14,
+ "variants": [
+  "bare",
+  "numbered"
+ ],
+ "layouts": {
+  "L1": "one line",
+  "L2": "two lines split at 'split' (author line, then ΠΕΡΙ+topic line), left aligned",
+  "L3": "two lines split at 'split', each line centred on the common midpoint"
+ },
+ "chunk_rule": "chunks of 3 consecutive letters (last chunk 1-3 letters), chunk offsets free within +-0.5a of nominal pitch; statistic = mean over chunks of max NCC",
+ "grid": {
+  "translation_step": "h/8",
+  "rotation_deg": [
+   -3,
+   -1.5,
+   0,
+   1.5,
+   3
+  ],
+  "scale": [
+   0.9,
+   0.95,
+   1.0,
+   1.05,
+   1.1
+  ],
+  "line_spacing": "P",
+  "h_over_P": 0.6,
+  "advance_over_h": 0.75
+ },
+ "block_side_mm": 0.7,
+ "font": {
+  "file": "DejaVuSans.ttf",
+  "sha256": "3fdf69cabf06049ea70a00b5919340e2ce1e6d02b0cc3c4b44fb6801bd1e0d22",
+  "role": "bootstrap classifier for exemplar cut + fallback template only"
+ },
+ "entries": [
+  {
+   "id": "r1",
+   "kind": "real",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΜΟΥΣΙΚΗΣ",
+   "n": 21,
+   "split": 9
+  },
+  {
+   "id": "r2",
+   "kind": "real",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΚΑΚΙΩΝ",
+   "n": 19,
+   "split": 9
+  },
+  {
+   "id": "r3",
+   "kind": "real",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΡΗΤΟΡΙΚΗΣ",
+   "n": 22,
+   "split": 9
+  },
+  {
+   "id": "r4",
+   "kind": "real",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΠΟΙΗΜΑΤΩΝ",
+   "n": 22,
+   "split": 9
+  },
+  {
+   "id": "r5",
+   "kind": "real",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΘΕΩΝ",
+   "n": 17,
+   "split": 9
+  },
+  {
+   "id": "r6",
+   "kind": "real",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΘΑΝΑΤΟΥ",
+   "n": 20,
+   "split": 9
+  },
+  {
+   "id": "r7",
+   "kind": "real",
+   "string": "ΕΠΙΚΟΥΡΟΥΠΕΡΙΦΥΣΕΩΣ",
+   "n": 19,
+   "split": 9
+  },
+  {
+   "id": "d_orges",
+   "kind": "decoy_other_work",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΟΡΓΗΣ",
+   "n": 18,
+   "split": 9,
+   "source": "PHerc. 182 subscriptio (Indelli 1988; Armstrong/McOsker 2020): φιλοδημου | ὑπομνημα περὶ οργηϲ | Α"
+  },
+  {
+   "id": "d_parrh",
+   "kind": "decoy_other_work",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΠΑΡΡΗΣΙΑΣ",
+   "n": 22,
+   "split": 9,
+   "source": "PHerc. 1471 'with title' (DCLP 62476; Olivieri 1914 Περὶ παρρησίας)"
+  },
+  {
+   "id": "d_euseb",
+   "kind": "decoy_other_work",
+   "string": "ΦΙΛΟΔΗΜΟΥΠΕΡΙΕΥΣΕΒΕΙΑΣ",
+   "n": 22,
+   "split": 9,
+   "source": "PHerc. 1428 Περὶ εὐσεβείας (Obbink 1996); see PREREG s.5 note"
+  },
+  {
+   "id": "p1_r1",
+   "kind": "decoy_perm",
+   "string": "ΜΙΠΔΦΟΚΡΗΜΗΕΥΙΣΙΟΣΛΥΟ",
+   "n": 21,
+   "split": 9,
+   "base": "r1",
+   "tries": 2
+  },
+  {
+   "id": "p1_r2",
+   "kind": "decoy_perm",
+   "string": "ΝΥΙΔΚΦΡΟΙΕΚΩΟΗΑΠΙΜΛ",
+   "n": 19,
+   "split": 9,
+   "base": "r2",
+   "tries": 1
+  },
+  {
+   "id": "p1_r3",
+   "kind": "decoy_perm",
+   "string": "ΚΥΡΙΙΟΟΠΗΛΕΤΗΣΡΗΦΜΔΟΙΡ",
+   "n": 22,
+   "split": 9,
+   "base": "r3",
+   "tries": 2
+  },
+  {
+   "id": "p1_r4",
+   "kind": "decoy_perm",
+   "string": "ΙΕΗΙΟΗΦΠΠΜΟΛΤΡΝΙΔΩΑΥΟΜ",
+   "n": 22,
+   "split": 9,
+   "base": "r4",
+   "tries": 1
+  },
+  {
+   "id": "p1_r5",
+   "kind": "decoy_perm",
+   "string": "ΕΦΛΝΥΜΗΙΟΔΡΕΠΩΟΙΘ",
+   "n": 17,
+   "split": 9,
+   "base": "r5",
+   "tries": 1
+  },
+  {
+   "id": "p1_r6",
+   "kind": "decoy_perm",
+   "string": "ΜΡΦΥΤΟΟΗΟΙΥΠΑΑΘΕΔΝΙΛ",
+   "n": 20,
+   "split": 9,
+   "base": "r6",
+   "tries": 3
+  },
+  {
+   "id": "p1_r7",
+   "kind": "decoy_perm",
+   "string": "ΥΠΥΕΣΕΦΠΕΙΟΚΥΩΙΡΣΟΡ",
+   "n": 19,
+   "split": 9,
+   "base": "r7",
+   "tries": 2
+  },
+  {
+   "id": "p2_r3",
+   "kind": "decoy_perm",
+   "string": "ΙΗΡΙΙΗΟΥΕΟΣΠΛΟΡΚΜΤΡΦΗΔ",
+   "n": 22,
+   "split": 9,
+   "base": "r3",
+   "tries": 1
+  },
+  {
+   "id": "p2_r4",
+   "kind": "decoy_perm",
+   "string": "ΙΠΙΛΥΠΙΤΦΗΝΜΗΩΡΜΟΟΑΔΟΕ",
+   "n": 22,
+   "split": 9,
+   "base": "r4",
+   "tries": 1
+  },
+  {
+   "id": "p2_r1",
+   "kind": "decoy_perm",
+   "string": "ΗΟΣΟΠΕΙΜΗΥΙΚΜΣΟΙΥΛΡΦΔ",
+   "n": 21,
+   "split": 9,
+   "base": "r1",
+   "tries": 3
+  },
+  {
+   "id": "p2_r6",
+   "kind": "decoy_perm",
+   "string": "ΑΝΤΜΥΟΠΥΗΛΙΦΙΔΕΑΡΟΟΘ",
+   "n": 20,
+   "split": 9,
+   "base": "r6",
+   "tries": 1
+  }
+ ]
+}
