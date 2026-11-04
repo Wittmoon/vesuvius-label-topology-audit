@@ -722,6 +722,15 @@ released, their raw outputs are in `validation/negative_results/`.
   (exactly 5 in 4% of columns, 47% in the controls), so it cannot stand in
   for a hand trace as a one-run-per-winding target; soft prior at most. Rows
   in `validation/negative_results/predsurf/`.
+- [ink-map-texture-not-letters](notes/ink-map-texture-not-letters-negative-result.md):
+  three pre-registered tests (blank-papyrus null, stroke morphology, title
+  template control with a phase-scrambled bank) all find that the dense_native
+  2D ink map on PHerc Paris 4 separates letters from blank papyrus by texture,
+  not letter shape (blank FPR 0.763, morphology AUC 0.474, true bank minus
+  scrambled bank -0.047 with interval -0.107 to +0.013). No 0/N "no title here"
+  claim can rest on that map. Pre-registrations, results and rows in
+  `validation/` (`ink_detectability_g3v2_*`, `ink_detectability_morph_*`,
+  `PREREG_title.md`, `RESULT_title.md`).
 - [ink-prediction-cross-check-2167](notes/ink-prediction-cross-check-2167-inconclusive.md):
   correlating the Challenge's ink predictions of w033-w037 in (angle, z) to
   tell which #2167 gap meshes share a sheet is inconclusive; the
