@@ -1,0 +1,17 @@
+2026-11-14 08:11:30 PHerc0343P_20260304131111: launching
+2026-11-14 08:13:48 progress step 0 footprint 5.93555 GB peak 5.93555 GB swap 9087.31M
+2026-11-14 08:23:04 progress step 1000 footprint 23 GB peak 24 GB swap 14037.62M
+2026-11-14 08:28:12 KILL s.8d(amended): fitter footprint 30 GB >= 30 GB on two consecutive samples
+2026-11-14 08:28:13 PHerc0343P_20260304131111: rc=1; last: step 1400: loss = 108.1, umbilicus = 0.0, sym_dirichlet = 27.3, min_spacing = 0.0, track_radius = 80.7, track_dt = 0.0
+2026-11-14 08:28:13 PHerc0500P2_20250526151718: launching
+2026-11-14 08:30:00 progress step 0 footprint 18 GB peak 18 GB swap 16593.50M
+2026-11-14 08:42:22 KILL s.8d(amended): fitter footprint 30 GB >= 30 GB on two consecutive samples
+2026-11-14 08:42:22 PHerc0500P2_20250526151718: rc=1; last: step 400: loss = 872.3, umbilicus = 0.1, sym_dirichlet = 22.7, min_spacing = 0.0, track_radius = 849.5, track_dt = 0.0
+2026-11-14 08:42:22 PHerc0500P2_20250820143440: launching
+2026-11-14 08:43:39 progress step 0 footprint 7.16016 GB peak 7.16016 GB swap 22936.62M
+2026-11-14 09:00:42 KILL s.8d(amended): fitter footprint 31 GB >= 30 GB on two consecutive samples
+2026-11-14 09:00:42 PHerc0500P2_20250820143440: rc=1; last: step 0: loss = 11954.8, umbilicus = 6.6, sym_dirichlet = 2.7, min_spacing = 0.0, track_radius = 11945.5, track_dt = 0.0
+2026-11-14 09:00:42 PHerc0009B_20260319104112: launching
+2026-11-14 09:03:01 KILL s.8d(amended): fitter footprint 42 GB >= 30 GB on two consecutive samples
+2026-11-14 09:03:01 PHerc0009B_20260319104112: rc=1; last: step 0: loss = 7801.2, umbilicus = 10.2, sym_dirichlet = 6.4, min_spacing = 0.0, track_radius = 7784.6, track_dt = 0.0
+2026-11-14 09:03:01 chain done
